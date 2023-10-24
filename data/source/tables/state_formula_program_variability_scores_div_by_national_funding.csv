@@ -1,0 +1,39 @@
+"","state_formula_program","program_long_name","national_per_capita_funding","variability_score","variability_score_div_national_funding"
+"1","cdbg_entitlement","Community Development Block Grant (CDBG)",10.0059426765622,3.77672654065807,0.377448348720268
+"2","coc","Continnum of Care (COC)",8.36740577691288,0.525863829260939,0.0628466986400837
+"3","cwsrf_emerging_combined","Clean Water State Revolving Fund-Emerging Contaminants",0.557050035177751,0.959931199303042,1.72324053259728
+"4","cwsrf_general_combined","Clean Water State Revolving Fund",7.90664132595184,13.6289018971584,1.72372836142503
+"5","doe_bead_initial","Broadband Equity, Access, And Deployment Program",15.7659388715135,119.921112513173,7.60634133434646
+"6","doe_weatherization","Weatherization Assistance Program",0.852022453122482,2.10026455212861,2.46503427747893
+"7","dwsrf_emerging_combined","Drinking Water State Revolving Fund Emerging Contaminants",4.48959061465787,16.0127228495682,3.56663317971331
+"8","dwsrf_general_combined","Drinking Water State Revolving Fund",7.97951270818051,28.3955805766673,3.55856073110285
+"9","dwsrf_lead_combined","Drinking Water State Revolving Fund Lead Service Lines Replacement",12.5730216892324,44.7432241214299,3.55866912722724
+"10","elderly","Supportive Housing for the Elderly (Section 202)",1.7746258189382,0.341694619602353,0.192544600645333
+"11","fhwa_app","Appalachian Development Highway System",0.746608162905808,0.746608162905808,1
+"12","fhwa_bridge","Bridge Formula Program",16.0918693385688,44.96730378454,2.79441144086118
+"13","fhwa_carbon","Carbon Reduction Program",3.74033829460142,17.6081969636789,4.70764823307386
+"14","fhwa_cmaq","Congestion Mitigation and Air Quality Improvement Program",7.69041518235658,32.9946565282501,4.29036089026074
+"15","fhwa_ev","National Electric Vehicle Infrastructure Formula Program",1.86462546268862,8.66230163265868,4.64559870386433
+"16","fhwa_highway_freight","National Highway Freight Program",4.16564155925742,19.4294180752017,4.66420785341531
+"17","fhwa_metro_plan","Metropolitan Planning",1.32834444149844,2.7303659887652,2.05546536234624
+"18","fhwa_nhpp","National Highway Performance Program",86.2258672213852,405.921053360984,4.70764825500427
+"19","fhwa_protect","Promoting Resilient Operations for Transformative, Efficient, and Cost-Saving Transportation (PROTECT) - Formula",4.25303263746421,20.0217811320578,4.70764812752422
+"20","fhwa_railway","Railway-Highway Crossings Program",0.742818273754002,0.919348105708406,1.23764874693008
+"21","fhwa_safety","Highway Safety Improvement Program",9.03437116870631,45.1082209967233,4.99295636125416
+"22","fhwa_stp","Surface Transportation Block Grant Program",41.9477191825543,197.47510609323,4.70764823312153
+"23","fmcsa_21","Motor Carrier Safety Assistance Program",0.885294393283467,0.791963100033945,0.894575980648238
+"24","fta_5305_combined","FTA Metropolitan Planning",0.558471007120595,0.484704612630012,0.867913654334692
+"25","fta_5307_5340","Urbanized Area Formula Grants",20.9772221416239,9.66570517082266,0.460771455131972
+"26","fta_5310","Enhanced Mobility of Seniors and Individuals with Disabilities",0.767748695179064,0.398270140517535,0.518750657628465
+"27","fta_5311_combined","Formula Grants for Rural Areas, Growing State Apportionments, Growing States and High-Density States Formula",0.1247493435533,0.0330723365237702,0.265110305046534
+"28","fta_5329_e","FTA State Safety Oversight Program",0.148598470188505,0.148598470188505,1
+"29","fta_5337_combined","State of Good Repair Formula Grants",12.4657181514012,36.6177090321427,2.93747288262142
+"30","fta_5339","Bus and Bus Facilities Formula Grants",1.81033951191382,4.48109320766175,2.47527780185525
+"31","fy_2022_ttp","Tribal Transportation Program",1.39704172470882,67.7773839798462,48.5149317884352
+"32","hcv","Housing Choice Voucher (Section 8)",74.9653485886983,11.0633662008776,0.147579733959184
+"33","home","HOME Formula Grants",4.54987953761533,0.577454618886113,0.126916463196906
+"34","nhtsa","Highway Safety Programs, National Priority Safety Programs",2.59743936897436,4.746937081181,1.82754490360073
+"35","public_hsg","Public Housing Operating Fund",15.0738691903084,1.69375955517086,0.112363954721051
+"36","public_hsg_cap","Public Housing Capital Fund",9.55342061599645,4.8377853970654,0.506393007439127
+"37","s8_project","Section 8 Housing Assistance Payments (Project Based)",53.5291207411689,40.7101096283994,0.760522666255743
+"38","usace","US Army Corps of Engineers IIJA Construction Projects",21.9445640361652,726.796938562242,33.119679997491

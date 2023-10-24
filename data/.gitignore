@@ -1,0 +1,14 @@
+.quarto/
+.Rhistory
+.Rproj*
+plots
+inspo
+~$*.xlsx
+**/~$*.xlsx
+*.Rproj.user
+
+_output/
+.RData
+data/output/
+output/
+PERC-data-exploration_files/
