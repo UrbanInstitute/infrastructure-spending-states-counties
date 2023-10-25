@@ -24,8 +24,8 @@
         {site_content.user_guide.header}
       </h1>
     </LayoutBlock>
-    {#each site_content.user_guide.text as item}
-      <p class="user-guide--text">{@html item.value}</p>
+    {#each site_content.user_guide.text as item, i (i)}
+      <div class="user-guide--text">{@html item.value}</div>
     {/each}
   </LayoutSection>
   <section>
@@ -43,11 +43,19 @@
   }
   .user-guide--text {
     margin-bottom: var(--spacing-8);
+    font-size: var(--font-size-large);
+    line-height: var(--line-height-normal);
   }
   :global(.user-guide--text h2) {
     font-size: var(--font-size-2xl);
   }
   h1 {
     font-size: var(--font-size-5xl);
+  }
+  @media(min-width: 769px) {
+    .user-guide--text {
+      margin-bottom: var(--spacing-8);
+      line-height: var(--line-height-relaxed);
+    }
   }
 </style>
