@@ -47,7 +47,7 @@
 	<meta name="twitter:site" content="@urbaninstitute" />
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />
-	<meta name="twitter:image:src" content="{base}/social.jpg" />
+	<meta name="twitter:image:src" content="{get_site_url()}social.jpg" />
 
 	<meta name="robots" content="max-image-preview:large" />
 
