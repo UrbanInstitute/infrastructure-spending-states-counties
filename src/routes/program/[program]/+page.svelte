@@ -35,6 +35,15 @@
 
   // normalize formula competitive strings
   $: formula_comp_normalized = data.detail.formula_competitive.toLowerCase().includes("formula") ? "formula" : "competitive";
+  
+  // temporary hotfix for description with missing [uses] variable
+  function get_program_description(template, program_vars) {
+    let description = format_text_template(template, program_vars);
+    if (!program_vars.uses) {
+      description = description.replace("The money can go toward [uses].", "");
+    }
+    return description;
+  }
 
 </script>
 
@@ -61,7 +70,7 @@
           <strong class="detail-page--label">Department: </strong>
           {data.detail.agency_name}
         </p>
-        <p class="page-description">{@html format_text_template(site_content.program_pages.about_text, program_language_vars)}</p>
+        <p class="page-description">{@html get_program_description(site_content.program_pages.about_text, program_language_vars)}</p>
         {#if is_nuclear_page}
         <p class="page-description">
           <strong class="detail-page--label">Note: </strong>

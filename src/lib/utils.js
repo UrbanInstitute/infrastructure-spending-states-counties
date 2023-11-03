@@ -125,7 +125,7 @@ const number_fmts = {
   decimal: ",.2f",
   decimal_small: ",.4f",
   integer: ",.0f",
-  dollar: "$,.0~s",
+  dollar: "$,.2~s",
 }
 
 const per_cap_indicators = [

@@ -7,6 +7,7 @@
   import Meta from "$components/Meta.svelte";
   import site_content from "$data/site_content.json";
   import { get_site_url } from "$lib/utils.js";
+
 </script>
 
 <Meta

@@ -31,7 +31,7 @@
     top: 10,
     right: 10,
     bottom: 30,
-    left: 50,
+    left: 60,
   };
 
   let width = 300;
