@@ -13,7 +13,7 @@
   import { max } from "d3-array";
   import { logClickToGA } from "$lib/analytics";
   import { program_list, program_map } from "$stores/programs.js";
-  import site_content from "$data/site_content.json";
+  import site_content from "$data/site_content.aml";
 
   /** @type {Array<any>} */
   export let comparison_buckets;
@@ -21,13 +21,14 @@
   /** @type {Array<Record<string, number>>} */
   export let program_funding;
 
-  /** @type {"county" | "state"} */
-  export let data_level = "county";
+  /** @type {"county" | "state" | "cbsa"} */
+  export let geo_type = "county";
 
   /** @type {string} */
   export let current_location = "";
 
-  let comparison_bucket = "across_the_state";
+  let comparison_bucket =
+    geo_type === "county" ? "state_bucket" : "percent_poc_bucket";
 
   /** @type {string} */
   let program_filter = "";
@@ -109,7 +110,7 @@
     comparison_buckets.length > 1
       ? comparison_buckets.map((bucket) => ({
           value: bucket.bucket,
-          label: get_bucket_label(bucket.bucket),
+          label: get_bucket_label(bucket.bucket, geo_type),
         }))
       : [];
 
@@ -139,9 +140,17 @@
   }));
 
   $: geography_label =
-    data_level === "county" ? "Similar Counties" : "Other States";
+    geo_type === "county"
+      ? "Similar Counties"
+      : geo_type === "cbsa"
+      ? "Similar CBSAs"
+      : "Other States";
   $: key_compare_label =
-    data_level === "county" ? "similar counties" : "other states";
+    geo_type === "county"
+      ? "similar counties"
+      : geo_type === "cbsa"
+      ? "similar CBSAs"
+      : "other states";
 </script>
 
 <div class="barbell-compare">
@@ -154,18 +163,6 @@
     <p>{site_content.geography_pages.barbell_graph.about_text}</p>
     <div class="spacing" />
     {#if browser}
-      <ProgramSelect
-        bind:value={program_filter}
-        clearable={true}
-        on:change={(e) => {
-          logClickToGA(
-            e.target,
-            "program-select-barbell--" + e.detail.detail.value
-          );
-        }}
-        programs={program_search_options}
-      />
-      <div class="spacing" />
       <Select
         bind:value={category_filter}
         items={category_search_options}
@@ -179,11 +176,23 @@
         clearable
       />
       <div class="spacing" />
+      <ProgramSelect
+        bind:value={program_filter}
+        clearable={true}
+        on:change={(e) => {
+          logClickToGA(
+            e.target,
+            "program-select-barbell--" + e.detail.detail.value
+          );
+        }}
+        programs={program_search_options}
+      />
+      <div class="spacing" />
       <ToggleButton
-        label="Compare with funded jurisdictions only"
+        label={site_content.geography_pages.barbell_graph.toggle_text}
         value={"funded_only"}
         on:click={(e) => {
-          (funded_only = !funded_only)
+          funded_only = !funded_only;
           logClickToGA(
             e.target,
             "funded-toggle-barbell--" + (funded_only ? "funded-only" : "all")

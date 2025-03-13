@@ -1,0 +1,182 @@
+"","iija_flag","ira_flag","fy22","fy23","county_level","state_level","competitive","formula","agency_name","bureau_name","program_name","program_short_name","year","total_award_amount"
+"1",1,0,0,1,1,1,1,0,"Federal Communications Commission","Federal Communications Commission","Affordable Connectivity (ACP) Outreach Grant Program","acp_outreach","2023",64631073
+"2",0,1,0,1,0,1,1,0,"Department of Agriculture","Natural Resources Conservation Service","Agricultural Conservation Easement Program (ACEP)","ag_acep","2023",72723302
+"3",0,1,0,1,0,1,1,0,"Department of Agriculture","Natural Resources Conservation Service","Conservation Stewardship Program (CSP)","ag_csp","2023",170963915
+"4",0,1,0,1,0,1,1,0,"Department of Agriculture","Natural Resources Conservation Service","Environmental Quality Incentives Program (EQIP)","ag_eqip","2023",147539391
+"5",0,1,0,1,1,1,1,0,"Department of Agriculture","Natural Resources Conservation Service","Regional Conservation Partnership Program (RCPP)","ag_rcpp","2023",1076194562
+"6",0,1,0,1,1,1,1,0,"Department of Agriculture","Rural Business-Cooperative Service","Rural Energy for America Program (REAP)","ag_reap","2023",145275006
+"7",1,0,1,1,1,1,1,0,"Department of Agriculture","Rural Utilities Service","Rural Development Broadband ReConnect Program","ag_reconnect","2022",1671213716
+"8",1,0,1,1,1,1,1,0,"Department of Agriculture","Rural Utilities Service","Rural Development Broadband ReConnect Program","ag_reconnect","2023",1713028967
+"9",0,1,0,1,1,1,1,0,"Department of Agriculture","Forest Service","Urban and community forestry grants","ag_urban_forest","2023",978381215
+"10",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Aviation Administration","Contract Tower Competitive Grant Program","airport_infrastructure_comp","2022",20000000
+"11",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Aviation Administration","Contract Tower Competitive Grant Program","airport_infrastructure_comp","2023",20000000
+"12",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Aviation Administration","Airport Infrastructure Formula Grants","airport_infrastructure_formula","2022",328596090
+"13",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Aviation Administration","Airport Infrastructure Formula Grants","airport_infrastructure_formula","2023",1724995760
+"14",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Aviation Administration","Airport Terminals Program","airport_terminal","2022",968625660
+"15",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Aviation Administration","Airport Terminals Program","airport_terminal","2023",967431393
+"16",1,0,1,0,1,1,1,0,"Department of Transportation","Federal Transit Administration","All Stations Accessibility Program (ASAP)","asap","2022",686000000
+"17",1,0,1,0,1,1,1,0,"Department of Homeland Security","Federal Emergency Management Agency","Building Resilient Infrastructure and Communities (BRIC) Program","bric","2022",1812435011
+"18",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Highway Administration","Bridge Investment Program","bridge","2022",2107150000
+"19",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Highway Administration","Bridge Investment Program","bridge","2023",4353000000
+"20",1,0,1,1,1,1,1,0,"Environmental Protection Agency","State and Tribal Assistance Grants","Brownfields Program","brownfield","2022",72302036
+"21",1,0,1,1,1,1,1,0,"Environmental Protection Agency","State and Tribal Assistance Grants","Brownfields Program","brownfield","2023",162686278
+"22",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Grants for Buses and Bus Facilities Program","buses","2022",551366311
+"23",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Grants for Buses and Bus Facilities Program","buses","2023",472922707
+"24",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Capital Investment Grants Program (New Starts/Small Starts)","capital_investment","2022",3688699326
+"25",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Capital Investment Grants Program (New Starts/Small Starts)","capital_investment","2023",3781173052
+"26",1,0,1,1,1,1,1,0,"Department of Energy","Office of Clean Energy Demonstrations","Carbon Capture Demonstration Projects Program","carbon_capture_dem","2022",40618893
+"27",1,0,1,1,1,1,1,0,"Department of Energy","Office of Clean Energy Demonstrations","Carbon Capture Demonstration Projects Program","carbon_capture_dem","2023",890000000
+"28",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Community Development Block Grant (CDBG) Program","cdbg_entitlement","2022",3300209712.1195
+"29",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Community Development Block Grant (CDBG) Program","cdbg_entitlement","2023",3298210227.2759
+"30",1,0,0,1,1,1,1,0,"Department of Transportation","Federal Highway Administration","Charging and Fueling Infrastructure Grant Program","charge_fuel_infra","2023",622573845
+"31",1,0,0,1,1,1,1,0,"Department of Energy","Office of Clean Energy Demonstrations","Regional Clean Hydrogen Hubs (H2Hubs) Program","clean_hydrogen","2023",7000000000
+"32",1,0,1,1,1,1,1,0,"Environmental Protection Agency","State and Tribal Assistance Grants","Clean School Bus Program","clean_school_bus","2022",947405000
+"33",1,0,1,1,1,1,1,0,"Environmental Protection Agency","State and Tribal Assistance Grants","Clean School Bus Program","clean_school_bus","2023",5740689572
+"34",1,1,0,1,1,1,1,0,"Department of Commerce","National Oceanic and Atmospheric Administration","Climate-Ready Coasts","climate_coasts","2023",423572667
+"35",0,0,1,1,1,1,1,0,"Department of Housing and Urban Development",NA,"Continuum of Care (COC) Program","coc","2022",1930031706.3179
+"36",0,0,1,1,1,1,1,0,"Department of Housing and Urban Development",NA,"Continuum of Care (COC) Program","coc","2023",3155636244.76456
+"37",1,0,1,0,1,1,1,0,"Department of Transportation","Federal Railroad Administration","Consolidated Rail Infrastructure and Safety Improvements (CRISI) Program","crisi","2022",1442567411
+"38",1,0,1,0,1,1,1,0,"Department of Transportation","Office of the Secretary","National Culvert Removal, Replacement and Restoration Grants","culvert_restore","2022",195696998
+"39",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Clean Water State Revolving Fund supplemental appropriation for emerging contaminants","cwsrf_emerging_combined","2022",183729000
+"40",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Clean Water State Revolving Fund supplemental appropriation for emerging contaminants","cwsrf_emerging_combined","2023",211568000
+"41",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Clean Water State Revolving Fund","cwsrf_general_combined","2022",2607807580
+"42",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Clean Water State Revolving Fund","cwsrf_general_combined","2023",2073844000
+"43",1,0,0,1,1,1,1,0,"Department of Energy","Fossil Energy and Carbon Management","Regional Direct Air Capture (DAC) Hubs Program","dac_hubs","2023",600000000
+"44",1,0,1,0,1,1,1,0,"Department of Homeland Security","Federal Emergency Management Agency","Flood Mitigation Assistance (FMA) Grant Program","dhs_flood","2022",636006597
+"45",1,0,1,0,1,1,1,0,"Department of Energy","Energy Efficiency and Renewable Energy","Battery Materials Processing and Battery Manufacturing and Recycling Program","doe_battery","2022",2667494099
+"46",1,0,1,0,0,1,0,1,"Department of Commerce","National Telecommunications and Information Administration","Broadband Equity, Access, and Deployment Program","doe_bead_initial","2022",5200000000
+"47",1,0,1,0,0,1,0,1,"Department of Commerce","National Telecommunications and Information Administration","Broadband Equity, Access, and Deployment Program","doe_bead_initial","2023",0
+"48",1,0,1,1,1,1,1,0,"Department of Energy","Fossil Energy and Carbon Management","Carbon Storage Validation and Testing Program","doe_carbon_storage","2022",242287618
+"49",1,0,1,1,1,1,1,0,"Department of Energy","Fossil Energy and Carbon Management","Carbon Storage Validation and Testing Program","doe_carbon_storage","2023",444445815
+"50",1,0,0,1,1,1,1,0,"Department of Energy","Office of Clean Energy Demonstrations","Grid Innovation Program","doe_grid_innovation","2023",3298396327
+"51",1,0,0,1,1,1,1,0,"Department of Energy","Electricity","Grid Resilience Utility and Industry Grants","doe_grid_resilience","2023",919970043
+"52",1,0,0,1,1,1,1,0,"Department of Energy","Energy Efficiency and Renewable Energy","Clean hydrogen electrolysis, manufacturing, and recycling activities","doe_hydrogen_electro","2023",751400000
+"53",1,0,1,0,0,1,1,0,"Department of Energy","Nuclear Energy","Civil Nuclear Credit Program","doe_nuclear","2022",1100000000
+"54",1,0,0,1,1,1,1,0,"Department of Energy","Office of Clean Energy Demonstrations","Energy Improvements in Rural or Remote Areas (ERA) Program","doe_rural_energy","2023",365930000
+"55",1,0,1,1,0,1,0,1,"Department of Energy","Energy Efficiency and Renewable Energy","Weatherization Assistance Program","doe_weatherization","2022",281018263
+"56",1,0,1,1,0,1,0,1,"Department of Energy","Energy Efficiency and Renewable Energy","Weatherization Assistance Program","doe_weatherization","2023",298024696
+"57",1,0,1,1,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Aging Infrastructure Account","doi_aging_infra","2022",596116647
+"58",1,0,1,1,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Aging Infrastructure Account","doi_aging_infra","2023",585510239
+"59",0,1,0,1,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Drought mitigation funding opportunities","doi_drought","2022",250000000
+"60",0,1,0,1,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Drought mitigation funding opportunities","doi_drought","2023",711834513
+"61",1,0,1,0,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Rural water projects","doi_rural_water","2022",388000000
+"62",1,0,1,0,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Rural water projects","doi_rural_water","2023",278000000
+"63",1,0,1,1,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Water recycling and desalination projects","doi_water_recycle","2022",309590062
+"64",1,0,1,1,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Water recycling and desalination projects","doi_water_recycle","2023",28974564
+"65",1,0,1,1,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Water Storage, Groundwater Storage, and Conveyance projects","doi_water_storage","2022",210000000
+"66",1,0,1,1,1,1,1,0,"Department of the Interior","Bureau of Reclamation","Water Storage, Groundwater Storage, and Conveyance projects","doi_water_storage","2023",152000000
+"67",0,0,1,1,1,1,1,0,"Department of Transportation",NA,"US Department of Transportation Thriving Communities Program","dot_tc","2022",21150000
+"68",0,0,1,1,1,1,1,0,"Department of Transportation",NA,"US Department of Transportation Thriving Communities Program","dot_tc","2023",100107402
+"69",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Drinking Water State Revolving Fund emerging contaminants","dwsrf_emerging_combined","2022",1480779000
+"70",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Drinking Water State Revolving Fund emerging contaminants","dwsrf_emerging_combined","2023",752540000
+"71",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Drinking Water State Revolving Fund","dwsrf_general_combined","2022",2631842380
+"72",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Drinking Water State Revolving Fund","dwsrf_general_combined","2023",2560259000
+"73",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Drinking Water State Revolving Fund for lead service line replacement","dwsrf_lead_combined","2022",4146896250
+"74",1,0,1,1,0,1,0,1,"Environmental Protection Agency","State and Tribal Assistance Grants","Drinking Water State Revolving Fund for lead service line replacement","dwsrf_lead_combined","2023",2822025000
+"75",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Supportive Housing for the Elderly (Section 202)","elderly","2022",707234049.1089
+"76",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Supportive Housing for the Elderly (Section 202)","elderly","2023",785457270.6598
+"77",1,0,1,1,1,1,1,0,"Environmental Protection Agency","Environmental Programs and Management","Great Lakes Restoration Initiative","epa_great_lakes","2022",158262568
+"78",1,0,1,1,1,1,1,0,"Environmental Protection Agency","Environmental Programs and Management","Great Lakes Restoration Initiative","epa_great_lakes","2023",40529764
+"79",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Federal Transit Administration Ferry Programs","ferry_rural_comms","2022",384354926
+"80",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Federal Transit Administration Ferry Programs","ferry_rural_comms","2023",220189473
+"81",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Appalachian Development Highway System","fhwa_app","2022",246250000
+"82",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Appalachian Development Highway System","fhwa_app","2023",246250000
+"83",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Bridge Formula Program","fhwa_bridge","2022",5307500000
+"84",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Bridge Formula Program","fhwa_bridge","2023",5307500000
+"85",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Highway Administration","Carbon Reduction Program (CRP)","fhwa_carbon","2022",1233656943.02492
+"86",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Highway Administration","Carbon Reduction Program (CRP)","fhwa_carbon","2023",1258330081.07238
+"87",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Congestion Mitigation and Air Quality Improvement (CMAQ) Program","fhwa_cmaq","2022",2536490803
+"88",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Congestion Mitigation and Air Quality Improvement (CMAQ) Program","fhwa_cmaq","2023",2587220620
+"89",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","National Electric Vehicle Infrastructure Formula Program","fhwa_ev","2022",615000000
+"90",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","National Electric Vehicle Infrastructure Formula Program","fhwa_ev","2023",885000000
+"91",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","National Highway Freight Program","fhwa_highway_freight","2022",1373932519
+"92",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","National Highway Freight Program","fhwa_highway_freight","2023",1401411169
+"93",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Metropolitan Planning Program","fhwa_metro_plan","2022",438121139
+"94",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Metropolitan Planning Program","fhwa_metro_plan","2023",446883562
+"95",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","National Highway Performance Program (NHPP)","fhwa_nhpp","2022",28612452345
+"96",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","National Highway Performance Program (NHPP)","fhwa_nhpp","2023",29185191188
+"97",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Promoting Resilient Operations for Transformative, Efficient, and Cost-Saving Transportation (PROTECT)—Formula Program","fhwa_protect","2022",1402756277
+"98",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Promoting Resilient Operations for Transformative, Efficient, and Cost-Saving Transportation (PROTECT)—Formula Program","fhwa_protect","2023",1430811405
+"99",1,0,0,1,1,1,1,0,"Department of Transportation","Federal Highway Administration","Promoting Resilient Operations for Transformative, Efficient, and Cost-Saving Transportation (PROTECT) Program","fhwa_protect_comp","2023",829619001
+"100",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Railway-Highway Crossing Program","fhwa_railway","2022",245000000
+"101",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Railway-Highway Crossing Program","fhwa_railway","2023",245000000
+"102",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Highway Safety Improvement Program","fhwa_safety","2022",2979761019
+"103",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","Highway Safety Improvement Program","fhwa_safety","2023",3044326241
+"104",0,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","State Planning and Research Program Subpart B (SPR-B)","fhwa_spr","2022",983300622
+"105",0,0,1,1,0,1,0,1,"Department of Transportation","Federal Highway Administration","State Planning and Research Program Subpart B (SPR-B)","fhwa_spr","2023",1003066033
+"106",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Highway Administration","Surface Transportation Block Grant (STBG) Program","fhwa_stp","2022",12145575340.4533
+"107",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Highway Administration","Surface Transportation Block Grant (STBG) Program","fhwa_stp","2023",12388486845.3413
+"108",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Highway Administration","Transportation Alternatives Program (TAP)","fhwa_tap","2022",1383540483.53838
+"109",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Highway Administration","Transportation Alternatives Program (TAP)","fhwa_tap","2023",1411211293.4429
+"110",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Motor Carrier Safety Administration","Motor Carrier Safety Assistance Program","fmcsa_21","2022",291992179
+"111",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Motor Carrier Safety Administration","Motor Carrier Safety Assistance Program","fmcsa_21","2023",467565783
+"112",1,0,1,0,1,1,1,0,"Department of Transportation","Federal Railroad Administration","Federal-State Partnership for Intercity Passenger Rail (FSP) Grant Program","fra_intercity_rail","2022",24497322288
+"113",1,0,1,0,1,1,1,0,"Department of Transportation","Federal Railroad Administration","Railroad Crossing Elimination Grant Program","fra_rail_cross","2022",570982420
+"114",1,0,1,1,1,1,1,0,"Department of Agriculture","Forest Service","Community Wildfire Defense Grant (CWDG) Program","fs_wildfire","2022",175707143
+"115",1,0,1,1,1,1,1,0,"Department of Agriculture","Forest Service","Community Wildfire Defense Grant (CWDG) Program","fs_wildfire","2023",249691910
+"116",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Transit Administration","Federal Transit Administration Metropolitan, Statewide, and Non-Metropolitan Planning","fta_5305_combined","2022",184197672
+"117",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Transit Administration","Federal Transit Administration Metropolitan, Statewide, and Non-Metropolitan Planning","fta_5305_combined","2023",187564320
+"118",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Transit Administration","Federal Transit Administration Urbanized Area Formula Grants Program","fta_5307_5340","2022",6918811684.63124
+"119",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Transit Administration","Federal Transit Administration Urbanized Area Formula Grants Program","fta_5307_5340","2023",9882661784.2672
+"120",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Transit Administration","Enhanced Mobility of Seniors and Individuals with Disabilities Program","fta_5310","2022",421723155.242612
+"121",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Transit Administration","Enhanced Mobility of Seniors and Individuals with Disabilities Program","fta_5310","2023",427686418.369944
+"122",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Transit Administration","Federal Transit Administration Formula Grants for Rural Areas Program, Growing State Apportionments, Growing States and High-Density States Program (combined)","fta_5311_combined","2022",41145446
+"123",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Transit Administration","Federal Transit Administration Formula Grants for Rural Areas Program, Growing State Apportionments, Growing States and High-Density States Program (combined)","fta_5311_combined","2023",954482472
+"124",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Transit Administration","State Safety Oversight Program","fta_5329_e","2022",49011483
+"125",1,0,1,1,0,1,0,1,"Department of Transportation","Federal Transit Administration","State Safety Oversight Program","fta_5329_e","2023",50416539
+"126",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Transit Administration","Federal Transit Administration State of Good Repair Grants Program","fta_5337_combined","2022",4111504865.1299
+"127",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Transit Administration","Federal Transit Administration State of Good Repair Grants Program","fta_5337_combined","2023",4183253511.10642
+"128",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Transit Administration","Grants for Buses and Bus Facilities Formula Program","fta_5339","2022",597095160.954424
+"129",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Transit Administration","Grants for Buses and Bus Facilities Formula Program","fta_5339","2023",609048125.522987
+"130",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Rail Vehicle Replacement Program grants","fta_rail_vehicle","2022",703100000
+"131",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Rail Vehicle Replacement Program grants","fta_rail_vehicle","2023",630856341
+"132",0,1,0,1,1,1,1,0,"Department of Housing and Urban Development","Office of Housing, Multifamily Housing, Office of Recapitalization","Green and Resilient Retrofit Program (GRRP)—Comprehensive cohort","grrp_comp","2023",163280000
+"133",0,1,0,1,1,1,1,0,"Department of Housing and Urban Development","Office of Housing, Multifamily Housing, Office of Recapitalization","Green and Resilient Retrofit Program (GRRP)—Elements cohort","grrp_elements","2023",25430932
+"134",0,1,0,1,1,1,1,0,"Department of Housing and Urban Development","Office of Housing, Multifamily Housing, Office of Recapitalization","Green and Resilient Retrofit Program (GRRP)—Leading Edge cohort","grrp_leading","2023",103420000
+"135",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Housing Choice Voucher (Section 8)","hcv","2022",26782579961.3119
+"136",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Housing Choice Voucher (Section 8)","hcv","2023",29646986606.9678
+"137",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"HOME Investment Partnerships Program","home","2022",1500663791
+"138",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"HOME Investment Partnerships Program","home","2023",1497002300
+"139",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Supportive Housing for Persons with Disabilities","hud_disability","2022",191291950.0549
+"140",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Supportive Housing for Persons with Disabilities","hud_disability","2023",205539417.1075
+"141",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Emergency Solutions Grants Program","hud_esg","2022",289420000
+"142",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Emergency Solutions Grants Program","hud_esg","2023",289420000
+"143",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Housing Opportunities for Persons With AIDS (HOPWA) Program","hud_hopwa","2022",423383091.984
+"144",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Housing Opportunities for Persons With AIDS (HOPWA) Program","hud_hopwa","2023",735700960.999
+"145",0,0,1,1,0,1,0,1,"Department of Housing and Urban Development",NA,"Housing Trust Fund (HTF)","hud_htf","2022",747928396.7
+"146",0,0,1,1,0,1,0,1,"Department of Housing and Urban Development",NA,"Housing Trust Fund (HTF)","hud_htf","2023",381975359.82
+"147",1,0,0,1,1,1,1,0,"Department of Health and Human Services","Indian Health Service","Indian Health Service (IHS) Sanitation Facilities Construction Program","indian_health","2023",612549446
+"148",1,0,1,0,1,1,1,0,"Department of the Interior","Bureau of Indian Affairs","Indian water rights settlements","indian_water","2022",2076202
+"149",1,0,1,1,1,1,1,0,"Department of Transportation","Office of the Secretary","Nationally Significant Freight and Highway Projects Program (INFRA)","infra","2022",1515600000
+"150",1,0,1,1,1,1,1,0,"Department of Transportation","Office of the Secretary","Nationally Significant Freight and Highway Projects Program (INFRA)","infra","2023",2918200000
+"151",1,0,0,1,1,1,1,0,"General Services Administration","Real Property Activities","Land ports of entry projects","land_port","2023",2817500000
+"152",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Low or No Emission Vehicle Program","low_no_emission","2022",1105329750
+"153",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Transit Administration","Low or No Emission Vehicle Program","low_no_emission","2023",1216941397
+"154",1,0,0,1,1,1,1,0,"Department of Transportation","Office of the Secretary","National Infrastructure Project Assistance Program (Mega Program)","mega","2023",1172171053
+"155",1,0,0,1,1,1,1,0,"Department of Transportation","Federal Motor Carrier Safety Administration","Federal Motor Carrier Safety Administration (FMCSA) discretionary grants","motor_carrier_safety","2023",131267150
+"156",0,1,0,1,1,1,1,0,"Department of Energy","Office of Science","National Laboratory infrastructure grants","national_lab","2023",1534500000
+"157",1,0,1,0,1,1,1,0,"Department of Transportation","Pipeline and Hazardous Materials Safety Administration","Natural Gas Distribution Infrastructure Safety and Modernization Grant Program","natural_gas","2022",195460230
+"158",1,0,1,1,0,1,0,1,"Department of Transportation","National Highway Traffic Safety Administration","Highway Safety Programs","nhtsa","2022",856700312.02
+"159",1,0,1,1,0,1,0,1,"Department of Transportation","National Highway Traffic Safety Administration","Highway Safety Programs","nhtsa","2023",873931996.28
+"160",1,0,1,0,1,1,1,0,"Department of Commerce","National Telecommunications and Information Administration","Enabling Middle Mile Grant Program","ntia_middle_mile","2022",930021354
+"161",1,0,1,0,1,1,1,0,"Department of Transportation","Maritime Administration","Port Infrastructure Development Program grants","ports","2022",703123800
+"162",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Public Housing Operating Fund","public_hsg","2022",4971620649.7348
+"163",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Public Housing Operating Fund","public_hsg","2023",5099087071.2856
+"164",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Public Housing Capital Fund ","public_hsg_cap","2022",3160264019.716
+"165",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Public Housing Capital Fund ","public_hsg_cap","2023",3405732998.8939
+"166",1,0,1,1,1,1,1,0,"Department of Transportation","Office of the Secretary","Better Utilizing Investments to Leverage Development (BUILD) Grant Program (formerly RAISE)","raise","2022",2245000000
+"167",1,0,1,1,1,1,1,0,"Department of Transportation","Office of the Secretary","Better Utilizing Investments to Leverage Development (BUILD) Grant Program (formerly RAISE)","raise","2023",2259907467
+"168",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Highway Administration","Reconnecting Communities and Neighborhoods (RCN) Program","reconnect_community","2022",185235000
+"169",1,0,1,1,1,1,1,0,"Department of Transportation","Federal Highway Administration","Reconnecting Communities and Neighborhoods (RCN) Program","reconnect_community","2023",3331730541
+"170",1,0,1,1,1,1,1,0,"Department of Transportation","Office of the Secretary","Rural Surface Transportation Grant Program","rural_surface","2022",273900000
+"171",1,0,1,1,1,1,1,0,"Department of Transportation","Office of the Secretary","Rural Surface Transportation Grant Program","rural_surface","2023",645300000
+"172",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Section 8 Housing Assistance Payments (project based) ","s8_project","2022",13479751373.5138
+"173",0,0,1,1,1,1,0,1,"Department of Housing and Urban Development",NA,"Section 8 Housing Assistance Payments (project based) ","s8_project","2023",14601704219.3551
+"174",1,0,1,1,1,1,1,0,"Department of Transportation","Office of the Secretary","Safe Streets and Roads for All (SS4A) Grant Program","safe_streets","2022",802238993
+"175",1,0,1,1,1,1,1,0,"Department of Transportation","Office of the Secretary","Safe Streets and Roads for All (SS4A) Grant Program","safe_streets","2023",895717979
+"176",1,0,0,1,1,1,1,0,"Department of Energy","Electricity","Smart Grid Grants","smart_grid","2023",1106770878
+"177",1,0,1,1,1,1,1,0,"Department of Commerce","National Telecommunications and Information Administration","Tribal Broadband Connectivity Program","tribal_broadband","2022",1027526147
+"178",1,0,1,1,1,1,1,0,"Department of Commerce","National Telecommunications and Information Administration","Tribal Broadband Connectivity Program","tribal_broadband","2023",131860061
+"179",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Highway Administration","Tribal Transportation Program","ttp","2022",460779267.255022
+"180",1,0,1,1,1,1,0,1,"Department of Transportation","Federal Highway Administration","Tribal Transportation Program","ttp","2023",452118985.209962
+"181",1,0,1,0,0,1,0,1,"Department of Defense – Army Corps of Engineers","Corps of Engineers – Civil Works","US Army Corps of Engineers IIJA Construction Projects","usace","2022",7289574736

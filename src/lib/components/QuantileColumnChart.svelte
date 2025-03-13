@@ -6,6 +6,7 @@
   import { get_indicator_label, format_indicator_value } from "$lib/utils";
 
   export let quantiles;
+  // console.log(quantiles)
 
   /** @type {String} [fill="#00e047"] - The shape"s fill color. */
   export let fill = urbanColors.blue;
@@ -53,7 +54,9 @@
   function format_range_number(num) {
     return format_indicator_value(num, current_indicator);
   }
-  function x_label({quantile_range}) {
+  function x_label(d) {
+    const { quantile_range_max, quantile_range_min } = d;
+    const quantile_range = [quantile_range_min, quantile_range_max];
     if (quantile_range[1] == null) {
       return `${format_range_number(quantile_range[0])}+`
     }

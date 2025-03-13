@@ -11,49 +11,92 @@
   export let content;
 
   let show_advanced_search = false;
+
+  /**
+   * @type {HTMLElement}
+   */
+  let el;
+
+  function onShowAdvanced() {
+    show_advanced_search = !show_advanced_search;
+    // get window height and scroll to calculate the bottom of the viewport
+    window.setTimeout(() => {
+      const winHeight = window.innerHeight;
+      const elBounds = el.getBoundingClientRect();
+      if (elBounds.bottom > winHeight) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 250);
+  }
 </script>
 
-<div class="main-search">
-  <div class="main-search--inner-wrap layout-container--article-width">
-    <h2 class="main-search--subhead">Search for federal infrastructure programs and where they distributed&nbsp;funds</h2>
-    <div class="main-search--ui-wrapper">
-      <div class="main-search--search-wrap">
-        <Search placeholder={content.placeholder} />
+<div class="main-search-container" bind:this={el}>
+  <div class="main-search">
+    <div class="main-search--inner-wrap layout-container--article-width">
+      <h2 class="main-search--subhead">
+        Search for federal infrastructure programs and where they
+        distributed&nbsp;funds
+      </h2>
+      <div class="main-search--ui-wrapper">
+        <div class="main-search--search-wrap">
+          <Search placeholder={content.placeholder} />
+        </div>
+        <div class="advanced--search-button-wrapper">
+          {#if !show_advanced_search}
+            <button
+              class="advanced--search-button"
+              on:click={(e) => {
+                onShowAdvanced();
+                logClickToGA(
+                  e.target,
+                  "main-advanced-search-button--" +
+                    (show_advanced_search ? "open" : "close")
+                );
+              }}
+              ><img
+                src={icon_open}
+                alt="open advanced search"
+                class="search-button--icon"
+              />Search options</button
+            >
+          {:else}
+            <button
+              class="advanced--search-button"
+              on:click={(e) => {
+                show_advanced_search = !show_advanced_search;
+                logClickToGA(
+                  e.target,
+                  "main-advanced-search-button--" +
+                    (show_advanced_search ? "open" : "close")
+                );
+              }}
+              ><img
+                src={icon_close}
+                alt="close advanced search"
+                class="search-button--icon"
+              />Search options</button
+            >
+          {/if}
+        </div>
       </div>
-      <div class="advanced--search-button-wrapper">
-      {#if !show_advanced_search}
-        <button
-          class="advanced--search-button"
-          on:click={(e) => {
-            (show_advanced_search = !show_advanced_search)
-            logClickToGA(e.target, "main-advanced-search-button--" + (show_advanced_search ? "open" : "close"));
-          }}
-          ><img src={icon_open} alt="open advanced search" class="search-button--icon"/>Search options</button>
-      {:else}
-        <button
-          class="advanced--search-button"
-          on:click={(e) => {
-            (show_advanced_search = !show_advanced_search)
-            logClickToGA(e.target, "main-advanced-search-button--" + (show_advanced_search ? "open" : "close"));
-          }}
-          ><img src={icon_close} alt="close advanced search" class="search-button--icon"/>Search options</button>
-      {/if}
-      </div>
+      <p class="main-search--explainer-subhead">{content.subhead}</p>
+      {#each content.explainer_text as text}
+        <p class="main-search--explainer-text">
+          {@html format_text_template(text.value, { base: base })}
+        </p>
+      {/each}
     </div>
-    <p class="main-search--explainer-subhead">{content.subhead}</p>
-    {#each content.explainer_text as text}
-      <p class="main-search--explainer-text">{@html format_text_template(text.value, {"site-url": base})}</p>
-    {/each}
   </div>
+  {#if show_advanced_search}
+    <div
+      class="main-search--advanced-search"
+      id="advanced-search"
+      transition:slide={{ duration: 250 }}
+    >
+      <AdvancedSearch />
+    </div>
+  {/if}
 </div>
-{#if show_advanced_search}
-  <div
-    class="main-search--advanced-search"
-    transition:slide={{ duration: 250 }}
-  >
-    <AdvancedSearch />
-  </div>
-{/if}
 
 <style>
   .main-search {
@@ -108,13 +151,13 @@
     margin-bottom: var(--spacing-6);
     max-width: 550px;
   }
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     .advanced--search-button-wrapper {
       position: static;
       transform: none;
     }
   }
-  @media(min-width: 768px) {
+  @media (min-width: 768px) {
     .main-search--inner-wrap {
       padding: 0 !important;
     }

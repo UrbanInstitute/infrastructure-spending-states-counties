@@ -14,6 +14,8 @@
   /** @type {boolen} */
   export let clearable = false;
 
+  export let show_label = false;
+
   $: program_items = programs.map((program) => {
     return {
       value: program.short_name,
@@ -24,11 +26,14 @@
 </script>
 
 <div class="program-select--wrapper">
+  {#if show_label}
+    <p class="program-select--label"><em>Search for a program</em></p>
+  {/if}
   <div class="program-select--select-wrapper">
     <Select
       items={program_items}
       bind:value
-      on:change      
+      on:change
       {clearable}
       placeholder="Search for a specific program"
     />

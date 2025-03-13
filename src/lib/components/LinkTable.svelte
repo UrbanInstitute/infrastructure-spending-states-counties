@@ -38,8 +38,10 @@
     sort_column = column;
   }
 
-
   function format_column(column) {
+    if (column === "total_funding") {
+      return "Total funding (2022 + 2023)"
+    }
     return column.replaceAll("_", " ");
   }
 </script>
@@ -50,7 +52,9 @@
       <tr>
         {#each columns as column}
           {#if column != "url"}
-            <th on:click={(e) => sortByColumn(column)}>{format_column(column)}</th>
+            <th on:click={(e) => sortByColumn(column)}
+              >{format_column(column)}</th
+            >
           {/if}
         {/each}
       </tr></thead
@@ -63,16 +67,11 @@
               {#if column === "program"}
                 {#if format_funs_list.includes(column)}
                   <td
-                    ><a href="{row.url}"
-                      >{format_funs[column](row[column])}</a
+                    ><a href={row.url}>{format_funs[column](row[column])}</a
                     ></td
                   >
                 {:else}
-                  <td
-                    ><a href="{row.url}"
-                      >{row[column]}</a
-                    ></td
-                  >
+                  <td><a href={row.url}>{row[column]}</a></td>
                 {/if}
               {:else if format_funs_list.includes(column)}
                 <td>{format_funs[column](row[column])}</td>
@@ -103,7 +102,7 @@
     background: var(--scrollbar-background);
   }
   .table-wrapper--height-limit {
-    max-height: 500px;
+    max-height: clamp(500px, 60vw, 1000px);
   }
   table.data-table {
     border-collapse: collapse;
@@ -126,9 +125,10 @@
     padding: 0.5em;
   }
   table.data-table tbody td:nth-child(2) {
-    min-width: 150px;
+    min-width: 250px;
   }
-  table.data-table tbody td a, table.data-table tbody td a:visited{
+  table.data-table tbody td a,
+  table.data-table tbody td a:visited {
     color: var(--color-black);
   }
   table.data-table tbody td a:hover {
@@ -148,6 +148,10 @@
   table tbody tr:nth-child(even) {
     background: var(--color-gray-shade-lightest);
   }
-  table.data-table thead tr {
+  @media (max-width: 768px) {
+
+    table.data-table tbody td:nth-child(2) {
+      min-width: 150px;
+    }
   }
 </style>

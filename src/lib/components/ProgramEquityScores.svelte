@@ -4,19 +4,12 @@
   import HelpTip from "$components/HelpTip.svelte";
   import { ToggleGroup } from "$components/Toggle";
   import { get_indicator_label } from "$lib/utils.js";
-  import site_content from "$data/site_content.json";
+  import site_content from "$data/site_content.aml";
   import { logClickToGA } from "$lib/analytics";
 
-  $: metric_options = [
-    { label: "Concentration measure", value: "concentration" },
-    { label: "High-need equity measure", value: "high_need" },
-    { label: "Variability measure", value: "variability" },
-  ].filter((option) => {
-    return !(option.value == "variability" && !variability_score?.score);
-  });
-
+  $: metric_options =
+    site_content.program_pages.equity_scores.equity_scores_dropdown.options;
   export let equity_scores = [];
-  export let variability_scores = [];
   export let program = "";
 
   let current_metric = "concentration";
@@ -24,24 +17,27 @@
   const level_options = [
     { label: "County data", value: "county" },
     { label: "State data", value: "state" },
+    { label: "CBSA data", value: "cbsa" },
   ];
-  /** @type {"state" | "county"} */
+  /** @type {"state" | "county" | "cbsa"} */
   let current_level = "state";
-  const set_options = [
-    { label: "All jurisdictions", value: "all" },
-    { label: "Funded jurisdictions", value: "funded" },
-  ];
+  // const set_options = [
+  //   { label: "All jurisdictions", value: "all" },
+  //   { label: "Funded jurisdictions", value: "funded" },
+  // ];
 
-  $: variability_score = equity_scores.find(
-    (score_data) => score_data.metric == "variability"
+  $: distribution_scores = equity_scores.filter(
+    (score_data) =>
+      score_data.metric == "distribution" &&
+      !score_data.indicator.includes("share_us_pop")
   );
 
   /** @type {"all" | "funded"} */
-  let current_set = "all";
+  // let current_set = "all";
 
-  $: if (current_metric !== "high_need") {
-    current_set = "all";
-  }
+  // $: if (current_metric !== "high_need") {
+  //   current_set = "all";
+  // }
   $: county_scores = equity_scores.filter((score_data) => {
     return score_data.level == "county";
   });
@@ -55,20 +51,24 @@
     return (
       score_data.score !== null &&
       score_data.metric == current_metric &&
-      ((score_data.level == current_level &&
-        score_data.subset == current_set) ||
-        current_metric == "variability")
+      (score_data.level == current_level || current_metric == "distribution")
     );
   });
 
-  $: clean_scores = filtered_scores.map((score_data) => {
-    return {
-      indicator: score_data.indicator == "variability" ? "Variability" : get_indicator_label(score_data.indicator),
-      score: score_data.score,
-    };
-  });
+  $: clean_scores = filtered_scores
+    .map((score_data) => {
+      return {
+        indicator:
+          score_data.indicator == "variability"
+            ? "Variability"
+            : get_indicator_label(score_data.indicator),
+        score: score_data.score,
+      };
+    })
+    .filter((score_data) => !score_data.indicator.includes("share_us_pop")); // filter out population data
 
-  $: score_help_text = site_content.program_pages.equity_scores[`${current_metric}_help_text`]
+  $: score_help_text =
+    site_content.program_pages.equity_scores[`${current_metric}_help_text`];
 
   // a little hack to toggle the current geography level without making it a reactive dependency
   function set_county() {
@@ -79,7 +79,9 @@
   }
 </script>
 
-<p class="equity--label">Select measure type:</p>
+<p class="equity--label">
+  {site_content.program_pages.equity_scores.equity_scores_dropdown.label}
+</p>
 <div class="equity--select">
   <div class="equity--group">
     <Select
@@ -93,16 +95,17 @@
         );
       }}
     />
-    <HelpTip text={score_help_text}></HelpTip>
+    {#if current_metric === "concentration"}
+      <HelpTip text={score_help_text} />
+    {/if}
   </div>
 </div>
-{#if county_scores.length > 0}
+{#if county_scores.length > 0 && current_metric == "concentration"}
   <hr class="equity--rule" />
   <p class="equity--label">Data level</p>
   <ToggleGroup
     options={level_options}
     bind:value={current_level}
-    disabled={current_metric == "variability"}
     on:change={(e) => {
       logClickToGA(
         e.detail.target,
@@ -111,32 +114,31 @@
     }}
   />
 {/if}
-<hr class="equity--rule" />
-<p class="equity--label">
-  Funding </p>
-<div class="equity--group">
-  <ToggleGroup
-    disabled={current_metric !== "high_need"}
-    options={set_options}
-    bind:value={current_set}
-    on:change={(e) => {
-      logClickToGA(
-        e.detail.target,
-        "program-equity-all-funded-toggle--" + current_set
-      );
-    }}
-  />
-  <HelpTip
-    text={site_content.program_pages.equity_scores.funded_all_jurisdictions_toggle.help_text}
-  />
-</div>
 <div class="spacing" />
-{#if current_metric == "variability"}
-  <EquityTable data={clean_scores} viz_domain={[0, 8]} score_type={current_metric} variability_program={program} limit_height geography_level={current_level} use_tooltips/>
+{#if current_metric == "distribution"}
+  <EquityTable
+    data={clean_scores}
+    viz_domain={[0, 8]}
+    score_type={current_metric}
+    limit_height
+    show_viz={false}
+    geography_level={current_level}
+    use_tooltips
+  />
 {:else if current_metric == "concentration"}
-  <EquityTable data={clean_scores} viz_domain={[-1, 3]} score_type={current_metric} geography_level={current_level} use_tooltips/>
+  <EquityTable
+    data={clean_scores}
+    viz_domain={[-1, 3]}
+    score_type={current_metric}
+    geography_level={current_level}
+    use_tooltips
+  />
 {:else}
-  <EquityTable data={clean_scores} score_type={current_metric} geography_level={current_level}/>
+  <EquityTable
+    data={clean_scores}
+    score_type={current_metric}
+    geography_level={current_level}
+  />
 {/if}
 
 <style>

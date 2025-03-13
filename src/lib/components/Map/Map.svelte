@@ -3,18 +3,16 @@
   Generates an SVG Choroplet map.
  -->
 <script>
-  import { onMount, afterUpdate } from "svelte";
-  import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
+  import { LoadingWrapper } from "@urbaninstitute/dataviz-components";
   import { fade } from "svelte/transition";
   import { raise, dollarsToString } from "$lib/utils";
-  import Loading from "$components/Loading.svelte";
   import { geoMercator, geoPath } from "d3-geo";
   import { scaleQuantile } from "d3-scale";
   import { format } from "d3-format";
   import { geoAlbersUsaPr } from "./projections.js";
   import { feature } from "topojson-client";
   import { base } from "$app/paths";
-  import { blues } from "$lib/colors";
   import { current_tooltip } from "$stores/tooltip";
   import { logClickToGA } from "$lib/analytics";
 
@@ -33,6 +31,8 @@
     features: [],
   };
 
+  let geo_data_base_layer;
+
   /**
    * FIPS code of feature to highlight
    * @type {String | null}
@@ -49,7 +49,7 @@
 
   /**
    * What level of the map to show
-   * @type {"state" | "county"}
+   * @type {"state" | "county" | "cbsa"}
    * @default "state"
    **/
   export let map_level = "state";
@@ -116,14 +116,14 @@
   });
 
   // projection function to use, based on map_level
-  $: projectionFunc = map_level === "state" ? geoAlbersUsaPr : geoMercator;
+  $: projectionFunc = map_level === "county" ? geoMercator : geoAlbersUsaPr;
 
   // what feature to size the projection to, will use bound_feature if provided, otherwise will use the geo_data_layer
   $: fitFeature = bound_feature || geo_data_layer;
 
   // projection and path are also calculated reactively based on container_width and maxHeight
   $: projection =
-    map_level == "county"
+    map_level === "county"
       ? projectionFunc().fitSize(
           [container_width, container_height],
           fitFeature
@@ -147,7 +147,7 @@
     if (no_data) {
       return "#e3e3e3";
     }
-    if (val === 0) {
+    if (val === 0 || !val) {
       return "#d2d2d2";
     } else {
       return color_scale(val);
@@ -161,9 +161,19 @@
    */
   async function get_states_geo() {
     const data = await (
-      await fetch(`${base}/data/cb_2020_us_state_500k.json`)
+      await fetch(`${base}/data/cb_2023_us_state_500k.json`)
     ).json();
     return feature(data, data.objects.states);
+  }
+
+  /**
+   * @returns {Promise<import("geojson").FeatureCollection>}
+   */
+  async function get_cbsa_geo() {
+    const data = await (
+      await fetch(`${base}/data/cb_2021_us_cbsa_500k.json`)
+    ).json();
+    return feature(data, data.objects.cbsas);
   }
 
   /**
@@ -190,6 +200,17 @@
         geo_data_layer = data;
         return data;
       });
+    } else if (map_level === "cbsa") {
+      geo_data = get_cbsa_geo()
+        .then((data) => {
+          geo_data_layer = data;
+          return data;
+        })
+        .then(() => {
+          get_states_geo().then((data) => {
+            geo_data_base_layer = data;
+          });
+        });
     } else {
       geo_data = get_states_geo().then((data) => {
         geo_data_layer = data;
@@ -200,10 +221,7 @@
 
   function show_tooltip(event, data) {
     if (no_data) return;
-    const tooltip_label =
-      map_level === "county"
-        ? `${data.properties.county}, ${data.properties.state}`
-        : data.properties.state;
+    const tooltip_label = data.properties.name;
     const tooltip_content = [
       {
         text: `<strong>${tooltip_label}</strong>`,
@@ -229,71 +247,11 @@
   });
 </script>
 
-{#if !no_data}
-  <div class="color-scale--wrapper">
-    <p class="color-scale--title">Funding amount per 1,000 residents</p>
-    <div class="color-scale--labels">
-      <div
-        class="color-scale--label"
-        class:single-label={!color_scale_quantiles[0]}
-        style="left: {(100 / (color_scale.range().length + 1)) * 1}%"
-      >
-        $0
-      </div>
-      {#if quantiles_differ}
-        {#each color_scale_quantiles as quantile, i}
-          {#if quantile}
-            <div
-              class="color-scale--label"
-              style:left={`${
-                (100 / (color_scale.range().length + 1)) * (i + 2)
-              }%`}
-            >
-              {tickFormat(Math.floor(quantile / 100) * 100)}
-            </div>
-          {/if}
-        {/each}
-      {:else if color_scale_quantiles[color_scale_quantiles.length - 1]}
-        <div
-          class="color-scale--label"
-          style:left={`${(100 / (color_scale.range().length + 1)) * 2}%`}
-        >
-          {tickFormat(
-            Math.floor(
-              color_scale_quantiles[color_scale_quantiles.length - 1] / 100
-            ) * 100
-          )}
-        </div>
-      {/if}
-    </div>
-    <div class="color-scale--color-bars">
-      <div
-        class="color-scale--color-bar"
-        style="background-color: {get_color(0)}"
-      />
-      {#if color_scale_quantiles[0] && quantiles_differ}
-        {#each color_scale.range() as color, i}
-          <div
-            class="color-scale--color-bar"
-            style="background-color: {color}"
-          />
-        {/each}
-      {:else if color_scale_quantiles[0]}
-        <div
-          class="color-scale--color-bar"
-          style="background-color: {color_scale.range()[
-            color_scale.range().length - 1
-          ]}"
-        />
-      {/if}
-      <!-- <div class="color-scale--color-bar" style="background-color: {get_color(}"></div> -->
-    </div>
-  </div>
-{/if}
-
 <div class="map-container" bind:clientWidth={container_width}>
   {#await geo_data}
-    <Loading label="Map loading" height={400} />
+    <LoadingWrapper>
+      <div class="loading-block" style="height: 500px;" />
+    </LoadingWrapper>
   {:then _}
     <svg
       width={container_width}
@@ -302,6 +260,13 @@
       role="img"
       aria-label={label}
     >
+      {#if map_level === "cbsa" && geo_data_base_layer}
+        <g>
+          {#each geo_data_base_layer.features as feature}
+            <path d={path(feature)} fill="#f5f5f5" class="bg-feature" />
+          {/each}
+        </g>
+      {/if}
       <g>
         {#each geo_features_with_props as feature}
           <a
@@ -311,7 +276,7 @@
             <path
               d={path(feature)}
               fill={get_color(feature.properties[color_key])}
-              stroke="#9d9d9d"
+              stroke="#ffffff"
               class="main-feature"
               on:mouseover={handle_mouseover}
               on:mouseleave={() => ($current_tooltip = null)}
@@ -319,14 +284,27 @@
               on:click={(e) =>
                 logClickToGA(
                   e.target,
-                  "map-click--" + (map_level == "county"
-                    ? feature.properties.county
-                    : feature.properties.state)
+                  "map-click--" +
+                    (map_level == "county"
+                      ? feature.properties.county
+                      : feature.properties.state)
                 )}
             />
           </a>
         {/each}
       </g>
+      {#if map_level === "cbsa" && geo_data_base_layer}
+        <g>
+          {#each geo_data_base_layer.features as feature}
+            <path
+              d={path(feature)}
+              fill="none"
+              stroke="#ffffff"
+              class="bg-feature"
+            />
+          {/each}
+        </g>
+      {/if}
       {#if highlight_fips}
         <g>
           {#each geo_features_with_props as feature}
@@ -340,9 +318,10 @@
                 on:click={(e) =>
                   logClickToGA(
                     e.target,
-                    "map-click--" + (map_level == "county"
-                      ? feature.properties.county
-                      : feature.properties.state)
+                    "map-click--" +
+                      (map_level == "county"
+                        ? feature.properties.county
+                        : feature.properties.state)
                   )}
               />
             {/if}
@@ -352,6 +331,71 @@
     </svg>
   {/await}
 </div>
+
+{#if !no_data}
+  <div class="map--footer">
+    <div class="color-scale--wrapper">
+      <p class="color-scale--title">Funding amount per 1,000 residents (2022 + 2023)</p>
+      <div class="color-scale--labels">
+        <div
+          class="color-scale--label"
+          class:single-label={!color_scale_quantiles[0]}
+          style="left: {(100 / (color_scale.range().length + 1)) * 1}%"
+        >
+          $0
+        </div>
+        {#if quantiles_differ}
+          {#each color_scale_quantiles as quantile, i}
+            {#if quantile}
+              <div
+                class="color-scale--label"
+                style:left={`${
+                  (100 / (color_scale.range().length + 1)) * (i + 2)
+                }%`}
+              >
+                {tickFormat(Math.floor(quantile / 100) * 100)}
+              </div>
+            {/if}
+          {/each}
+        {:else if color_scale_quantiles[color_scale_quantiles.length - 1]}
+          <div
+            class="color-scale--label"
+            style:left={`${(100 / (color_scale.range().length + 1)) * 2}%`}
+          >
+            {tickFormat(
+              Math.floor(
+                color_scale_quantiles[color_scale_quantiles.length - 1] / 100
+              ) * 100
+            )}
+          </div>
+        {/if}
+      </div>
+      <div class="color-scale--color-bars">
+        <div
+          class="color-scale--color-bar"
+          style="background-color: {get_color(0)}"
+        />
+        {#if color_scale_quantiles[0] && quantiles_differ}
+          {#each color_scale.range() as color, i}
+            <div
+              class="color-scale--color-bar"
+              style="background-color: {color}"
+            />
+          {/each}
+        {:else if color_scale_quantiles[0]}
+          <div
+            class="color-scale--color-bar"
+            style="background-color: {color_scale.range()[
+              color_scale.range().length - 1
+            ]}"
+          />
+        {/if}
+        <!-- <div class="color-scale--color-bar" style="background-color: {get_color(}"></div> -->
+      </div>
+    </div>
+    <slot />
+  </div>
+{/if}
 
 <style>
   .loading-indicator--wrapper {
@@ -363,6 +407,9 @@
   path.main-feature:hover {
     stroke: #353535;
     stroke-width: 2px;
+  }
+  path.main-feature {
+    stroke-width: 0.5px;
   }
   .color-scale--color-bars {
     display: flex;
@@ -398,5 +445,12 @@
   }
   .color-scale--wrapper {
     margin-bottom: var(--spacing-4);
+  }
+  @media (min-width: 768px) {
+    .map--footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
   }
 </style>

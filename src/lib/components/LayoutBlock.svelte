@@ -9,7 +9,7 @@
 
 <style>
   .layout-block {
-    margin: 0 0 var(--spacing-16) 0;
+    margin: 0 0 var(--spacing-8) 0;
     width: 100%;
   }
 </style>

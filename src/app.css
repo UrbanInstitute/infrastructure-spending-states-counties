@@ -75,7 +75,7 @@
   --color-green-shade-darkest: #1a2e19;
   --color-green-shade-darker: #2c5c2d;
   --color-green-shade-dark: #408941;
-  --color-green: #ffb748;
+  --color-green: #55b748;
   --color-green-shade-medium: #78c26d;
   --color-green-shade-light: #98cf90;
   --color-green-shade-lighter: #bcdeb4;
@@ -589,6 +589,7 @@ p {
     font-size: var(--font-size-6xl);
   }
 }
+
 .section-label {
   background-color: var(--color-gray-shade-lighter);
   color: var(--color-black);
@@ -597,6 +598,7 @@ p {
   display: inline-block;
   flex-shrink: 0;
 }
+
 .section-label p {
   margin: 0;
   padding: 0;
@@ -604,29 +606,34 @@ p {
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-small);
 }
+
 .section-break {
   display: flex;
   align-items: center;
   width: 100%;
   margin: var(--spacing-6) 0;
 }
+
 .section-break .section-line {
   flex-grow: 1;
   flex-shrink: 1;
   width: 100%;
   border-bottom: 1px solid var(--color-gray-shade-medium);
 }
+
 .module-subhead {
   font-size: var(--font-size-2xl);
   line-height: var(--line-height-normal);
   margin-bottom: 1rem;
 }
+
 .module-small-title {
   font-size: var(--font-size-large);
   margin-bottom: 0;
 }
 
-text.chart-annotation-stroke, .chart-annotation-stroke {
+text.chart-annotation-stroke,
+.chart-annotation-stroke {
   fill: var(--color-black);
   font-weight: var(--font-weight-bold);
   text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8),
@@ -647,6 +654,7 @@ text.chart-axis-tick-text {
 .layout-container--article-width {
   padding: 0 var(--spacing-6);
 }
+
 .layout-container--full-width {
   padding: 0 var(--spacing-12);
   margin: 0 auto;
@@ -673,8 +681,10 @@ section {
   height: 300px;
 }
 
-a, a:visited {
+a,
+a:visited {
   color: var(--color-blue);
+  font-weight: var(--font-weight-bold);
   text-decoration: none;
 }
 
@@ -691,17 +701,22 @@ h1.overview-page--page-title {
   font-size: var(--font-size-4xl);
   margin-bottom: var(--spacing-4);
 }
+
 p.page-description {
   font-size: var(--font-size-xl);
 }
-.detail-page--text p, .detail-page--text {
-  font-size: var(--font-size-small);
-  line-height: 1.5;
+
+.detail-page--text p,
+.detail-page--text {
+  font-size: 18px;
+  line-height: 27px;
   margin-bottom: var(--spacing-4) !important;
 }
+
 .detail-page--text li {
   margin-bottom: var(--spacing-2);
 }
+
 .help-text {
   background-color: var(--color-gray-shade-lightest);
   color: var(--color-gray-shade-darkest);
@@ -710,39 +725,69 @@ p.page-description {
   border-radius: 5px;
   margin-top: var(--spacing-6);
 }
+
 section {
   margin-bottom: var(--spacing-12);
 }
+
 .section--page-footer {
   padding-bottom: var(--spacing-12);
   /* border-bottom: solid 1px var(--color-gray-shade-light); */
   border-top: solid 1px var(--color-gray-shade-light);
 }
+
 [data-svelte-typeahead] input {
   color: var(--color-black, black);
   font-style: italic;
   font-family: var(--font-family-sans);
 }
+
 .chart--tick-label {
   font-size: var(--font-size-xsmall);
 }
+
 .section-divide-rule {
   border-bottom: solid 1px var(--color-gray-shade-light);
   margin: var(--spacing-12) 0;
 }
 
-.multi-column-1-2 > *:first-child {
+.multi-column-1-2>*:first-child {
   margin-bottom: var(--spacing-8);
 }
+
+
+.geo-toggle-button {
+  appearance: none;
+  border: none;
+  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-sans);
+  color: var(--color-black);
+  padding: var(--spacing-4);
+  background: var(--color-gray-shade-lightest);
+  cursor: pointer;
+}
+
+.geo-toggle-button.active {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.geo-toggle-button:nth-child(2) {
+  margin-left: var(--spacing-2);
+}
+
 @media (min-width: 1024px) {
   .multi-column-1-2 {
     display: flex;
   }
-  .multi-column-1-2 > *:first-child {
+
+  .multi-column-1-2>*:first-child {
     width: 33.33%;
     margin-bottom: 0;
   }
-  .multi-column-1-2 > *:nth-child(2) {
+
+  .multi-column-1-2>*:nth-child(2) {
     padding-left: var(--spacing-8);
     width: 66.66%;
   }
@@ -751,10 +796,12 @@ section {
 .chart-note {
   font-size: var(--font-size-xsmall);
 }
+
 p.axis-label {
   text-align: center;
   font-size: var(--font-size-xsmall);
 }
+
 p.axis-label.left {
   text-align: left;
 }

@@ -18,11 +18,13 @@
 
   export let height = 420;
 
-  const margin = {
+  export let left_margin = 80;
+
+  $: margin = {
     top: 10,
     right: 50,
     bottom: 20,
-    left: 80,
+    left: left_margin,
   };
 
   export let data;
@@ -136,9 +138,7 @@
 
   function show_tooltip(event, data) {
     const county_data = Object.keys(data).includes("county");
-    const tooltip_label = county_data
-      ? `${data.county}, ${data.state}`
-      : data.state;
+    const tooltip_label = data.name;
     const tooltip_content = [
       {
         text: `<strong>${tooltip_label}</strong>`,
@@ -154,15 +154,36 @@
       content: tooltip_content,
     };
   }
+
+  /**
+  * @param {{name: string}} node
+  * @returns {boolean}
+  */
+  function is_micro_area(node) {
+    return node.name.toLowerCase().includes("micro area");
+  }
+
+  function get_fill(node) {
+    if (data_level === "cbsa" && is_micro_area(node)) {
+      return "#a2d4ec";
+    }
+    return urbanColors.blue;
+  }
 </script>
 
 <div bind:clientWidth={container_width}>
-  {#if highlight_name}
+  {#if highlight_name && data_level === "cbsa"}
     <div class="key-wrapper">
+      <div class="key-item">
+        <div class="key-swatch base" />
+        <p class="key-label">
+          Metropolitan area
+        </p>
+      </div>
       <div class="key-item">
         <div class="key-swatch other" />
         <p class="key-label">
-          Other {data_level == "county" ? "counties" : "states"}
+          Micropolitan area
         </p>
       </div>
       <div class="key-item">
@@ -170,12 +191,41 @@
         <p class="key-label">{highlight_name}</p>
       </div>
     </div>
+  {:else if highlight_name}
+    <div class="key-wrapper">
+      <div class="key-item">
+        <div class="key-swatch other" />
+        <p class="key-label">
+          Other {data_level == "county" ? "counties" : data_level === "cbsa" ? "CBSAs" : "states"}
+        </p>
+      </div>
+      <div class="key-item">
+        <div class="key-swatch highlight" />
+        <p class="key-label">{highlight_name}</p>
+      </div>
+    </div>
+  {:else if data_level === "cbsa"}
+    <div class="key-wrapper">
+      <div class="key-item">
+        <div class="key-swatch other" />
+        <p class="key-label">
+          Micropolitan area
+        </p>
+      </div>
+      <div class="key-item">
+        <div class="key-swatch base" />
+        <p class="key-label">Metropolitan area</p>
+      </div>
+    </div>
   {/if}
   {#if browser}
     <svg
       width={container_width}
       {height}
-      aria-label="A chart comparing funding per 1,000 residents for the selected program compared with {data_level == 'county' ? 'other counties in the state' : 'other states'}"
+      aria-label="A chart comparing funding per 1,000 residents for the selected program compared with {data_level ==
+      'county'
+        ? 'other counties in the state'
+        : 'other states'}"
       role="img"
     >
       <g
@@ -201,7 +251,7 @@
       <g class="bee-group" transform="translate({margin.left}, 0)">
         {#each simulation.nodes() as node, i (node.fips)}
           <circle
-            fill={highlight_fips ? "#a2d4ec" : urbanColors.blue}
+            fill={get_fill(node)}
             cx={node.x}
             cy={node.y}
             in:fade={{ duration: 250, delay: i }}
@@ -286,6 +336,10 @@
   .key-swatch.highlight {
     background: var(--color-yellow);
     border: solid 2px var(--color-black);
+  }
+  .key-swatch.base {
+    background: var(--color-blue);
+    border: solid 2px var(--color-blue);
   }
   .key-label {
     font-size: var(--font-size-small);
