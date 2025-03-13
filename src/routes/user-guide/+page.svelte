@@ -5,9 +5,8 @@
   import About from "$components/About.svelte";
   import Credits from "$components/Credits.svelte";
   import Meta from "$components/Meta.svelte";
-  import site_content from "$data/site_content.json";
+  import site_content from "$data/site_content.aml";
   import { get_site_url } from "$lib/utils.js";
-
 </script>
 
 <Meta
@@ -26,7 +25,36 @@
       </h1>
     </LayoutBlock>
     {#each site_content.user_guide.text as item, i (i)}
-      <div class="user-guide--text">{@html item.value}</div>
+      {#if item.type === "text"}
+        <div class="user-guide--text">{@html item.value}</div>
+      {:else if item.type === "table"}
+        <iframe
+          title="Indicators and Data Sources"
+          aria-label="Table"
+          id="datawrapper-chart-CkbAx"
+          src="https://datawrapper.dwcdn.net/CkbAx/1/"
+          scrolling="no"
+          frameborder="0"
+          style="width: 0; min-width: 100% !important; border: none;"
+          height="5100"
+          data-external="1"
+        /><script type="text/javascript">
+          !(function () {
+            "use strict";
+            window.addEventListener("message", function (a) {
+              if (void 0 !== a.data["datawrapper-height"]) {
+                var e = document.querySelectorAll("iframe");
+                for (var t in a.data["datawrapper-height"])
+                  for (var r = 0; r < e.length; r++)
+                    if (e[r].contentWindow === a.source) {
+                      var i = a.data["datawrapper-height"][t] + "px";
+                      e[r].style.height = i;
+                    }
+              }
+            });
+          })();
+        </script>
+      {/if}
     {/each}
   </LayoutSection>
   <section>
@@ -53,7 +81,7 @@
   h1 {
     font-size: var(--font-size-5xl);
   }
-  @media(min-width: 769px) {
+  @media (min-width: 769px) {
     .user-guide--text {
       margin-bottom: var(--spacing-8);
       line-height: var(--line-height-relaxed);

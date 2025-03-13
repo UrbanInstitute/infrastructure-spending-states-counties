@@ -13,7 +13,7 @@
   {#if subhead}
     <p class="hero--subhead">{subhead}</p>
   {/if}
-  <p class="hero--date">{date}</p>
+  <p class="hero--date">{@html date}</p>
 </div>
 <SocialButtons />
 
@@ -37,6 +37,10 @@
   }
   .hero--date {
     color: var(--color-gray-shade-darker);
+  }
+  .hero--date :global(strong) {
+    font-style: normal;
+    font-weight: var(--font-weight-bold);
   }
     
 </style>

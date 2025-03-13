@@ -1,13 +1,11 @@
-import states_data from "$data/states.json";
-import counties_data from "$data/counties.json";
+import fips_list from "$data/server/state_fips_list.json";
+import { base } from "$app/paths";
 import { error } from "@sveltejs/kit";
-import { median } from "d3-array";
-import { get_state_equity_scores } from "$lib/equity_scores_state_server.js";
 
 // tell sveltekit what pages to prerender
 /** @type {import('./$types').EntryGenerator} */
 export function entries() {
-  return states_data.map(({ fips }) => ({ fips: fips }));
+  return fips_list.map((fips) => ({ fips }));
 }
 
 function get_funding(detail) {
@@ -26,44 +24,30 @@ function get_funding(detail) {
   return funding;
 }
 
-const state_funding_data = new Map();
-for (const state of states_data) {
-  state_funding_data.set(state.fips, get_funding(state));
-}
-
-const funding_keys = Object.keys(states_data[0]).filter((key) =>
-  key.includes("per_1k")
-);
-const state_funding_medians = new Map();
-for (const funding_key of funding_keys) {
-  state_funding_medians.set(
-    funding_key,
-    median(states_data, (d) => d[funding_key])
-  );
-  state_funding_medians.set(
-    funding_key + "_funded",
-    median(states_data.filter((d) => d[funding_key] > 0), (d) => d[funding_key])
-  );
-}
 // this function loads data for the page
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
-  const state_data = states_data.find((d) => d.fips === params.fips);
-  const counties_funding = counties_data
-    .filter(({ state_fips }) => state_fips == params.fips)
-    .map(get_funding);
+export async function load({ params, fetch }) {
+  const state_data_resp = await fetch(
+    `${base}/data/server/state/${params.fips}.json`
+  );
+  const state_data = await state_data_resp.json();
+  // const state_data = states_data.find((d) => d.fips === params.fips);
   if (!state_data) {
-    throw error(404, `State not found`);
+    error(404, `State not found`);
     return;
   }
+  const median_resp = await fetch(
+    `${base}/data/server/state/state_funding_medians.json`
+  );
+  const funding_medians_raw = await median_resp.json();
+  const state_funding_medians = new Map(Object.entries(funding_medians_raw));
   return {
     detail: {
       name: state_data.name,
-      fips: state_data.fips
+      fips: state_data.fips,
     },
-    state_funding_data,
-    counties_funding,
+    funding: get_funding(state_data),
     state_funding_medians,
-    equity_scores: get_state_equity_scores(params.fips)
+    equity_scores: state_data.equity_scores,
   };
 }

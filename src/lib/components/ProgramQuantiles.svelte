@@ -8,12 +8,13 @@
   } from "$lib/utils.js";
   import QuantileColumnChart from "$components/QuantileColumnChart.svelte";
   import Select from "$components/Select.svelte";
-  import site_content from "$data/site_content.json";
+  import site_content from "$data/site_content.aml";
 
   export let quantile_funding;
   export let t_test_data;
+  export let default_indicator = undefined;
 
-  let current_indicator = "percent_poc";
+  $: current_indicator = default_indicator ? default_indicator : "percent_poc";
 
   $: current_quantiles = quantile_funding.filter(
     (d) => d.data_level == data_level && d.indicator == current_indicator
@@ -41,6 +42,10 @@
       label: "Urban counties",
       value: "county_urban",
     },
+    {
+      label: "Metropolitan areas",
+      value: "metro_area",
+    },
   ];
   $: data_level = has_county_data ? "county" : "state";
   $: current_t_test_data = t_test_data.find(
@@ -58,9 +63,21 @@
       return "states";
     }
     if (level == "county_urban") {
-      return "counties in metropolitan areas";
+      return "counties with more than half of their population in urban areas";
+    }
+    if (level === "metro_area") {
+      return "metropolitan areas"
     }
     return "counties";
+  }
+  function get_geography_label(level) {
+    if (level == "county_urban") {
+      return "counties in urban areas";
+    }
+    if (level === "metro_area") {
+      return "metropolitan areas"
+    }
+    return level;
   }
 </script>
 
@@ -88,7 +105,13 @@
         current_indicator
       ).toLowerCase()} compared with the national average.
     </p>
-    <QuantileColumnChart quantiles={current_quantiles} {current_indicator} label={`A chart displaying average funding per 1,000 residents among quantiles of ${get_geography_text(data_level)} by ${get_indicator_label(current_indicator).toLowerCase()}`}/>
+    <QuantileColumnChart
+      quantiles={current_quantiles}
+      {current_indicator}
+      label={`A chart displaying average funding per 1,000 residents among quantiles of ${get_geography_text(
+        data_level
+      )} by ${get_indicator_label(current_indicator).toLowerCase()}`}
+    />
     <p class="axis-label">
       {get_indicator_label(current_indicator.replace("_per_1k", ""))}
       {is_indicator_per_capita(current_indicator) ? "per 10,000 residents" : ""}
@@ -96,7 +119,7 @@
         ? "per 1,000 square miles"
         : ""}
       {data_level == "county_urban" ? "for" : "by"}
-      {data_level == "county_urban" ? "counties in urban areas" : data_level}
+      {get_geography_label(data_level)}
     </p>
   </div>
 </div>

@@ -29,7 +29,7 @@
 
   /**
    * What level of the map to show
-   * @type {"state" | "county"}
+   * @type {"state" | "county" | "cbsa"}
    * @default "state"
    **/
   export let map_level = "state";
@@ -55,6 +55,8 @@
 
   export let link_program = null;
 
+  export let show_program_link = true;
+
   export let program_select = true;
 
   /**
@@ -62,8 +64,12 @@
    */
   export let program_state = null;
 
-  let selected_program =
+  export let selected_program =
     map_level == "state" ? "fhwa_nhpp" : "cdbg_entitlement";
+
+  export let show_geo_toggle = false;
+
+  export let show_select_label = false;
 
   /**
    * List of programs that require NYC special note
@@ -77,18 +83,13 @@
     "hcv",
   ];
 
-  $: if (
-    program_state &&
-    programs &&
-    programs.map(({ short_name }) => short_name).includes(program_state)
-  ) {
-    selected_program = program_state;
-  } else if (program_state) {
-    selected_program = program_state;
-  }
+  $: map_color_key = color_key;
+  let has_data = true;
+  // $: has_data = Object.keys(data_layer[0]).includes(map_color_key);
 
-  $: map_color_key = program_select ? selected_program + "_per_1k" : color_key;
-  $: has_data = Object.keys(data_layer[0]).includes(map_color_key);
+  function update_geo_level(new_level) {
+    map_level = new_level;
+  }
 </script>
 
 <div class="map-container">
@@ -96,6 +97,7 @@
     {#if programs}
       <ProgramSelect
         {programs}
+        show_label={show_select_label}
         on:change={(e) => {
           // explicitly clear program state when user selects a new program
           program_state = null;
@@ -103,6 +105,26 @@
         }}
         bind:value={selected_program}
       />
+    {/if}
+    {#if show_geo_toggle}
+      <div class="geo-controls">
+        <div class="geo-toggle">
+          <button
+            class="geo-toggle-button"
+            class:active={map_level == "state"}
+            on:click={() => update_geo_level("state")}
+          >
+            States
+          </button>
+          <button
+            class="geo-toggle-button"
+            class:active={map_level == "cbsa"}
+            on:click={() => update_geo_level("cbsa")}
+          >
+            CBSAs
+          </button>
+        </div>
+      </div>
     {/if}
     {#if map_level == "county" && !has_data}
       <p class="help-text">
@@ -119,7 +141,18 @@
     color_key={map_color_key}
     {map_level}
     {show_counties}
-  />
+  >
+    {#if show_program_link}
+      <p class="learn-more-link">
+        <a
+          href="{base}/program/{slugify_program(selected_program)}"
+          on:click={(event) =>
+            logClickToGA(event.target, "map-link-click--full-program-analysis")}
+          >View full program analysis</a
+        >
+      </p>
+    {/if}
+  </Map>
   {#if map_level == "county" && show_counties == "36" && nyc_programs.includes(selected_program)}
     <p class="chart-note">
       <strong>Notes:</strong> For this program, funding for New York City’s five
@@ -127,19 +160,11 @@
       share.
     </p>
   {/if}
-  <p class="learn-more-link">
-    <a
-      href="{base}/program/{slugify_program(selected_program)}"
-      on:click={(event) =>
-        logClickToGA(event.target, "map-link-click--full-program-analysis")}
-      >View full program analysis</a
-    >
-  </p>
 </div>
 
 <style>
   .map-controls {
-    margin: var(--spacing-4) auto;
+    margin: var(--spacing-4) auto 0;
     max-width: var(--body-width);
   }
   .learn-more-link {
@@ -154,5 +179,18 @@
   }
   .learn-more-link a:hover {
     color: var(--color-blue);
+  }
+  .geo-controls {
+    margin-top: var(--spacing-4);
+  }
+  @media (min-width: 768px) {
+    .map-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .geo-controls {
+      margin-top: 2.25em;
+    }
   }
 </style>

@@ -1,11 +1,12 @@
 <script>
-  import search_data from "$data/search.json";
+  import search_data from "$data/server/search.json";
   import { goto } from "$app/navigation";
   import { base } from "$app/paths";
-  import program_data from "$data/programs_simple.json";
+  import program_data from "$data/server/programs_simple.json";
   import Select from "$components/Select.svelte";
   import Button from "$components/common/Button.svelte";
   import { slugify_program, get_program_name } from "$lib/utils";
+  import site_content from "$data/site_content.aml";
   import { logClickToGA } from "$lib/analytics";
 
   const clean_program_data = program_data.map((program) => ({
@@ -29,23 +30,31 @@
   // variables for location search
   let location_search_selected_state;
   let location_search_selected_county;
+  let location_search_selected_cbsa;
   let location_search_category_filter;
   let location_search_department_filter;
   let location_search_selected_program;
 
-  const department_options = [
-    {
-      value: "IIJA",
-      label: "IIJA",
-    },
-    {
-      value: "HUD",
-      label: "HUD",
-    },
-  ];
+  // const department_options = [
+  //   {
+  //     value: "IIJA",
+  //     label: "IIJA",
+  //   },
+  //   {
+  //     value: "HUD",
+  //     label: "HUD",
+  //   },
+  // ];
+  $: department_options = Array.from(
+    new Set(clean_program_data.map(({ agency_name }) => agency_name))
+  ).map((type) => ({ value: type, label: type }));
+  $: department_options.sort((a, b) => a.label.localeCompare(b.label));
 
   const state_options = search_data
     .filter(({ category }) => category === "state")
+    .map(({ name, route_param }) => ({ value: route_param, label: name }));
+  const cbsa_options = search_data
+    .filter(({ category }) => category === "cbsa")
     .map(({ name, route_param }) => ({ value: route_param, label: name }));
   $: location_search_county_options = search_data
     .filter(
@@ -64,13 +73,15 @@
       }
       return true;
     })
-    .filter(({ type }) => {
+    .filter(({ agency_name }) => {
       if (program_search_department_filter) {
-        return type === program_search_department_filter;
+        return agency_name === program_search_department_filter;
       }
       return true;
     })
     .map(({ name, short_name }) => ({ label: name, value: short_name }));
+
+  $: program_search_options.sort((a, b) => a.label.localeCompare(b.label));
 
   $: location_search_program_search_options = clean_program_data
     .filter(({ categories }) => {
@@ -79,11 +90,16 @@
       }
       return true;
     })
-    .filter(({ type }) => {
+    .filter(({ agency_name }) => {
       if (location_search_department_filter) {
-        return type === location_search_department_filter;
+        return agency_name === location_search_department_filter;
       }
       return true;
+    })
+    .filter(({ name, county_level }) => {
+      if ((location_search_selected_county || location_search_selected_cbsa)) {
+        return county_level === 1;
+      }
     })
     .map(({ name, short_name }) => ({ label: name, value: short_name }));
 
@@ -92,7 +108,15 @@
   }
 
   function go_to_location() {
-    if (location_search_selected_county) {
+    if (location_search_selected_cbsa) {
+      goto(
+        `${base}/cbsa/${location_search_selected_cbsa}/${
+          location_search_selected_program
+            ? "?program=" + location_search_selected_program
+            : ""
+        }`
+      );
+    } else if (location_search_selected_county) {
       goto(
         `${base}/county/${location_search_selected_county}/${
           location_search_selected_program
@@ -120,10 +144,10 @@
 
 <div class="advanced-search layout-container--article-width">
   <div class="advanced-search--program-search">
-    <h2 class="advanced-search--subhead">Search for a program</h2>
-    <p class="advanced-search--text">
-      Select a filter to search by a funding category or a specific program.
-    </p>
+    <h2 class="advanced-search--subhead">
+      {site_content.search.advanced_subhead_a}
+    </h2>
+    <p class="advanced-search--text">{site_content.search.advanced_text_a}</p>
     <Select
       items={category_options}
       bind:value={program_search_category_filter}
@@ -132,7 +156,8 @@
       on:change={(e) => {
         logClickToGA(
           e.target,
-          "advanced-search-program-category-select--" + program_search_category_filter
+          "advanced-search-program-category-select--" +
+            program_search_category_filter
         );
       }}
     />
@@ -145,7 +170,8 @@
       on:change={(e) => {
         logClickToGA(
           e.target,
-          "advanced-search-program-department-select--" + program_search_department_filter
+          "advanced-search-program-department-select--" +
+            program_search_department_filter
         );
       }}
     />
@@ -158,7 +184,8 @@
       on:change={(e) => {
         logClickToGA(
           e.target,
-          "advanced-search-program-program-select--" + program_search_selected_program
+          "advanced-search-program-program-select--" +
+            program_search_selected_program
         );
       }}
     />
@@ -167,18 +194,16 @@
       style="blue"
       disabled={!program_search_selected_program}
       on:click={(e) => {
-        go_to_program(program_search_selected_program)
+        go_to_program(program_search_selected_program);
         logClickToGA(e.target, "advanced-search--program-search");
-      }}
-      >Search</Button
+      }}>Search</Button
     >
   </div>
   <div class="advanced-search--place-search">
-    <h2 class="advanced-search--subhead">Search for a state or county</h2>
-    <p class="advanced-search--text">
-      Select a filter to search by state or county. Use the category or program
-      dropdowns to narrow your search within that geography.
-    </p>
+    <h2 class="advanced-search--subhead">
+      {site_content.search.advanced_subhead_b}
+    </h2>
+    <p class="advanced-search--text">{site_content.search.advanced_text_b}</p>
     <div class="advanced-search--column-group">
       <div class="advanced-search--filter-group">
         <Select
@@ -188,7 +213,8 @@
           on:change={(e) => {
             logClickToGA(
               e.target,
-              "advanced-search-location-state-select--" + location_search_selected_state
+              "advanced-search-location-state-select--" +
+                location_search_selected_state
             );
           }}
           clearable
@@ -201,7 +227,22 @@
           on:change={(e) => {
             logClickToGA(
               e.target,
-              "advanced-search-location-county-select--" + location_search_selected_county
+              "advanced-search-location-county-select--" +
+                location_search_selected_county
+            );
+          }}
+          clearable
+        />
+        <div class="spacing" />
+        <Select
+          items={cbsa_options}
+          bind:value={location_search_selected_cbsa}
+          placeholder="Select a cbsa"
+          on:change={(e) => {
+            logClickToGA(
+              e.target,
+              "advanced-search-location-cbsa-select--" +
+                location_search_selected_cbsa
             );
           }}
           clearable
@@ -216,7 +257,8 @@
           on:change={(e) => {
             logClickToGA(
               e.target,
-              "advanced-search-location-category-select--" + location_search_category_filter
+              "advanced-search-location-category-select--" +
+                location_search_category_filter
             );
           }}
           clearable
@@ -229,7 +271,8 @@
           on:change={(e) => {
             logClickToGA(
               e.target,
-              "advanced-search-location-department-select--" + location_search_department_filter
+              "advanced-search-location-department-select--" +
+                location_search_department_filter
             );
           }}
           clearable
@@ -242,7 +285,8 @@
           on:change={(e) => {
             logClickToGA(
               e.target,
-              "advanced-search-location-program-select--" + location_search_selected_program
+              "advanced-search-location-program-select--" +
+                location_search_selected_program
             );
           }}
           clearable
@@ -250,13 +294,16 @@
         <div class="spacing" />
         <Button
           style="blue"
-          disabled={!location_search_selected_county &&
-            !location_search_selected_state}
+          disabled={(!location_search_selected_county &&
+            !location_search_selected_state &&
+            !location_search_selected_cbsa) ||
+            ((location_search_category_filter ||
+              location_search_department_filter) &&
+              !location_search_selected_program)}
           on:click={(e) => {
             logClickToGA(e.target, "advanced-search--location-search");
-            go_to_location()
-          }}
-          >Search</Button
+            go_to_location();
+          }}>Search</Button
         >
       </div>
     </div>

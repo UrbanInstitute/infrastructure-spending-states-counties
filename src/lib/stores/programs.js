@@ -1,12 +1,11 @@
 import { base } from "$app/paths";
 import { readable } from "svelte/store";
-import programs_simple from "$data/programs_simple.json";
+import programs_simple from "$data/server/programs_simple.json";
 
-/** @typedef {{name: string, short_name: string, type: string, categories: string[]}} ProgramInfo */
+/** @typedef {{name: string, short_name: string, type: string, categories: string[], county_level: number}} ProgramInfo */
 
 /** @type {import("svelte/store").Writable<Array<ProgramInfo>>}*/
 export const program_list = readable(programs_simple);
-
 
 const p_map = new Map();
 for (const p of programs_simple) {

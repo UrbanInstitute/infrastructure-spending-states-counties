@@ -4,6 +4,7 @@
   import { logClickToGA } from "$lib/analytics";
   export let text = "";
   export let button_size = 31;
+  export let align = "left";
 
   let buttonEl;
 
@@ -28,7 +29,10 @@
       const rect = e.target.getBoundingClientRect();
       text_y_pos = rect.top + window.scrollY;
       text_x_pos = rect.left;
-      logClickToGA(e.detail.target, "helptip--" + (show_text ? "open" : "close"));
+      logClickToGA(
+        e.detail.target,
+        "helptip--" + (show_text ? "open" : "close")
+      );
     }}
   >
     <img
@@ -39,7 +43,7 @@
   </button>
   {#if show_text}
     <div
-      class="helptip--text-wrapper"
+      class="helptip--text-wrapper {align}-align"
       transition:fade={{ duration: 100 }}
       style:top="{text_y_pos}px"
       style:left="{text_x_pos}px"
@@ -69,6 +73,9 @@
     transform: translate(-100%, -100%);
     border: solid 1px var(--color-gray-shade-light);
     box-shadow: 0px 4px 4px 1px rgba(0, 0, 0, 0.25);
+  }
+  .helptip--text-wrapper.right-align {
+    transform: translate(0, -100%);
   }
   .helptip--text-wrapper p {
     font-size: var(--font-size-small);

@@ -15,7 +15,7 @@
   import LayoutBlock from "$components/LayoutBlock.svelte";
 
   // data and content
-  import site_content from "$data/site_content.json";
+  import site_content from "$data/site_content.aml";
   import program_language from "$data/program_language.json";
 
   /** @type {import('./$types').PageData} */
@@ -47,7 +47,10 @@
           <p>{@html site_content.category_page.descriptions[category]}</p>
           <ul class="category--program-list">
             {#each data.programs.filter( (program) => program.categories.includes(category) ) as program}
-            {@const program_language_vars = program_language.find(({ program_short_name }) => program_short_name === program.short_name)}
+              {@const program_language_vars = program_language.find(
+                ({ program_short_name }) =>
+                  program_short_name === program.short_name
+              )}
               <li>
                 <p>
                   <a href="{base}/program/{slugify_program(program.short_name)}"
