@@ -1,201 +1,150 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import search_data from "$data/server/search.json";
   import { goto } from "$app/navigation";
   import { base } from "$app/paths";
-  import program_data from "$data/server/programs_simple.json";
+  import categories_simple from "$data/server/categories_simple.json";
   import Select from "$components/Select.svelte";
   import Button from "$components/common/Button.svelte";
-  import { slugify_program, get_program_name } from "$lib/utils";
+  import { slugify_program } from "$lib/utils";
+  import { category_display_name } from "$stores/categories.js";
   import site_content from "$data/site_content.aml";
   import { logClickToGA } from "$lib/analytics";
+  import { createEventDispatcher } from "svelte";
 
-  const clean_program_data = program_data.map((program) => ({
-    ...program,
-    name: get_program_name(program.short_name),
-  }));
-  const category_options = Array.from(
-    new Set(clean_program_data.flatMap(({ categories }) => categories))
-  )
-    .map((category) => ({
+  const dispatch = createEventDispatcher();
+
+  const category_options = categories_simple
+    .map(({ category }) => ({
       value: category,
-      label: format_category_name(category),
+      label: category_display_name(category),
     }))
     .sort((a, b) => a.label.localeCompare(b.label));
 
-  // variables for program search
-  let program_search_category_filter;
-  let program_search_department_filter;
-  let program_search_selected_program;
+  // variables for category search
+  /** @type {string | undefined} */
+  let category_search_selected;
 
   // variables for location search
+  /** @type {string | undefined} */
   let location_search_selected_state;
+  /** @type {string | undefined} */
   let location_search_selected_county;
+  /** @type {string | undefined} */
   let location_search_selected_cbsa;
-  let location_search_category_filter;
-  let location_search_department_filter;
-  let location_search_selected_program;
-
-  // const department_options = [
-  //   {
-  //     value: "IIJA",
-  //     label: "IIJA",
-  //   },
-  //   {
-  //     value: "HUD",
-  //     label: "HUD",
-  //   },
-  // ];
-  $: department_options = Array.from(
-    new Set(clean_program_data.map(({ agency_name }) => agency_name))
-  ).map((type) => ({ value: type, label: type }));
-  $: department_options.sort((a, b) => a.label.localeCompare(b.label));
+  /** @type {string | undefined} */
+  let location_search_selected_category;
 
   const state_options = search_data
     .filter(({ category }) => category === "state")
-    .map(({ name, route_param }) => ({ value: route_param, label: name }));
+    .map(({ name, route_param }) => ({
+      value: /** @type {string} */ (route_param),
+      label: /** @type {string} */ (name),
+    }));
   const cbsa_options = search_data
     .filter(({ category }) => category === "cbsa")
-    .map(({ name, route_param }) => ({ value: route_param, label: name }));
+    .map(({ name, route_param }) => ({
+      value: /** @type {string} */ (route_param),
+      label: /** @type {string} */ (name),
+    }));
   $: location_search_county_options = search_data
     .filter(
       ({ category, route_param }) =>
         category === "county" &&
         (location_search_selected_state
-          ? location_search_selected_state === route_param.substr(0, 2)
+          ? location_search_selected_state === route_param?.substr(0, 2)
           : true)
     )
-    .map(({ name, route_param }) => ({ value: route_param, label: name }));
+    .map(({ name, route_param }) => ({
+      value: /** @type {string} */ (route_param),
+      label: /** @type {string} */ (name),
+    }));
 
-  $: program_search_options = clean_program_data
-    .filter(({ categories }) => {
-      if (program_search_category_filter) {
-        return categories.includes(program_search_category_filter);
+  // A selection that no longer fits is dropped instead of being left to win
+  // in go_to_location: a county belongs to one state, and a county and a CBSA
+  // are alternative destinations (review #4). One block rather than one
+  // statement per rule, because two statements that each clear the other's
+  // variable form a reactive cycle the compiler rejects.
+  let prev_selected_state = location_search_selected_state;
+  let prev_selected_county = location_search_selected_county;
+  let prev_selected_cbsa = location_search_selected_cbsa;
+  $: {
+    if (location_search_selected_state !== prev_selected_state) {
+      prev_selected_state = location_search_selected_state;
+      location_search_selected_county = undefined;
+    }
+    if (location_search_selected_county !== prev_selected_county) {
+      prev_selected_county = location_search_selected_county;
+      if (location_search_selected_county) {
+        location_search_selected_cbsa = undefined;
       }
-      return true;
-    })
-    .filter(({ agency_name }) => {
-      if (program_search_department_filter) {
-        return agency_name === program_search_department_filter;
+    }
+    if (location_search_selected_cbsa !== prev_selected_cbsa) {
+      prev_selected_cbsa = location_search_selected_cbsa;
+      if (location_search_selected_cbsa) {
+        location_search_selected_county = undefined;
       }
-      return true;
-    })
-    .map(({ name, short_name }) => ({ label: name, value: short_name }));
-
-  $: program_search_options.sort((a, b) => a.label.localeCompare(b.label));
-
-  $: location_search_program_search_options = clean_program_data
-    .filter(({ categories }) => {
-      if (location_search_category_filter) {
-        return categories.includes(location_search_category_filter);
-      }
-      return true;
-    })
-    .filter(({ agency_name }) => {
-      if (location_search_department_filter) {
-        return agency_name === location_search_department_filter;
-      }
-      return true;
-    })
-    .filter(({ name, county_level }) => {
-      if ((location_search_selected_county || location_search_selected_cbsa)) {
-        return county_level === 1;
-      }
-    })
-    .map(({ name, short_name }) => ({ label: name, value: short_name }));
-
-  function go_to_program(program) {
-    goto(`${base}/program/${slugify_program(program)}/`);
-  }
-
-  function go_to_location() {
-    if (location_search_selected_cbsa) {
-      goto(
-        `${base}/cbsa/${location_search_selected_cbsa}/${
-          location_search_selected_program
-            ? "?program=" + location_search_selected_program
-            : ""
-        }`
-      );
-    } else if (location_search_selected_county) {
-      goto(
-        `${base}/county/${location_search_selected_county}/${
-          location_search_selected_program
-            ? "?program=" + location_search_selected_program
-            : ""
-        }`
-      );
-    } else {
-      goto(
-        `${base}/state/${location_search_selected_state}/${
-          location_search_selected_program
-            ? "?program=" + location_search_selected_program
-            : ""
-        }`
-      );
     }
   }
 
-  function format_category_name(category) {
-    return (
-      category.charAt(0).toUpperCase() + category.slice(1).replace(/_/g, " ")
+  function go_to_category() {
+    goto(
+      `${base}/program-categories/${slugify_program(
+        /** @type {string} */ (category_search_selected)
+      )}/`
     );
+  }
+
+  function go_to_location() {
+    const category_param = location_search_selected_category
+      ? "?category=" + location_search_selected_category
+      : "";
+    if (location_search_selected_cbsa) {
+      goto(`${base}/cbsa/${location_search_selected_cbsa}/${category_param}`);
+    } else if (location_search_selected_county) {
+      goto(
+        `${base}/county/${location_search_selected_county}/${category_param}`
+      );
+    } else {
+      goto(`${base}/state/${location_search_selected_state}/${category_param}`);
+    }
   }
 </script>
 
-<div class="advanced-search layout-container--article-width">
+<div class="advanced-search">
+  <button
+    class="advanced-search--close-button"
+    on:click={() => dispatch("close")}
+    aria-label="Close advanced search"
+  >
+    ✕
+  </button>
   <div class="advanced-search--program-search">
     <h2 class="advanced-search--subhead">
       {site_content.search.advanced_subhead_a}
     </h2>
     <p class="advanced-search--text">{site_content.search.advanced_text_a}</p>
+    <p class="advanced-search--label">Category</p>
     <Select
       items={category_options}
-      bind:value={program_search_category_filter}
+      chevron_color="var(--color-gray-shade-dark)"
+      bind:value={category_search_selected}
       placeholder="Select a category"
       clearable
       on:change={(e) => {
         logClickToGA(
           e.target,
-          "advanced-search-program-category-select--" +
-            program_search_category_filter
-        );
-      }}
-    />
-    <div class="spacing" />
-    <Select
-      items={department_options}
-      bind:value={program_search_department_filter}
-      placeholder="Select a department"
-      clearable
-      on:change={(e) => {
-        logClickToGA(
-          e.target,
-          "advanced-search-program-department-select--" +
-            program_search_department_filter
-        );
-      }}
-    />
-    <div class="spacing" />
-    <Select
-      items={program_search_options}
-      bind:value={program_search_selected_program}
-      placeholder="Select a program"
-      clearable
-      on:change={(e) => {
-        logClickToGA(
-          e.target,
-          "advanced-search-program-program-select--" +
-            program_search_selected_program
+          "advanced-search-category-select--" + category_search_selected
         );
       }}
     />
     <div class="spacing" />
     <Button
-      style="blue"
-      disabled={!program_search_selected_program}
+      style="black"
+      disabled={!category_search_selected}
       on:click={(e) => {
-        go_to_program(program_search_selected_program);
-        logClickToGA(e.target, "advanced-search--program-search");
+        go_to_category();
+        logClickToGA(e.target, "advanced-search--category-search");
       }}>Search</Button
     >
   </div>
@@ -206,8 +155,10 @@
     <p class="advanced-search--text">{site_content.search.advanced_text_b}</p>
     <div class="advanced-search--column-group">
       <div class="advanced-search--filter-group">
+        <p class="advanced-search--label">State</p>
         <Select
           items={state_options}
+          chevron_color="var(--color-gray-shade-dark)"
           bind:value={location_search_selected_state}
           placeholder="Select a state"
           on:change={(e) => {
@@ -220,8 +171,10 @@
           clearable
         />
         <div class="spacing" />
+        <p class="advanced-search--label">County</p>
         <Select
           items={location_search_county_options}
+          chevron_color="var(--color-gray-shade-dark)"
           bind:value={location_search_selected_county}
           placeholder="Select a county"
           on:change={(e) => {
@@ -234,10 +187,12 @@
           clearable
         />
         <div class="spacing" />
+        <p class="advanced-search--label">CBSA</p>
         <Select
           items={cbsa_options}
           bind:value={location_search_selected_cbsa}
-          placeholder="Select a cbsa"
+          chevron_color="var(--color-gray-shade-dark)"
+          placeholder="Select a CBSA"
           on:change={(e) => {
             logClickToGA(
               e.target,
@@ -247,59 +202,29 @@
           }}
           clearable
         />
-        <div class="spacing" />
       </div>
       <div class="advanced-search--filter-group">
+        <p class="advanced-search--label">Category</p>
         <Select
           items={category_options}
-          bind:value={location_search_category_filter}
+          bind:value={location_search_selected_category}
           placeholder="Select a category"
+          chevron_color="var(--color-gray-shade-dark)"
           on:change={(e) => {
             logClickToGA(
               e.target,
               "advanced-search-location-category-select--" +
-                location_search_category_filter
-            );
-          }}
-          clearable
-        />
-        <div class="spacing" />
-        <Select
-          items={department_options}
-          bind:value={location_search_department_filter}
-          placeholder="Select a department"
-          on:change={(e) => {
-            logClickToGA(
-              e.target,
-              "advanced-search-location-department-select--" +
-                location_search_department_filter
-            );
-          }}
-          clearable
-        />
-        <div class="spacing" />
-        <Select
-          items={location_search_program_search_options}
-          bind:value={location_search_selected_program}
-          placeholder="Select a program"
-          on:change={(e) => {
-            logClickToGA(
-              e.target,
-              "advanced-search-location-program-select--" +
-                location_search_selected_program
+                location_search_selected_category
             );
           }}
           clearable
         />
         <div class="spacing" />
         <Button
-          style="blue"
-          disabled={(!location_search_selected_county &&
+          style="black"
+          disabled={!location_search_selected_county &&
             !location_search_selected_state &&
-            !location_search_selected_cbsa) ||
-            ((location_search_category_filter ||
-              location_search_department_filter) &&
-              !location_search_selected_program)}
+            !location_search_selected_cbsa}
           on:click={(e) => {
             logClickToGA(e.target, "advanced-search--location-search");
             go_to_location();
@@ -312,21 +237,47 @@
 
 <style>
   .advanced-search {
-    padding: var(--spacing-12) var(--spacing-4);
+    position: relative;
+    padding-block: 72px;
+  }
+  .advanced-search--close-button {
+    position: absolute;
+    top: var(--spacing-4);
+    right: var(--spacing-4);
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
   }
   .advanced-search--subhead {
     font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-2xl);
-    text-transform: uppercase;
+    font-size: 28px;
+    line-height: 36px;
     margin-bottom: var(--spacing-4);
   }
   .advanced-search--text {
     margin-bottom: var(--spacing-4);
   }
+  .advanced-search--label {
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-family-sans-alt);
+    text-transform: uppercase;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: var(--spacing-1);
+  }
   @media (min-width: 768px) {
     .advanced-search {
       display: flex;
-      padding: var(--spacing-12);
     }
     .advanced-search--program-search {
       width: 33.33%;

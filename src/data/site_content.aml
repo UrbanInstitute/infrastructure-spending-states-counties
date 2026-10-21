@@ -1,6 +1,8 @@
 :skip 
 
-This document will be used to store the site copy for use on the Urban Institute - PERC project 
+This document is used to store the site copy for use on the Urban Institute - PERC project 
+
+It is formatted in archieml (https://archieml.org/) and later converted to HTML as part of the tool’s build process.
 
 :endskip 
 
@@ -8,21 +10,25 @@ This document will be used to store the site copy for use on the Urban Institute
 
 {meta} 
 
-title: Are Federal Infrastructure Dollars Meeting Your Community’s Needs? 
+title: The Federal Infrastructure Funding Tracker
 
-description: Data analysis tracking whether the billions in funding that the US has committed to its roads, bridges, housing, and other infrastructure are getting to the communities that need it most. 
+description: Large-scale federal investments in infrastructure have gone out to states and localities nationwide, but are these funds meeting community needs?
 
  
 
-title_program: Are [program] Funds Meeting Community Needs? 
+title_program: [program] | The Federal Infrastructure Funding Tracker 
 
 description_program: Data analysis tracking whether [program] funds are reaching the communities that need them most. 
 
  
 
+description_category: Data analysis tracking whether [category] funds are reaching the communities that need them most.
+
+ 
+
 title_geography: Tracking Federal Infrastructure Spending in [geography] 
 
-description_geography: Data analysis tracking whether the federal infrastructure dollars allocated to [geography] are meeting the existing need in comparison with similar areas nationwide.  
+description_geography: Data analysis tracking whether the federal infrastructure dollars allocated to [geography] are meeting the existing need in comparison with similar areas nationwide.
 
  
 
@@ -66,39 +72,47 @@ url_staging: https://apps-staging.urban.org/features/perc-data-tool
 
 [.keywords] 
 
-* Neighborhoods, Cities, and Metros 
+* Housing and Communities 
+
+* Urban Development and Transportation
+
+* Housing
 
 * Transportation 
 
 * Infrastructure 
 
-* Equitable development 
-
 * State programs, budgets 
-
-* Federal budget and economy 
 
 * Federal housing programs and policies 
 
 * Housing affordability 
 
-* Housing development and supply chain 
-
 * Housing vouchers and mobility 
 
 * Public and assisted housing 
 
-* Climate adaptation and resilience 
+* Climate resilient housing 
 
 * Climate mitigation, sustainability, energy and land use 
 
 * Land use and zoning 
 
-* Race and equity in grantmaking 
+* Fair housing and housing discrimination 
 
-* Federal urban policies 
+* Housing and the economy 
 
-* Place-based initiatives 
+* Housing stability 
+
+* Housing subsidies
+
+* Multifamily housing 
+
+* Racial barriers to housing
+
+* Rental housing 
+
+* Shared equity housing
 
 [] 
 
@@ -106,7 +120,7 @@ url_staging: https://apps-staging.urban.org/features/perc-data-tool
 
 data_url: https://datacatalog.urban.org/dataset/spending-infrastructure-toward-equity-data 
 
-report_url: https://www.urban.org/research/publication/is-federal-infrastructure-investment-advancing-equity-goals 
+hub_url: https://www.urban.org/projects/infrastructure-investments-hub 
 
 {} 
 
@@ -114,13 +128,11 @@ report_url: https://www.urban.org/research/publication/is-federal-infrastructure
 
 {hero} 
 
-eyebrow: Stories and Data Tools 
+headline: The Federal Infrastructure Funding Tracker 
 
-headline: Are Federal Infrastructure Dollars Meeting Your Community’s Needs? 
+date: Last updated October 21, 2026 
 
-date: Last updated March 13, 2025 
-
-{} 
+{}
 
  
 
@@ -128,83 +140,125 @@ date: Last updated March 13, 2025
 
  
 
-In recent years, the federal government has prioritized funding large-scale investments in infrastructure through major spending laws. This new wave of spending has sought to expand access to clean energy, broadband, transit, affordable homes, and more.  
+Communities nationwide benefit from federal investments to maintain and expand vital infrastructure, including transportation, housing, energy, water, and broadband. Though many of these investments have historically improved community well-being, some federal support has left other communities behind.
 
-In the past, federal investments in infrastructure left some communities behind. All this new spending raises new questions. First, where are federal infrastructure dollars being spent? And second, are those dollars reaching the communities that most need that funding? 
+As federal policymakers have allocated more funding for infrastructure projects in recent years, new questions must be asked: Where have federal infrastructure dollars been spent? And did those dollars reach the communities that most need funding? 
 
 [] 
 
 {intro_map} 
 
-subhead: Where the Federal Government Has Distributed Infrastructure Funds  
+header: Where Was Funding Distributed? 
 
 Description: Funding amount per 1,000 residents ($)  
+
+county_note: In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where counties that contain state capitals appear to receive more money than they actually received.
+
+cbsa_note: In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where CBSAs that contain state capitals appear to receive more money than they actually received.
 
 {} 
 
 [+intro_after_map] 
 
-We <a href="https://www.urban.org/research/publication/is-federal-infrastructure-investment-advancing-equity-goals" target="blank">analyzed dozens of federal funding initiatives</a> to determine how much federal infrastructure money communities are receiving and if that funding is meeting community needs. This dataset includes programs enacted through the <a href="https://www.congress.gov/bill/117th-congress/house-bill/3684/text" target="blank">Infrastructure Investment and Jobs Act</a>, the <a href="https://www.congress.gov/bill/117th-congress/house-bill/5376/text" target="blank">Inflation Reduction Act</a>, the <a href="https://www.congress.gov/bill/117th-congress/house-bill/4346" target="blank">Creating Helpful Incentives to Produce Semiconductors</a> (CHIPS) Act, and other federal laws, but it is not exhaustive. Using the search bar below, explore how and where federal dollars are targeting the infrastructure needs of communities nationwide. 
+We analyzed dozens of federal funding initiatives to determine how much federal infrastructure money communities have received and whether that funding has met community needs. This tool includes many of the most significant infrastructure programs enacted through the <a href="https://www.congress.gov/bill/117th-congress/house-bill/3684/text" target="blank">Infrastructure Investment and Jobs Act</a>, the <a href="https://www.congress.gov/bill/117th-congress/house-bill/5376/text" target="blank">Inflation Reduction Act</a>, the <a href="https://www.congress.gov/bill/117th-congress/house-bill/4346" target="_blank">Creating Helpful Incentives to Produce Semiconductors</a> (CHIPS) Act, and other laws, but it is not exhaustive. 
 
 [] 
 
- 
+{category_highlights} 
 
-[.data_highlights] 
+header: Infrastructure Funding Trends 
 
-icon: transit-icon 
+button_text: See all nine infrastructure categories 
 
-text: <strong>Transit funding</strong> targets places with greater bus and train ridership—but low-income areas may receive less funding than they deserve. 
+[.items] 
 
-link: program/fta-5307-5340/?cc_option=pub_transit_commute#community-comparison 
+category_short_name: public_transportation 
 
- 
-
-icon: broadband-icon 
-
-text: <strong>Broadband programs</strong> support areas with greater internet needs, particularly native communities. 
-
-link: program/tribal-broadband/?cc_option=hh_int_access#community-comparison 
+text: Public transportation funding tends to go to places with lower transportation costs and greater access to employment.
 
  
 
-icon: house-icon 
+category_short_name: roads_and_bridges 
 
-text: <strong>Housing funds</strong> disproportionately go to areas with higher housing cost burdens but may underfund areas with poor housing quality. 
-
-link: program/home/?cc_option=housing_cost_burden#community-comparison 
+text: Funding for roads and bridges tends to go to places that are heavily reliant on car travel already.
 
  
 
+category_short_name: broadband 
+
+text: Broadband programs direct more funding to places with less internet access and lower broadband speeds.
+
  
+
+category_short_name: housing_and_community_development 
+
+text: Housing and community development funds are distributed more often to places with higher housing cost burdens and more overcrowding.
+
+ 
+
+category_short_name: passenger_and_freight_rail 
+
+text: Passenger and freight rail funds are disproportionately distributed to places without intercity passenger rail service.
+
+ 
+
+category_short_name: ports 
+
+text: Airport and dock programs tend to fund areas with existing airports and docks, rather than investing in new areas.
+
+ 
+
+category_short_name: energy_and_power 
+
+text: Energy and power programs direct similar levels of funding to places with high household energy costs as to places with lower household energy costs.
+
+ 
+
+category_short_name: environmental_resilience 
+
+text: Environmental resilience programs direct more funding to places with low incomes.
+
+ 
+
+category_short_name: water_conservation 
+
+text: Water conservation programs send more funds to places with more water system violations.
 
 [] 
+
+{} 
+
+ 
 
 {search} 
 
-placeholder: Search for a type of infrastructure, a federal program, or a geography. 
+homepage_subhead: <span class= "text-highlight" >Explore</span> where federal infrastructure investments have been made
 
-subhead: Not sure where to start? 
+prompt: Search for a type of infrastructure or a geography.
+
+placeholder: Search
+
+explainer_subhead: Not sure where to start? 
 
 [+.explainer_text] 
 
-Try searching for a state, county, or urban area (Illinois, Cook County, or Chicago, for example) to see if it receives funding proportional to its needs. Or try searching for an infrastructure category (like <a href="program-categories/#ports-and-waterways" target="_blank">Ports and waterways</a>) or a specific program (such as the <a href="program/bridge/" target="_blank">Bridge Investment Program</a>) to see if it distributes funds in a way that advances racial and economic equity.  
+Try searching for a state, county, metropolitan area, or micropolitan area (<a href="[base]/state/17/" target="_blank">Illinois</a>, <a href="[base]/county/17031/" target="_blank">Cook County</a>, or <a href="[base]/cbsa/16980/" target="_blank">Chicago</a>, for example) to see if it receives funding proportional to its needs. Or try searching for an infrastructure category (like <a href="[base]/program-categories/public-transportation/" target="_blank">public transportation</a>) to see if the programs in that category distribute funds in a way that meets community needs. 
 
  
 
-Some of these projects are competitively funded, meaning federal officials review applications from prospective grantees, mostly at the state and local levels, then choose where to direct money. Others are formula funded, meaning states and localities distribute a pot of money allocated to them through a formula established by Congress or other federal agencies. For more information on how competitive and formula funding mechanisms work, see our <a href="[base]/user-guide/" target="_blank">User Guide</a>.  
+Some infrastructure projects are competitively funded, meaning federal officials review applications from prospective grantees and then choose where to direct money. Other projects are formula funded, meaning states and localities distribute a pot of federal money allocated to them by Congress or federal agencies. For more information on funding mechanisms, see our <a href="[base]/user-guide/" target="_blank">user guide</a>.  
 
 [] 
 
  
 
-advanced_subhead_a: Search by program 
+advanced_subhead_a: Search by category 
 
-advanced_text_a: Select a filter to search by a funding category or a specific program. 
+advanced_text_a: Select a category to view all funding for that type of infrastructure. 
 
-advanced_subhead_b: Search by state, county, or CBSA 
+advanced_subhead_b: Search by geography 
 
-advanced_text_b: Select a filter to search by state, county, or core-based statistical area (CBSA). Use the dropdowns to narrow your search within that geography. 
+advanced_text_b: Select a filter to search by state, county, metropolitan area, or micropolitan area. Use the dropdowns to narrow your search within that geography.
 
  
 
@@ -220,15 +274,19 @@ subhead: About
 
  
 
-text: <strong>Update:</strong> This tool was updated on March 13, 2025 to include data from fiscal year 2023, additional federal infrastructure programs, and new funding distribution measures. The title was also changed to "Are Federal Infrastructure Funds Meeting Your Community’s Needs" to make it clear that the tool tracks funding by a variety of characteristics, including geography, race, income level, and indicators of local need. This tool was originally named "Is Federal Infrastructure Spending Advancing Racial and Economic Equity?” 
+text: <strong>Update:</strong> This tool was updated on October 21, 2026 with a new data source for federal funding information, new fiscal years of data, new measures of community need, and new analysis pages by infrastructure category.
 
  
 
-For this tool, we analyzed 85 grant programs funded by the Infrastructure Investment and Jobs Act, 9 grant programs funded by the Inflation Reduction Act, 2 programs funded by annual appropriations to the Department of Transportation, and 14 housing programs that use annual HUD appropriations. The data presented here are limited to fiscal year 2022 and fiscal year 2023. We collected program data from federal departmental announcements and project fact sheets. Demographic and need indicator data are sourced from approximately two dozen publicly available sources, including the 2016–20 American Community Survey five-year estimates from the US Census Bureau and data produced by other federal agencies. 
+In this tool, we analyze 71 major federal infrastructure programs funded by the Infrastructure Investment and Jobs Act, the Inflation Reduction Act, and annual appropriations (many programs were allocated funding through multiple laws). The funding data comes from <a href="https://www.usaspending.gov/" target="_blank">USAspending.gov</a>, which is standardized across federal agencies. Data in the initial tool release (2023) and prior update (2025) came from a combination of sources, including USAspending.gov, program fact sheets, and agency-level press releases and award announcements. 
 
  
 
-To learn more about how to use this tool, see our <a href="[base]/user-guide/" target="_blank">user guide</a>. To review the complete list of data sources and methods used in this work, see our <a href=" https://www.urban.org/research/publication/is-federal-infrastructure-investment-advancing-equity-goals" target="_blank">full report</a>.  
+Demographic and need indicator data come from approximately 25 publicly available sources, including the 2016–20 American Community Survey five-year estimates from the US Census Bureau and data produced by other federal agencies. 
+
+ 
+
+To learn more about how to use this tool and how we’ve updated it over time, see our <a href="[base]/user-guide/" target="_blank">user guide</a>.
 
 [] 
 
@@ -240,7 +298,7 @@ To learn more about how to use this tool, see our <a href="[base]/user-guide/" t
 
 [.+funding] 
 
-<em> This data tool was funded by a grant from the Melville Charitable Trust as part of the Partnership for Equitable and Resilient Communities Initiative. We are grateful to them and to all our funders, who make it possible for Urban to advance its mission. The views expressed are those of the authors and should not be attributed to the Urban Institute, its trustees, or its funders. Funders do not determine research findings or the insights and recommendations of our experts. More information on our funding principles is available <a href="https://www.urban.org/about/our-funding" target="_blank">here</a>. Read our terms of service <a href="https://www.urban.org/terms-service" target="_blank">here</a>.</em> 
+<em> This data tool was funded by a grant from the Melville Charitable Trust as part of our work in the <a href="https://www.urban.org/projects/infrastructure-investments-hub" target="_blank">Infrastructure Investments Hub</a>. We are grateful to them and to all our funders, who make it possible for Urban to advance its mission. The views expressed are those of the authors and should not be attributed to the Urban Institute, its trustees, or its funders. Funders do not determine research findings or the insights and recommendations of our experts. More information on our funding principles is available <a href="https://www.urban.org/about/our-funding" target="_blank">here</a>. Read our terms of service <a href="https://www.urban.org/terms-service" target="_blank">here</a>.</em> 
 
 [] 
 
@@ -260,7 +318,7 @@ credit: <a href="https://www.urban.org/author/brittney-spinner" target="_blank">
 
  
 
-role: Data visualization and development 
+role: Development 
 
 credit: <a href="https://www.urban.org/author/mitchell-thorson" target="_blank">Mitchell Thorson</a> 
 
@@ -290,15 +348,19 @@ github_url: https://github.com/UrbanInstitute/infrastructure-spending-states-cou
 
  
 
-state_about_text: On this page, we’ve included all funds distributed within [state] from the programs we've evaluated. Many of those funds are distributed to local governments and private entities, not used by the state government. 
+state_about_text: This page details funding through major infrastructure programs distributed to [state] in fiscal years 2022 through 2025, with many of those funds distributed directly to local governments and private entities and not used by the state government.
 
  
 
-county_about_text: On this page, we’ve estimated the amount of federal infrastructure funds distributed to [county] through the programs we've evaluated. Some of those funds are distributed to other local governments, public agencies, and private entities, not used by the county government. This page does not include formula funds redistributed by state governments to local governments. 
+county_about_text: This page details funding through major infrastructure programs distributed to [county] in fiscal years 2022 through 2025. Some funds were distributed directly to local governments, public agencies, and private entities within the county, and were not used by the county government. In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where counties that contain state capitals appear to receive more money than they actually received.
 
  
 
-cbsa_about_text: On this page, we’ve estimated the amount of federal infrastructure funds distributed to [cbsa] through the programs we’ve evaluated. Core-based statistical areas include metropolitan and micropolitan areas, which are made up of an urban area and its surrounding communities. This page includes funds going toward entities or projects located within the boundaries of the core-based statistical area. 
+cbsa_about_text: This page details funding through major infrastructure programs distributed to [CBSA] in fiscal years 2022 through 2025. Core-based statistical areas (CBSAs) include metropolitan and micropolitan areas, which are made up of an urban area and its surrounding communities. This page includes funds for entities or projects located within the boundaries of the CBSA. In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where CBSAs that contain state capitals appear to receive more money than they actually received.
+
+ 
+
+obligated_funds_caption: Obligated funds are those that the federal government has promised to pay through a binding agreement, such as an official contract or purchase order.
 
  
 
@@ -313,11 +375,15 @@ priority_both_tooltip: This county meets the federal definitions for <strong>dis
 
  
 
+county_note: In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where counties that contain state capitals appear to receive more money than they actually received.
+
+cbsa_note: In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where CBSAs that contain state capitals appear to receive more money than they actually received.
+
 {.map_beeswarm} 
 
-header: Where Is Funding Distributed? 
+header: Where Was Funding Distributed? 
 
-subhead_beeswarm: Compare funding received by [geo_type] 
+subhead_beeswarm: Funding amount per 1,000 residents
 
 {} 
 
@@ -325,9 +391,15 @@ subhead_beeswarm: Compare funding received by [geo_type]
 
 {.equity_scores} 
 
-header: Is Infrastructure Funding Allocated Equitably? 
+header: Was Infrastructure Funding Allocated According to Community Needs? 
 
-about_text: For each federal program, we compared a jurisdiction’s ranking for per capita funding received (measured by percentile) with that jurisdiction’s ranking among different demographic and need indicators. A number above 0 means the jurisdiction is overfunded by that program compared with the selected indicator, and a number below 0 means the jurisdiction is underfunded by the program compared with the selected indicator. 
+about_text: For each infrastructure category, we ranked per capita funding received by percentile for each geography and compared that with the geography’s percentile rank for a variety of community need characteristics.
+
+ 
+
+summary_text: This [geo_type] received more per capita [category] funding than [value] percent of [geo_type_plural]. 
+
+box_title: Per Capita Funding Percentile Compared with Community Need Percentile
 
  
 
@@ -335,7 +407,9 @@ set_help_text: Funded jurisdictions includes only the counties or states that re
 
  
 
-tooltip: [location] receives [more/less/proportional] funding in comparison with its [indicator]. 
+tooltip: This [geo_type] ranks above [value] percent of [geo_type_plural] in terms of [indicator].
+
+funding_tooltip: This [geo_type] received more [category] funding than [value] percent of [geo_type_plural].
 
  
 
@@ -351,9 +425,15 @@ tooltip: [location] receives [more/less/proportional] funding in comparison with
 
 header: How Do Similar Areas Compare? 
 
-about_text: Compare program funding received to that of similar jurisdictions  
-
 toggle_text: Compare with funded jurisdictions only 
+
+ 
+
+state_description: Using the dropdown below, compare the funding received at the state level with other states.
+
+county_description: Using the dropdown below, compare the funding received at the county level with counties that have a similar poverty rate, median household income, or share of people of color.
+
+cbsa_description: Using the dropdown below, compare the funding received at the CBSA level with CBSAs that have a similar poverty rate, median household income, or share of people of color.
 
 {} 
 
@@ -363,219 +443,109 @@ toggle_text: Compare with funded jurisdictions only
 
 {program_pages} 
 
-department_text: [Agency/Bureau] 
+department_text: Funded by [agency_name] 
 
-about_text: This program offers [recipients] funding to [description]. The money can go toward [uses]. Learn more at <a href="[website_url]" target="_blank">[website_text]</a>. 
+about_text: In fiscal years 2022 through 2025, the [program] received <strong>[total_obligated_funds]</strong> in total obligated funds. The program offers [recipients] funding to [description]. The money can go toward [uses]. 
+
+learn_more_text: Learn more about the [program] by visiting [website_link]. 
+
+obligated_funds_tooltip: Obligated funds are those that the federal government has promised to pay through a binding agreement such as an official contract or purchase order.
 
  
 
-{.funding} 
+{.map} 
 
-total_label: Total Funding 
+header: Where Was Funding Distributed? 
 
-recent_iija: Infrastructure Investment and Jobs Act 
+subhead_map: Funding amount per 1,000 residents
 
-recent_ira: Inflation Reduction Act 
+county_note: In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where counties that contain state capitals appear to receive more money than they actually received.
 
-recent_both: Infrastructure Investment and Jobs Act and Inflation Reduction Act 
+cbsa_note: In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where CBSAs that contain state capitals appear to receive more money than they actually received.
 
-recent_none: This program did not receive additional funding beyond typical appropriations in fiscal year [year] 
-
-type_label: Funding Type 
 
 {} 
 
- 
-
-{.equity_scores} 
-
- 
-
-header: How Equitably Are Funds Distributed? 
-
- 
-
-[+.about_text]:  
-
- 
-
-To explore how programs distribute funding compared with community characteristics, we developed several equity measures: 
-
-<strong>A concentration measure</strong>, which shows how much of a program’s funding is distributed to jurisdictions with the greatest share of a selected community characteristic. Scores range from −1 to 3. 
-
-header: Distribution measures 
-
-<strong>A variability measure</strong>, which demonstrates how evenly a program’s funding is distributed across the country on a per capita basis. We only display this score, which starts at 0, for state-level, formula-funded programs. 
-
-<strong>A disadvantage measure</strong>, which shows the share of funding a program allocates to counties that experience <a href="https://web.archive.org/web/20250101142112/https:/ejscorecard.geoplatform.gov/en/scorecard/environmental-protection-agency/" target="_blank">disproportionate environmental or socioeconomic burden</a>. 
-
-<strong>A persistent poverty measure</strong>, which shows the share of funding a program allocates to counties with a poverty rate of <a href="https://web.archive.org/web/20250104130223/https://www.transportation.gov/grants/mpdg-areas-persistent-poverty-and-historically-disadvantaged-communities" target="_blank">20 percent or higher for three decades</a>. 
-
-[] 
-
-concentration_help_text:  A score of 0 means that the jurisdictions with the top 25 percent of the population ranked by a given indicator receive roughly 25 percent of the funding. A lower score means that these jurisdictions receive less than 25 percent of the funding, and a higher score means that these jurisdictions receive more than 25 percent of the funding.  
-
-high_need_help_text: A negative score means the program underfunds the median high-need jurisdiction compared with its community characteristics. A positive score means the program overfunds the median high-need jurisdiction compared with the selected characteristic.   
-
-variability_help_text: This measure compares state-level per capita funding with national per-capita funding. A score closer to 0 means the state distribution is similar to the national distribution, while a higher score means states are receiving either more or less per-capita funding than would be true if funding were spread evenly across the country. 
-
- 
-
-{.tooltips} 
-
- 
-
-concentration: The [geo_level] with the [highest/lowest] percentile of [indicator] receive [more than proportional/less than proportional/proportional] national funding per capita. 
-
- 
-
-disadvantage: [value] percent of funding is going to disadvantaged counties, which house 23.5 percent of the nation’s population. 
-
- 
-
-variability: This program [distributes/does not distribute] funding [fairly/somewhat unfairly] on a per capita basis. 
-
- 
-
-persistent_poverty: [value] percent of funding is going to persistent poverty counties, which house 5.5 percent of the nation’s population. 
-
- 
-
-{} 
-
- 
-
-{.equity_scores_dropdown} 
-
-label: Select an equity measure 
-
- 
-
-[.options] 
-
-label: Concentration measure 
-
-value: concentration 
-
- 
-
-label: Distribution measures 
-
-value: distribution 
-
-[] 
-
- 
-
-{} 
-
- 
-
- 
-
-{} 
-
- 
-
-{.map_beeswarm} 
-
-header: Where Is Funding Distributed? 
-
- 
-
-subhead_beeswarm: Compare funding distribution by [geo_level] 
-
-{} 
-
- 
-
-{.quintile_scores} 
-
-header: How Is Funding Distributed by Community Characteristic? 
-
-about_text: For each program, we’ve analyzed how funding is distributed along different community characteristics. For counties, we show these distributions of funding by quintiles, and for states, we show these distributions by quartiles. 
-
-{} 
-
- 
-
-{.quintile_dropdown} 
-
-option_one: Population density 
-
-option_two: Share of people of color 
-
-option_three: Share living under the federal poverty line 
-
-option_four: Median household income 
-
- 
-
-{} 
-
-{} 
+{}
 
 {category_page} 
 
-header: Categories 
+header: Infrastructure Categories 
 
-about_text: We constructed these categories of infrastructure funding programs using funding announcements and web materials, but we acknowledge that our categorization may not align with the labels federal agencies assign to funding programs. Every program in this tool is assigned to at least one category, and some programs are included in more than one category. 
+about_text: We summed program-level infrastructure investments into nine distinct infrastructure categories. In total, we identified 71 programs funded through the Infrastructure Investment and Jobs Act, the Inflation Reduction Act, and annual appropriations. We then assigned each program to the most relevant infrastructure category and analyzed whether this category-level funding met community needs based on a variety of characteristics.
+ 
+
+agency_text: Funded by [agencies]. 
+
+overview_text: Programs that address <strong>[category_name]</strong> offer funds to [description]. 
+
+{.takeaways}
+
+ports: Airport and dock programs tend to fund areas with existing airports and docks, rather than investing in new areas.
+
+broadband: Broadband programs direct more funding to places with less internet access and lower broadband speeds.
+
+environmental_resilience: Environmental resilience programs direct more funding to places with low incomes, such as counties that have experienced persistent poverty. These programs provide less funding to areas with higher ozone concentration, a form of air pollution.
+
+energy_and_power: Energy and power programs direct similar levels of funding to places with high household energy costs as to places with lower household energy costs.
+
+housing_and_community_development: Housing and community development funds are distributed more often to places with higher housing cost burdens and more overcrowding. They are also more likely to go to communities with a higher share of people of color. Communities with lower housing staff capacity receive less funding.
+
+roads_and_bridges: Funding for roads and bridges tends to go to places that are heavily reliant on car travel already. These communities have more highways, their residents drive more, and drivers experience higher rates of fatal crashes. Places with a higher share of people of color receive less funding.
+
+passenger_and_freight_rail: Passenger and freight rail funds are disproportionately distributed to places without intercity passenger rail service. In addition, they are more likely to go to counties that experience disproportionate environmental or socioeconomic burden.
+
+public_transportation: Public transportation funding tends to go to places with lower transportation costs and greater access to employment. These funds also disproportionately go to communities where commuters are more likely to take transit, where households are less likely to own cars, and where families have higher incomes.
+
+water_conservation: Water conservation programs send more funds to places with more water system violations.
+
+{}
+
+obligated_funds_caption: Obligated funds are those that the federal government has promised to pay through a binding agreement, such as an official contract or purchase order.
 
  
 
-{.descriptions} 
+{.data_viz} 
 
- 
+header_equity: How Were Funds Distributed to Communities with the Greatest Needs? 
 
- 
+equity_description: Every community has different infrastructure needs. Those with worse infrastructure, poorer residents, or less local government staff capacity may need more funding to achieve the same results than areas with more resources. Here, we compare the amount of federal infrastructure funding obligated to different types of high-need communities.
 
-broadband: <strong>Broadband</strong> includes programs that fund expansions to high-speed internet service, with a focus on improving access for tribal nations, rural communities, and communities with low-income residents. We detail five programs providing broadband funding in this tool. 
+disadvantaged_text: Disadvantaged counties, those that experience disproportionate environmental or socioeconomic burden, received [value] percent of total obligated funding, a <strong>[higher/lower]</strong> share of [category name] funding compared with their share of the nation’s population (23.5 percent).
 
- 
+persistent_poverty_text: Counties where more than 20 percent of the population has lived in poverty for at least three decades received [value] percent of total obligated funding, a <strong>[higher/lower]</strong> share of [category name] funding compared with their share of the nation’s population (5.5 percent).
 
-environmental_resilience: <strong>Environmental resilience</strong> includes programs that fund clean water improvements, wildfire responses, carbon reduction efforts, electric vehicle promotion, and more. We detail 30 programs providing environmental resilience funding in this tool. 
+concentration_table_title: Funding Across the Highest-Need Communities
 
-ports_and_waterways: <strong>Ports and waterways</strong> includes programs that fund improvements to harbors, ports, and shipping channels as well as initiatives focused on access to clean water, water rights for tribal nations, and water recycling. We detail 25 programs providing ports and waterways funding in this tool. 
+concentration_section_description: Federal programs are meant to address communities’ infrastructure needs, but those programs may serve some needs better than others. Here, we compare several characteristics that can indicate a community’s level of need for the selected infrastructure category with the federal funding distributed to those communities. These comparisons can help stakeholders understand where federal funding meets community needs and where it may not.
 
- 
+concentration_table_description: We define highest-need communities as those that rank highest according to a given characteristic and cumulatively contain 25 percent of the US population. Based on their share of the population, we would expect these highest-need communities to receive 25 percent or more of all obligated funding.
 
-energy_and_power: <strong>Energy and power</strong> includes programs that fund the research and expansion of energy sources, such as nuclear power and natural gas. We detail 18 programs providing energy and power funding in this tool. 
+concentration_box_title: Magnitude of Funding Received by Highest-Need Communities, Compared with Baseline Expectation (25 Percent)
 
- 
+header_map: Where Was Funding Distributed? 
 
- 
+subhead_map: Funding amount per 1,000 residents
 
-housing: <strong>Housing</strong> includes programs that fund the construction and maintenance of affordable housing buildings as well as rent supports for people with low incomes and elderly people. We detail 17 programs providing housing funding in this tool.  
+county_note: In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where counties that contain state capitals appear to receive more money than they actually received.
 
- 
+cbsa_note: In some cases, a funding obligation for a statewide effort may list the state government as the recipient and the state capital as the recipient location. While we have taken steps to account for this, there may still be cases in this tool where CBSAs that contain state capitals appear to receive more money than they actually received.
 
-roads_and_bridges: <strong>Roads and bridges</strong> includes programs that fund improvements in the availability, resiliency, capacity, and safety of US roads, highways, bridges, and other transportation-focused infrastructure. The federal government allows considerable flexibility in the use of these funds, so recipient jurisdictions can often choose to use them for public or active transportation projects instead. We detail 34 programs providing road and bridges funding in this tool. 
+header_quintile: How Were Funds Distributed by Community Characteristic? 
 
- 
+quintile_description: For each infrastructure category, we analyzed how funding was distributed along different community characteristics. For counties and metropolitan areas, we show these funding distributions by quintiles, and for states, we show quartiles. For more information, refer to our <a href="[base]/user-guide/" target="_blank">user guide</a>.
 
-passenger_and_freight_rail: <strong>Passenger and freight rail</strong> includes programs that fund the expansion, improvement, and safety of railways, including intercity rail (generally Amtrak) and freight rail. We detail 14 programs providing passenger and freight rail funding in this tool.  
-
- 
-
- 
-
-public_transportation: <strong>Public transportation</strong> includes programs that fund improvements in and expansions of public transit, such as buses and light rail, with a focus on increasing transit service in tribal, rural, and low-income communities. We detail 28 programs providing public transportation funding in this tool. 
-
- 
-
-airports: <strong>Airports</strong> includes programs that fund improvements to publicly accessible airport terminals and related facilities. We detail three programs providing airport funding in this tool. 
-
- 
+quintile_chart_subtitle: Average program funding per 1,000 residents 
 
 {} 
 
-{} 
+{}
 
 {user_guide} 
 
-eyebrow: Feature User Guide 
+header: The Federal Infrastructure Funding Tracker: User Guide 
 
-header: Spending on Infrastructure toward Equity (SITE) Tool User Guide 
+table_title: Characteristics and Data Sources 
 
  
 
@@ -585,19 +555,15 @@ header: Spending on Infrastructure toward Equity (SITE) Tool User Guide
 
  
 
-Ideally, infrastructure—transit, roads, plumbing, power lines, and even homes—links all people to the resources they need to live a full life. It connects people to education and jobs, ensures access to quality dwellings, transports clean water, and provides parks to promote community health. The US federal government recently expanded investment in infrastructure through the 2021 Infrastructure Investment and Jobs Act (IIJA) and the 2022 Inflation Reduction Act (IRA), and has maintained funding for the Department of Housing and Urban Development (HUD). These investments intend to make transportation safer and more effective, increase access to broadband internet, ameliorate water quality, and reduce housing costs, while ensuring benefits go to communities where they are needed most. 
+Transit, roads, internet access, power lines, and even homes are all examples of infrastructure that can connect people to the resources they need to live a full life. Ideally, infrastructure ensures access to quality dwellings, education, and jobs; it transports clean water; and it promotes community health through parks and green space. To ensure infrastructure can support these use cases and benefits, the US federal government funds infrastructure maintenance and expansion projects nationwide.
 
  
 
-Historically, however, infrastructure development has immensely benefitted some communities while harming others, including many low-income communities of color. An inequitable distribution of federal infrastructure funds may contribute to disparities in health, poverty, and overall life outcomes. Today, Congress and public agencies’ decisions about investments in infrastructure have the potential to reinforce—or reverse—these inequities. 
+Historically, however, federal infrastructure funding has immensely benefitted some communities while harming others, including many low-income communities of color. If federal infrastructure funds are not distributed to communities based on their needs and vulnerabilities, the investments may perpetuate disparities in health, poverty, and overall life outcomes. Infrastructure investment decisions made by Congress and federal agencies today have the potential to reinforce—or reverse—previous outcomes.
 
  
 
-The distribution of dollars through new investments will have equity implications that will be critical to understand in order to prevent worsening disparities. Through the Spending on Infrastructure Towards Equity (SITE) tool, we aim to explore the equity implications of federal infrastructure investments by evaluating the funding distribution of grant programs originating from IIJA and IRA as well as longstanding programs funded by HUD. Our work responds directly to the Biden administration’s pledge to “allocat[e] federal resources to advance fairness and opportunity.”  
-
- 
-
-To our knowledge, this is the first project to attach equity metrics to the national distribution of infrastructure funding. Readers may also be interested in exploring the data and analyses available at the following sites:  
+To identify and prevent investments that could worsen disparities, it’s critical to study the distribution of federal infrastructure funds. In this tool, we explore the implications of federal infrastructure investments by evaluating the funding distribution of federal infrastructure grant programs. Readers may also be interested in exploring the data and analyses available at the following sites: 
 
  
 
@@ -605,29 +571,36 @@ To our knowledge, this is the first project to attach equity metrics to the nati
 
  
 
-<h2>How to Use This Tool </h2> 
+<h2>How to Use This Tool</h2> 
 
  
 
-Elected officials, policymakers, and advocates at the federal, state, and local levels can use this tool to understand the ways in which federal funds are distributed. Here are some potential ways to use the tool: 
+Elected officials, policymakers, and practitioners at the federal, state, and local levels can use this tool to understand how federal funds have been distributed. Here are some possible ways to use the tool:
 
  
 
-<ul><li><strong>Congress members and congressional staff</strong> can explore the distribution of program funding through the formulas they write, such as for the Department of Transportation’s <a href="https://apps.urban.org/features/infrastructure-spending-states-counties/program/fhwa-nhpp/" target="_blank">National Highway Performance Program</a>. They can explore, for example, the degree to which current rules result in states with a higher share of people of color getting a fair share of funding.</li><li><strong>Federal departmental officials</strong> can identify whether the programs they administer through competitive grants, such as the Department of Housing and Urban Development’s <a href="https://apps.urban.org/features/infrastructure-spending-states-counties/program/coc/" target="_blank">Continuum of Care Program</a>, are expanding support for communities with high levels of homelessness.</li><li><strong>Elected officials and staff from state, local, and tribal governments</strong> can evaluate the degree to which their state or community is receiving funding on par with the rest of the nation. They can look up data for <a href="https://apps.urban.org/features/infrastructure-spending-states-counties/state/08/" target="_blank">Colorado</a>, for example, or for <a href="https://apps.urban.org/features/infrastructure-spending-states-counties/county/17031/" target="_blank">Cook County, Illinois.</a></li><li><strong>Advocates</strong> can collect information about what federal infrastructure programs are available and how funding is distributed to help them understand how best to maximize the value of federal investments.</li></ul> 
+<ul><li><strong>Congress members and congressional staff</strong> can explore the distribution of funding they authorize, such as for federal <a href="[base]/program-categories/broadband/" target="_blank">broadband</a> programs. They can see, for example, whether states with less internet access receive a fair share of funding under current rules.</li><li><strong>Federal departmental officials</strong> can identify whether the programs they administer, such as the <a href="[base]/program-categories/housing-and-community-development/" target="_blank">housing and community development programs</a>, are expanding support for communities with high levels of homelessness.</li><li><strong>Elected officials and staff from state, local, and tribal governments</strong> can evaluate the degree to which their state or community is receiving funding on par with the rest of the nation. They can look up data for <a href="[base]/state/08/" target="_blank">Colorado</a>, for example, or for <a href="[base]/county/17031/" target="_blank">Cook County, Illinois</a>.</li><li><strong>Practitioners</strong> can collect information about what federal infrastructure programs are available and how funding is distributed to help them understand how best to maximize the value of federal investments.</li></ul> 
 
  
 
 <h2>How This Tool Is Organized</h2> 
 
-The SITE tool allows users to explore data by three different geographies: state, core-based statistical areas (CBSAs), and counties. CBSAs are made up of metropolitan and micropolitan areas, which include an urban area and its surrounding communities. For example, the New York-Newark-Jersey City, NY-NJ-PA Metro Area includes New York City, Jersey City, and several surrounding counties in New York, New Jersey, and Pennsylvania. The tool also allows users to explore the data by specific infrastructure programs.  
+ 
 
-To use this tool, start with the search bar on the landing page and look up a state, county, CBSA, or infrastructure program. If you don’t know specific program names, you can search for an infrastructure category to navigate to a list of related programs.  
+This tool allows users to explore data by three different geographies: state, county, and core-based statistical area (CBSA). CBSAs are made up of metropolitan and micropolitan areas, which include an urban area and its surrounding communities. For example, the New York-Newark-Jersey City, NY-NJ-PA Metro Area includes New York City and several surrounding counties in New York, New Jersey, and Pennsylvania. The tool also allows users to explore the data by specific types of infrastructure (e.g., public transportation or housing and community development) funded through federal investment programs.
+ 
 
-On the state, CBSA, and county pages, we include five data visualizations: a table of programs and their funding amounts; a map and a beeswarm comparing the amount of program funding nationally (for states and CBSAs) and state-wide (for counties); an equity score comparing a program’s per capita funding to indicators of need in that geography; and a barbell chart showing differences in program funding between the selected geography and the median of similar geographies. These pages intend to show how much funding the area has received compared to its need for infrastructure investment relative to other areas across the country. 
+The state, county, and CBSA pages include five data visualizations: a table of programs by infrastructure type and their funding amounts; a map and a beeswarm chart comparing the amount of funding nationally (for states and CBSAs) and state-wide (for counties); scores comparing an infrastructure category’s per capita funding to characteristics of need in that geography; and a barbell chart showing differences in category funding between the selected geography and the median of similar geographies. These pages intend to show how much funding an area has received compared with its need for infrastructure investment relative to other areas across the country. 
 
-On the program pages, we include a brief description of the program as well as four data visualizations: a map and a beeswarm comparing the amount of program funding nationally; a drop-down menu showing a suite of funding distribution measures that indicate whether communities received an equitable share of funding; and a bar chart comparing program funding across different community characteristics. These pages intend to show how much funding has been made available through a program and how well that funding is addressing the infrastructure deficits in the communities most in need of investment. 
 
-To learn more about the data behind each of these visualizations, see the About the Data section below. 
+The infrastructure category pages list all the programs included in the category as well as four data visualizations: a map and a beeswarm chart comparing the amount of funding for that infrastructure category nationally; a table indicating whether communities received the expected share of funding, when adjusted for population; and a bar chart comparing program funding across different community characteristics. These pages intend to show how much funding has been made available for a specific type of infrastructure and how well that funding addresses the communities most in need of investment.
+ 
+
+On the program pages, we include a brief description of the program, a breakdown of annual program funding, and one data visualization: a map comparing the amount of program funding obligated nationally.
+
+ 
+
+To learn more about the data behind each of these visualizations, see the About the Data section below.
 
  
 
@@ -635,233 +608,207 @@ To learn more about the data behind each of these visualizations, see the About 
 
  
 
-<strong>1. Infrastructure</strong>: Infrastructure is an umbrella term used to describe elements of the built environment, though there is no single definition or use of the term. IIJA (see below) largely uses it to describe transportation, energy, water, and broadband projects. For this project, we chose to expand that definition to housing, which is a key element of the built environment. 
+<strong>Infrastructure</strong>: Infrastructure is an umbrella term used to describe elements of the built environment, though there is no single definition or use of the term. The Infrastructure Investment and Jobs Act (IIJA) largely uses it to describe transportation, energy, water, and broadband projects. For this project, we chose to expand that definition to housing, which is a key element of the built environment.
 
-<strong>2. Equity</strong>: Equity means “the state, quality, or ideal of being just, impartial, and fair,” as defined by <a href="https://racc.org/wp-content/uploads/2015/12/An-Introduction-to-Racial-Equity-Assessment-Tools.pdf" target="_blank">Race Forward</a>. For this project, we focus on distributional equity across states and counties according to race, ethnicity, and economic class, meaning we look at which programs and policies result in a fair distribution of benefits and burdens across all segments of a community, prioritizing those with the highest needs. These distributions are, in part, the product of funding choices made by public officials, but it is worth emphasizing that achieving equitable outcomes depends on whether investments improve communities or degrade them. We do not measure these outcomes as a part of this project. 
+ 
 
-<strong>3. Infrastructure Investment and Jobs Act (IIJA)</strong>: In November 2021, Congress passed this law, which will distribute $1.2 trillion through various funding programs between fiscal years 2022 and 2026 to rebuild American infrastructure and “invest in communities that have too often been left behind,” according to <a href="https://www.whitehouse.gov/briefing-room/statements-releases/2021/11/06/fact-sheet-the-bipartisan-infrastructure-deal/" target="_blank">the Biden White House</a>. Throughout this project, we refer to the infrastructure law as IIJA; some officials refer to it as the Bipartisan Infrastructure Law, or BIL. 
+<strong>Infrastructure Investment and Jobs Act</strong>: This law, passed by Congress in November 2021, was designed to distribute $1.2 trillion through various funding programs between fiscal years 2022 and 2026 to rebuild American infrastructure and “invest in communities that have too often been left behind,” according to <a href="https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/11/06/fact-sheet-the-bipartisan-infrastructure-deal/" target="_blank">the Biden White House</a>. We refer to the infrastructure law as IIJA; others refer to it as the Bipartisan Infrastructure Law, or BIL.
 
-<strong>4 Inflation Reduction Act (IRA)</strong>: In August 2022, Congress passed this law, which will distribute or provide tax credits for more than $800 billion between 2022 and 2032 to strengthen America’s clean energy economy, cut pollution, and promote environmental justice. Throughout this project, we refer to the act as IRA. 
+ 
 
-<strong>5. Formula grant</strong>: Formula grants are awarded to eligible entities based on congressionally established funding formulas, often based on population and other local characteristics. In some cases, these formulas were established by prior laws, and Congress has maintained funding levels to state and local jurisdictions based on those formulas without updating them to account for present conditions. Most formula grants are distributed to states, but some (such as Community Development Block Grants) are distributed to localities and others (such as Housing Choice Vouchers) are distributed to public agencies. 
+<strong>Inflation Reduction Act (IRA)</strong>: This law, passed by Congress in August 2022, was designed to distribute or provide tax credits of more than $800 billion between 2022 and 2032 to strengthen America’s clean energy economy, cut pollution, and promote environmental justice (much of the law’s elements, however, were eliminated by congressional action in 2025). We refer to the act as IRA.
 
-<strong>6. Competitive grant</strong>: Competitive, or discretionary, grants are awarded by federal departments after a request for proposals that invites applicants to submit ideas that meet federal priorities. Through competitive grant programs, governmental bodies, public agencies, and occasionally nonprofit and for-profit entities can apply for federal funding for specific programs or project ideas. Once received, applications are evaluated based on merit by a team of reviewers from the awarding agency. 
+ 
 
-<strong>7. Capacity</strong>: Capacity represents the extent to which municipal governments have the time, staff, and money to apply for and receive grants by developing compelling proposals. In the context of this project, we define capacity as the number of per capita staff members working in county and local government offices. We calculate this figure for staff working in transportation, housing and community development, and the environment, depending on the program. 
+<strong>Formula grant</strong>: Formula grants are awarded to eligible entities based on congressionally established or agency-established funding formulas, often based on population and other local characteristics. In some cases, these formulas were established decades ago, and Congress has maintained funding levels to state and local jurisdictions based on those formulas without updating them to account for present conditions. Most formula grants are distributed to states, but some (such as Community Development Block Grants) are distributed to localities and others (such as Housing Choice Vouchers) are distributed to public agencies.
 
-<strong>8. Externalities</strong>: An externality is an outcome, effect, or consequence of some project or investment. Positive externalities are the planned or unplanned beneficial outcomes of some effort. Negative externalities are outcomes that cause harm (often referred to as “costs”). In the context of infrastructure work, negative externalities are often undesired byproducts of construction and facility use, such as the air pollution and traffic noise associated with highways. Each project funded by IIJA programs is likely to generate some amount of negative externalities that affect communities in the immediate vicinity of the project and in the surrounding regions. We describe a large number of these externalities for different project types in the appendix of <a href=" https://www.urban.org/research/publication/is-federal-infrastructure-investment-advancing-equity-goals" target="_blank">Is Federal Infrastructure Investment Advancing Equity Goals?</a>. 
+ 
 
-<strong>9. Need</strong>: We use the term “need” in two ways for this project. First, we use it in the context of community demographics, when referring to communities with high shares of people with low incomes and people of color, because we are interested in racial and economic equity considerations. Many of these communities have either historically received less investment or experienced more negative externalities from inequitable investment than whiter or more affluent communities. As such, these communities may have a greater need for investment today. Second, we use the term “need” in the context of programmatic indicators to describe jurisdictions that have a higher need related to a specific program; for example, jurisdictions with higher housing cost burdens might have a higher need for housing assistance. 
+<strong>Competitive grant</strong>: Competitive, or discretionary, grants are awarded by federal agencies following a request for proposals process that invites applicants to submit potential projects that meet federal priorities. Governmental bodies, public agencies, and occasionally nonprofit and for-profit entities can apply for federal funding for specific programs or project ideas through competitive grant programs. Once received, applications are evaluated and funded based on merit by a team of reviewers from the awarding agency.
 
-<strong>10. Indicator(s)</strong>: Indicators are data points that align with programmatic need. As in the example above, one indicator for the “need” for housing investment is housing cost burden. 
+ 
 
-<strong>11. Per-capita measurements</strong>: Per capita measurements calculate specific data <strong>per person</strong>. In this project, per capita calculations typically represent data values per 1000 people; we note if otherwise. Per capita measurements allow us to compare funding amounts across counties and states with different populations; for example, a county with 1,000,000 residents is likely to receive more funding overall than a county with 100,000 residents, but per capita funding can more easily be compared between jurisdictions. 
+<strong>Obligations</strong>: Obligations refer to funding that the federal government has promised to pay by entering a binding agreement with a recipient, usually through an official contract or purchase order. Obligations are different from <i>award announcements</i>, which demonstrate an intention to obligate funds but usually come before any binding agreement is made, and <i>outlays</i>, which refer to money that has been paid out.
+
+ 
+
+<strong>Need</strong>: We use the term <i>need</i> in two ways. First, we use it in the context of community demographics, when referring to communities with high shares of people with low incomes and people of color, because we are interested in racial and economic considerations across outcomes. Many of these communities have historically received less investment or experienced negative consequences from infrastructure investments than whiter or more affluent communities. As such, these communities may have a greater need for investment today. Second, we use <i>need</i> to describe jurisdictions that have a higher need related to a specific type of program. For example, jurisdictions with higher housing cost burdens might have a higher need for housing assistance.
+
+ 
+
+<strong>Characteristic(s)</strong>: Characteristics are data points that can tell us something about potential community need. As in the example above, one characteristic for the need for housing investment is housing cost burden (or the share of household income that is spent on housing).
+
+ 
+
+<strong>Per capita measurements</strong>: Per capita measurements calculate specific data <i>per person</i>. In this project, per capita calculations typically represent data values per 1000 people; we note if otherwise. Per capita measurements allow us to compare funding amounts across CBSAs, counties, and states with different populations. For example, a county with 1 million residents is likely to receive more funding overall than a county with 100,000 residents, but per capita measurements may show that the latter county received more funding per person.
+
+ 
 
 <h2>About the Data</h2> 
 
-For this tool, we analyzed (1) 85 unique grant programs funded by IIJA that will each distribute a total of at least $1 billion between fiscal years 2022 and 2026, (2) 9 unique grant programs funded by the IRA that will distribute at least $1 billion between fiscal years 2022 and 2032, (3) 14 housing programs each distributing at least $1 billion in 2022 through annual HUD appropriations, and (4) 2 programs funded through annual DOT appropriations. The data presented in the tool are limited to fiscal years 2022 and 2023. We collected data from federal departmental announcements and project fact sheets. See the methods appendix in our 2023 report <em><a href="https://www.urban.org/research/publication/is-federal-infrastructure-investment-advancing-equity-goals" target="_blank">Is Federal Infrastructure Investment Advancing Equity Goals?</a></em> for more detail on the programs included in the original version of the tool, published in October of 2023. In March 2025, we updated this tool with fiscal year 2023 data for existing programs and added 42 new programs (listed below) using the same methods for data collection, cataloguing, and analysis. 
+ 
 
-Infrastructure Investment and Jobs Act programs added to tool in March 2025: 
-
-<ol><li>Affordable Connectivity Outreach Grant Program</li><li>Battery Materials Processing and Battery Manufacturing and Recycling Program</li><li>Brownfields Program</li><li>Building Resilient Infrastructure and Communities Program</li><li>Carbon Capture Demonstration Projects Program</li><li>Carbon Storage Validation and Testing Program</li><li>Charging and Fueling Infrastructure Grant Program</li><li>Consolidated Rail Infrastructure and Safety Improvements Program</li><li>Clean hydrogen electrolysis, manufacturing, and recycling activities</li><li>Climate-Ready Coasts </li><li>Energy Improvements in Rural or Remote Areas Program</li><li>Federal Aviation Administration Contract Tower Competitive Grant Program</li><li>Federal Motor Carrier Safety Administration discretionary grants</li><li>Federal-State Partnership for Intercity Passenger Rail Grant Program</li><li>Flood Mitigation Assistance Grant Program</li><li>Great Lakes Restoration Initiative</li><li>Grid Innovation Program</li><li>Grid Resilience Utility and Industry Grants</li><li>Indian Health Service Sanitation Facilities Construction Program</li><li>Land ports of entry projects </li><li>National Culvert Removal, Replacement, and Restoration Grant</li><li>National Infrastructure Project Assistance Program (Mega Program)</li><li>Promoting Resilient Operations for Transformative, Efficient, and Cost-Saving Transportation Competitive Program</li><li>Regional Clean Hydrogen Hubs Program</li><li>Regional Direct Air Capture Hubs Program</li><li>Smart Grid Grants</li><li>Transportation Alternatives Program</li></ol> 
-
-Inflation Reduction Act programs added to tool in March 2025: 
-
-<ol><li>Agricultural Conservation Easement Program</li><li>Conservation Stewardship Program</li><li>Drought mitigation funding opportunities</li><li>.	Environmental Quality Incentives Program</li><li>Green and Resilient Retrofit Program: Comprehensive, Elements, and Leading Edge cohorts</li><li>National Laboratory infrastructure grants</li><li>Regional Conservation Partnership Program</li><li>Rural Energy for America Program</li><li>Urban and community forestry grants</li></ol> 
-
-US Department of Transportation–funded programs added to tool in March 2025: 
-
-<ol><li>Thriving Communities Program</li><li>State Planning and Research Program Subpart B</li></ol> 
+For this tool, we analyzed 71 major federal infrastructure programs funded by IIJA, the IRA, and annual congressional appropriations. The data presented in the tool are limited to fiscal years 2022 through 2025 and were collected in March 2026. For this version of the tool (updated in 2026), we collected data on funding obligations released on USAspending.gov. Data in the initial tool release (2023) and update (2025) came from a combination of sources, including USAspending.gov, program fact sheets, and agency-level press releases and award announcements.
 
  
 
-US Department of Housing and Urban Development–funded programs added to tool in March 2025: 
-
-<ol><li>Supportive Housing for Persons with Disabilities</li><li>Emergency Solutions Grants Program</li><li>Housing Opportunities for Persons with AIDS Program</li><li>Housing Trust Fund</li></ol> 
-
-Other IIJA and IRA programs may not be included in the tool because the funding they will distribute is lower than $1 billion. Also, more recent award allocations may not be reflected in the tool because they were announced after June 2024, when we paused our annual data collection.  
+Other federal infrastructure programs may not be included in the tool because they distribute relatively little funding or because data are unavailable. Eight programs were included in a previous version of this tool but were removed because they could not be distinguished on USAspending.gov. These programs were the Rural Water Projects program, the Drought Mitigation program, National Laboratory Infrastructure Grants, the Indian Health Service Sanitation Facilities Construction program, the Aging Infrastructure Account, the Land Port of Entry program, US Army Corps of Engineers IIJA Construction Projects, and the Civil Nuclear Credit program. Other programs from previous versions of this tool were combined or split up to reflect how data is recorded by USAspending.gov. 
 
  
 
-The federal government issued funds to regional, state, local, tribal, and private awardees. We indicate the county, CBSA, and state where funding was injected, but do not indicate the specific awardee. The county, CBSA, or state associated with an overall funding amount is not necessarily the specific awardee of some program funds (we use the county level as the smallest unit of geospatial analysis in this tool because it is nationally comprehensive). For example, we would classify a grant awarded to the Chicago Transit Authority to Cook County and Illinois. 
+USAspending.gov includes information about all federal government spending, including obligated funding amounts, awarding agency, program information, type of award, intended use, recipient, and place of performance. We use transaction-level data, rather than award-level data, to leverage the most granular program information possible. To isolate transactions that belong to awards made in our years of interest (fiscal years 2022–25), we first downloaded all transactions made between fiscal years 2016 through 2025. We then removed any transactions that belonged to an award ID that had any transaction activity before fiscal year 2022. One limitation of this approach is that we may still include some transactions for awards that originated before 2016; however, these cases should be minimal, and we consider it reasonable to treat any new activity after six years of inactivity as a new award.
+ 
+
+We assign transactions to programs using federal assistance listings, which the federal government uses to categorize federal programs that provide grants, loans, scholarships, insurance, and other types of assistance awards. Assistance listings are the most consistent and reliable program information in the USAspending.gov data, but they might not always match the colloquial title or categorization of a program. For example, assistance listings may combine closely related activities that are described or awarded separately in other federal agency materials, and marketing materials may combine several assistance listings as a larger program or initiative. You can see a description of each assistance listing on its program page.
+ 
+
+To give a more complete picture of the total funds a community might have received to support a type of infrastructure, we summed program-level data into nine distinct categories:
+ 
+
+<ol><li>Airports and docks</li><li>Broadband</li><li>Energy and power</li><li>Environmental resilience</li><li>Housing and community development</li><li>Passenger and freight rail</li><li>Public transit</li><li>Roads and bridges</li><li>Water conservation</li></ol> 
 
  
 
-When possible, we visualize indicators and programmatic data at the county level. Project funds occasionally cover multiple counties. In these cases, we assume that funds are spread out evenly across these counties. Because CBSAs are made up of counties, we aggregated the county-level funding data to create the CSBA funding data. The federal government distributed some awards directly to state governments for projects whose geographies were not yet defined. In these cases, we include awarded funds in state and program totals, but not at the county or CBSA level. Many formula funds are distributed to state governments through formula, so we do not break down these data to the county or CBSA level because we do not have adequate information to know how those funds have been spent. 
-
+Most of our analysis of the distribution of federal infrastructure funds is done at the category level.
  
 
-We collected data for demographic and need-indicators from a wide range of publicly available sources, including the US Census Bureau 2016–20 five-year American Community Survey and data produced by other federal agencies. These indicators allowed us to investigate the degree to which program funds were disbursed (1) compared with local demographics and (2) compared with a jurisdiction’s possible investment needs. Demographic indicators include characteristics such as population density, share of residents who are people of color, and median household income. Program-related need indicators include broadband speed, number of public transit stops, share of vacant housing units, and share of bridges in poor condition, among others.  For the full list of indicators and data sources used in this tool, see table 1.  
+The federal government issues funds to regional, state, local, tribal, and private recipients. We indicate the CBSA, county, and state where funding was injected, but do not indicate the specific recipient. The CBSA, county, or state associated with an overall funding amount is not necessarily the specific recipient of some program funds (we use the county level as the smallest unit of geospatial analysis in this tool because it is nationally comprehensive). For example, we would assign an obligation for the Chicago Transit Authority to Cook County and to Illinois.
+ 
 
+USAspending.gov data includes geographic information for both the recipient of an obligation and the “place of performance” of the funds, which is the location where the funds will be spent. When assigning obligations to counties, we used the place of performance county when available. In cases where the place of performance was missing, we used the recipient county. Therefore, there may be instances where the assigned county is not the location where the funds were spent. For example, an obligation for a statewide effort may list the state capital as the recipient, even if funds were distributed throughout the state. This may result in counties or CBSAs that contain state capitals appearing to receive more money than they did. The extent of this issue may vary by program or agency, as data collection and reporting practices differ.
+
+For eight formula programs across multiple categories (Clean Water State Revolving Fund; Drinking Water State Revolving Fund; Broadband Equity, Access, and Deployment Program; Weatherization Assistance Program; Motor Carrier Safety Assistance Program; State Safety Oversight Program; Housing Trust Fund [HTF]; and the Highway Safety programs) where funds were overwhelmingly concentrated in counties that contain state capitals or major state agencies, we redistributed each state’s total program funding to all counties in the state based on their share of the state population. This helped prevent the tool from artificially inflating the funds going to counties with state capitals. For the Formula Grants for Rural Areas and Tribal Transit Program, which is intended for rural and tribal areas with transit service, we distributed funds to any county with at least 50 transit riders (according to American Community Survey 2016–20 five-year estimates) based on their proportion of the state’s rural population. Finally, for several programs, we found that all funds going to New York City were concentrated in only one of the five New York City counties. In cases where it seemed reasonable to assume that funds would have been used across the entire city (All Stations Accessibility Program [ASAP], Bus and Bus Facilities programs, Community Development Block Grant [CDBG] Program, Federal Transit Administration Urbanized Area Formula Grants Program, Enhanced Mobility of Seniors and Individuals with Disabilities Program, State of Good Repair Grants Program [transit], Housing Choice Voucher Program [Section 8], HOME Investment Partnerships Program, Emergency Solutions Grants Program, Housing Opportunities for Persons with AIDS [HOPWA] Program, Public Housing Capital Fund, Public Housing Operating Fund, Better Utilizing Investments to Leverage Development [BUILD] Grant Program [formerly RAISE], and Safe Streets and Roads for All [SS4A] Grant Program), we redistributed New York City funds to all five New York City counties based on each county’s share of the New York City population.
+ 
+
+Transaction data from USAspending.gov also includes negative obligations, or de-obligations. De-obligations usually come after an original obligation was made to return any project funds that weren’t spent. Most negative transactions cancel out positive transactions in our data and are included in our analysis to avoid overstating funding totals. However, if a jurisdiction still had negative totals after we summed transactions by category and jurisdiction, we recoded them as $0. This avoids implying that jurisdictions are paying the federal government outright. Because CBSAs are made up of counties, we aggregated the county-level funding data to create the CSBA-level funding data.
+ 
+
+We collected data for community demographic and need characteristics from a wide range of publicly available sources, including the US Census Bureau 2016–20 five-year American Community Survey and data produced by other federal agencies. These characteristics allowed us to investigate how infrastructure funds were disbursed compared with (1) local demographics and (2) a jurisdiction’s investment needs. Demographic characteristics include the share of residents who are people of color and median household income. Need characteristics include broadband speed, number of public transit stops, share of vacant housing units, and share of bridges in poor condition, among others. For the full list of characteristics and data sources used in this tool, see table 1.
  
 
 table: here 
 
+ 
+
 <h2>Interpreting the Data and Applying Results</h2> 
 
-We present measurements that capture several different dimensions for how federal funding may be meeting need and equity goals in this tool. Each measurement should be interpreted within its local context and evaluated with the understanding that infrastructure projects generate both positive and negative externalities.  
+ 
+
+We provide data on a variety of characteristics that may help paint a picture of the level of need for infrastructure in specific communities and whether it is currently being met by federal funding. However, these characteristics do not always tell a clear story. 
 
  
 
-We provide data on a variety of indicators that may help paint a picture of the level of need for infrastructure in specific communities. But these indicators do not always tell a clear story. We use <em>miles of major roads and highways (per capita per square mile)</em>, for example, as one way to evaluate transportation programs. Places that have more roads might need high levels of transportation funding to help maintain those roads, but places with fewer roads might also have a high need for funding to build new roads and connect communities that currently lack transportation options.  
+We use <i>highway prevalence (miles of major roads and highways per capita per square mile)</i>, for example, as one way to evaluate transportation programs. Places that have more roads might need high levels of transportation funding to help maintain those roads, but places with fewer roads might also have a high need for funding to build new roads and connect communities that currently lack transportation options. 
 
  
 
-How a program distributes funding depends on the processes and people in charge of making funding decisions. These actors may differ depending on whether a program uses the formula funding process or the competitive funding process described above.  
+How agencies distribute funding depends on the processes and people in charge of making funding decisions. These actors may differ depending on whether a program uses a formula funding process or a competitive funding process. 
+ 
 
-<ul><li>In the formula process, the primary decisionmakers are (1) Congress, in the creation of the initial formula and allocation of funds, and (2) state government agencies, which decide how to distribute most of these funds. Some local governments, tribal governments, and local agencies also receive formula funds.</li><li> In the competitive process, the primary decisionmakers are (1) federal agencies, which review proposed projects and make decisions about which to fund, and (2) applicants (e.g., state, county, city, and tribal governments; transit authorities; regional entities), which make decisions about whether to apply for funding, which projects to submit, and how to fill out applications.</li></ul> 
-
-Once we collected the program funding data and established the demographic and need-indicator categories, we analyzed each of the 110 programs by comparing the distribution of funds across counties and states with the various indicators. This process allowed us to explore whether infrastructure funds are more likely to support communities with certain characteristics.  
-
-First, we calculated an <strong>equity metric</strong> for each jurisdiction, which calculates the difference between the funding percentile and indicator percentile for each program and relevant indicator combination. A score of 0 indicates that the jurisdiction’s funding is proportional to the indicator. A negative score indicates the jurisdiction is receiving less funding than its indicator value would imply; a positive score indicates the jurisdiction is receiving more funding than its indicator value would imply. For example, if a county was at the 40th percentile for the funding it received from the Bridge Formula Program, but in the 70th percentile of need for its share of bridges that are in disrepair, that county would have an equity metric of –0.3 for that program and indicator combination. This metric might indicate that the Bridge Formula Program is not meeting that county’s needs in terms of bridge repair, at least when placed in the national context. 
+<ul><li> In the formula process, the primary decisionmakers are (1) Congress and executive agencies, in the creation of the initial formula and allocation of funds, and (2) state government agencies, which decide how to distribute most of these funds. Some local governments, tribal governments, and local agencies also receive formula funds.</li><li> In the competitive process, the primary decisionmakers are (1) federal agencies, which review proposed projects and make decisions about which to fund, and (2) applicants (e.g., state, county, city, and tribal governments; transit authorities; and regional entities), which make decisions about whether to apply for funding, what projects to submit, and how to fill out applications.</li></ul> 
 
  
 
-Next, we produced four types of funding distribution measures for each program: 
+Once we collected the funding data and established the demographic and need characteristic categories, we analyzed each of the 71 programs by comparing the distribution of funds across CBSAs, counties, and states against the various characteristics. This process allowed us to explore whether infrastructure funds are more likely to support communities with certain characteristics.
+ 
 
-<ul><li>The <strong>concentration measure</strong> indicates, for each program, how national funding is concentrated in the highest-need jurisdictions according to a selected indicator. For each indicator, we have compiled the highest-need jurisdictions that comprise approximately 25 percent of the US population. (Depending on which jurisdictions are included, slightly more than 25 percent of the US population may be included.) Scores range from –1 to 3. A score of 0 indicates that jurisdictions accounting for the top 25 percent of the US population, ranked based on a given indicator, receive roughly 25 percent of the funding. A lower score means that these jurisdictions receive less than 25 percent of the funding, and a higher score means that these jurisdictions receive more than 25 percent of the funding. For example, if a program has a county-level concentration score of 1 when measured in terms of share of people of color, that would mean that the program distributes about 50 percent of its funding to the quarter of the population living in counties with the highest shares of people of color.</li><li>The <strong>variability measure</strong> indicates the degree to which a program’s per capita funding aligns with the nation’s overall per capita funding. A variability score of 0 means that the program’s state-level funding distribution is similar to the national distribution. A higher variability score indicates that the state-level funding distribution for that program is farther from the national distribution, in either direction. Scores for most programs fall between 0 and 10. A program having a score of 8, for example, might mean that the typical state is receiving either much higher or much lower per capita funding than would be true if funding were spread evenly across the country. This metric is relevant for formula programs only, in which large amounts of funding are distributed to all states.</li><li>The <strong>persistent poverty measure</strong> indicates the share of a program’s funds going to counties that are in persistent poverty. Counties are considered to be in persistent poverty if 20 percent or more of the population was living in poverty in the 1990 decennial census, the 2000 decennial census, and the 2022 Small Area Income Poverty Estimates. This measure is only provided for programs with county-level funding data.</li><li>The <strong>disadvantaged county measure</strong> indicates the share of a program’s funds going to disadvantaged counties. As part of the Biden Administration’s <a href="https://www.whitehouse.gov/environmentaljustice/justice40/" target="_blank">Justice40 Initiative</a>, census tracts are considered disadvantaged—and therefore a priority for funding—if they meet several indicators of underinvestment and environmental burden, including for income levels, climate risk, legacy pollution, energy costs, health risks, housing affordability and quality, transportation barriers, water quality, and unemployment. Federally recognized tribes, including Alaska Native villages, are also considered disadvantaged communities. We therefore consider a county to be disadvantaged if more than 50 percent of its census tracts are disadvantaged, or if more than 50 percent of the county population lives in disadvantaged tracts. This measure is only provided for programs with county-level funding data.</li></ul> 
+<h3>Evaluating Funding Within Jurisdictions</h3> 
 
-We added the persistent poverty and disadvantaged county measures in our 2024 tool update because they align more directly with <a href="https://www.transportation.gov/grants/mpdg-areas-persistent-poverty-and-historically-disadvantaged-communities" target="_blank">measures used by grant applicants and federal agencies</a> to track funding needs. 
+ 
 
-There is no such thing as a “perfect” measure. All measures show just one dimension of how a program may be meeting equity goals and should be viewed in combination with each other and with local context in mind to get a fuller picture. 
+For each jurisdiction and category of infrastructure spending, we calculated where that jurisdiction ranks in terms of per capita funding. We then calculate where that jurisdiction ranks across a suite of relevant need characteristics. Comparing these characteristic rankings to the jurisdiction’s funding rank can help illustrate how places are being funded relative to their need.
+ 
 
+<h3>Evaluating Categories of Federal Funding</h3> 
+
+ 
+
+We also calculated funding concentration measures for each infrastructure category. This measure evaluates whether funding in a category is concentrated in the highest-need jurisdictions according to specific characteristics. We consider the highest-need jurisdictions those that rank highest according to a given characteristic and contain 25 percent of the population. 
+
+ 
+
+For example, if the housing and community development category distributes about 25 percent of its funding to the counties where the quarter of the population with the highest housing cost burdens live, those counties receive as much funding as expected, based on population distribution. If the housing and community development category distributes 50 percent of funds to these places, they receive twice as much funding as expected. From a need perspective, it may be appropriate for the highest need places to receive more than 25 percent of the funding.
+ 
+
+We also measured how much funding was distributed to <strong>counties with persistent poverty</strong> and to <strong>disadvantaged counties</strong> for each infrastructure category. Counties are considered to be in persistent poverty if 20 percent or more of the population lived in poverty in the 1990 decennial census, the 2000 decennial census, and the 2022 Small Area Income Poverty Estimates. As part of the Biden Administration’s <a href="https://bidenwhitehouse.archives.gov/environmentaljustice/justice40/" target="_blank">Justice40 Initiative</a>, census tracts were considered disadvantaged—and therefore a priority for funding—if they met several characteristics of underinvestment and environmental burden, including for income levels, climate risk, legacy pollution, energy costs, health risks, housing affordability and quality, transportation barriers, water quality, and unemployment. Federally recognized tribes, including Alaska Native villages, are also considered disadvantaged communities. We consider a county to be disadvantaged if more than 50 percent of its census tracts are disadvantaged, or if more than 50 percent of the county’s population lives in disadvantaged tracts.
  
 
 <h2>About the Authors</h2> 
 
+ 
+
 <ul><li><a href="https://www.urban.org/author/yonah-freemark" target="_blank">Yonah Freemark</a></li><li><a href="https://www.urban.org/author/amanda-hermans" target="_blank">Amanda Hermans</a></li><li><a href="https://www.urban.org/author/gabe-samuels" target="_blank">Gabe Samuels</a></li><li><a href="https://www.urban.org/author/tomi-rajninger" target="_blank">Tomi Rajninger</a></li><li><a href="https://www.urban.org/author/sam-lieberman" target="_blank">Sam Lieberman</a></li><li><a href="https://www.urban.org/author/teddy-maginn" target="_blank">Teddy Maginn</a></li><li><a href="https://www.urban.org/author/mel-langness" target="_blank">Mel Langness</a></li><li><a href="https://www.urban.org/author/david-c-blount" target="_blank">David Blount</a></li></ul> 
-
-<h2>About the PERC Initiative</h2> 
-
-The Melville Charitable Trust funded this work as a component of the Partnership for Equitable and Resilient Communities (PERC), a new justice venture that aims to build cross-sector collaborative partnerships nationwide, prepared to secure and implement public funds specifically focused on advancing economic development, housing, and civic infrastructure. PERC works with cities to strategically form and activate powerful coalitions that center the voices and expertise of Black, Indigenous and Latino/a/x communities, deliver measurable and results-based outcomes, and ultimately, redefine the decision-making process for investment, implementation and long-term impact of public funds. 
-
-By creating the first database that pairs equity metrics with federal infrastructure funding distribution data, this research project supports the PERC Initiative’s goal of advancing racial equity through conscientious local development by providing insight into how federal dollars are distributed across the country and by helping local leaders better understand the positioning of and opportunities for federally supported infrastructure work in their communities.  
 
 [] 
 
-{} 
+{}
+
 
 {indicator_labels} 
 
-percent_poc: Population share who are people of color 
+percent_poc: Share who are people of color 
 
 poverty_rate: Poverty rate 
 
-pop_density: Population density 
-
 med_hh_income: Median household income 
 
-broadband_speed: Broadband speed 
+broadband_speed: Average broadband speed 
 
-hh_int_access: Internet access 
+hh_int_access: Internet access rate 
 
-ghg_per_acre: Greenhouse gas exposure 
-
-ozone: Ozone concentration 
-
-pm25: Air quality                   
-
-diesel_pm: Diesel exhaust concentration 
-
-capacity_environment: Environmental staff capacity 
-
-contaminated_sites: Contaminated site exposure 
-
-superfund_site: Superfund site exposure 
-
-water_system_violations: Water system violations 
-
-energy_cost_hh: Energy cost per household 
-
-grid_disturbances: Energy grid disturbances 
-
-power_generation: Electric power generation 
-
-cnw_500: Inland waterways         
-
-housing_cost_burden: Housing cost burden 
-
-housing_units: Housing units 
-
-capacity_housing: Housing staff capacity 
-
-overcrowded_housing: Overcrowded housing 
-
-vacancy_rate: Vacancy rate 
-
-homelessness: Homelessness rate 
-
-incomplete_plumbing: Housing with incomplete plumbing 
-
-incomplete_kitchen: Housing with incomplete kitchens 
-
-permits: Housing permits         
-
-hud_hcv: Section 8 housing credit vouchers                   
-
-hud_pbs8: Section 8 project-based units                 
-
-hud_ph: Public housing units 
-
-hud_202: Elderly supportive housing  
-
-age_over_64: Population share who are older adults 
+transport_costs: Transportation cost 
 
 annual_vehicle_mi_per_hh: Annual vehicle miles per household 
 
+employment_access_index: Employment access index 
+
 freq_fatal_accidents: Fatal accident frequency 
 
-avg_hh_person_trips: Vehicle trips per household 
+green_commute: Public transit commute share 
 
-access_to_car: Car access  
+pub_transit_stops: Number of public transit stops 
 
-highway_miles: Miles of highway 
+access_to_car: Car access rate 
+
+highway_miles: Highway prevalence 
+
+ozone: Ozone concentration 
+
+pm25: Air pollution 
+
+water_system_violations: Water treatment violation frequency 
+
+energy_cost_hh: Energy cost per household 
+
+housing_cost_burden: Housing cost burden 
+
+overcrowded_housing: Overcrowded housing share 
+
+vacancy_rate: Vacancy rate 
+
+capacity_housing: Housing staff capacity 
+
+homelessness: Homelessness rate 
+
+capacity_environment: Environmental staff capacity 
 
 capacity_transport: Transportation staff capacity 
 
-transport_costs: Transportation costs  
+bridges_poor_condition: Share of bridges in poor condition 
 
-commute_time: Commute time 
+rail_transit_km: Urban rail transit prevalence 
 
-pub_transit_commute: Public transit commute share 
+airports_primary: Number of airports 
 
-green_commute: Green commute share 
+rr_freight_route_miles: Freight railroad prevalence 
 
-pub_transit_stops: Public transit stops 
+rr_pax_route_miles: Intercity passenger rail prevalence 
 
-employment_access_index: Job density 
+rr_incident_number: Railroad crossing incident frequency 
 
-bridges: Bridges 
+docks: Number of docks 
 
-bridges_poor_condition: Bridges in poor condition 
-
-rail_transit_km: Miles of subway or light rail 
-
-airports_primary: Airports 
-
-freq_train_use: Train use frequency 
-
-freq_bus_use: Bus use frequency 
-
-rr_freight_route_miles: Miles of freight railroad 
-
-transport_trade_jobs: Transportation and trade jobs 
-
-rr_pax_route_miles: Miles of passenger railroad 
-
-rr_incident_number: Railroad crossing accidents 
-
-rr_incident_killed: Railroad crossing deaths 
-
-docks: Docks                  
-
-stations_subway: Subway stations 
-
-stations_elevated: Elevated rail stations 
-
-age_under_18: Population share who are children 
-
-share_funds_in_disadvantaged_counties: Disadvantage share  
+share_funds_in_disadvantaged_counties: Disadvantaged share 
 
 share_us_pop_in_funded_disadvantaged_counties: share_us_pop_in_funded_disadvantaged_counties 
 
@@ -873,4 +820,3 @@ share_us_pop_in_funded_poverty_counties: share_us_pop_in_funded_poverty_counties
 
 {} 
 
- 

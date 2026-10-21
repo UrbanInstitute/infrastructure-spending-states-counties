@@ -4,6 +4,21 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%sveltekit.assets%/urban_favicon.ico" />
     <meta name="viewport" content="width=device-width" />
+    <!-- GA lives here, not in Meta's <svelte:head>: head scripts re-run when a
+         new route mounts, which sent a second page_view on top of GA4's
+         history-based one. -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-N0EZ8ZMM8T"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-N0EZ8ZMM8T");
+    </script>
     %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover">

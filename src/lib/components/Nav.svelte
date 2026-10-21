@@ -1,22 +1,26 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import { base } from "$app/paths";
   import Logo from "$lib/components/urban-logo-badge.svelte";
 
   export let title = "";
+
+  /** Rendered height in px, for the layout's `--nav-height`. */
+  export let height = 0;
 </script>
 
-<nav>
+<nav bind:clientHeight={height}>
   <div class="logo">
     <a href="https://www.urban.org">
       <Logo width={30} />
     </a>
   </div>
   {#if title}
-  <div class="project-title layout-container--article-width">
-    <a href="{base}/">
-      <p class="nav--page-title">{title}</p>
-    </a>
-  </div>
+    <div class="project-title layout-container--article-width">
+      <a href="{base}/">
+        <p class="nav--page-title">{title}</p>
+      </a>
+    </div>
   {/if}
 </nav>
 
@@ -27,7 +31,11 @@
     display: flex;
     border-bottom: solid 1px var(--color-gray);
     padding: var(--spacing-2) 0;
-    position: relative;
+    /* Sticks above the pages' search bar (z-index 21), which stacks beneath it
+       at `--nav-height`. */
+    position: sticky;
+    top: 0;
+    z-index: 22;
     min-height: 48px;
   }
   .logo {

@@ -1,18 +1,15 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import SocialButtons from "$components/SocialButtons.svelte";
 
   /* @type {string} */
   export let headline;
-  /* @type {string | null} */
-  export let subhead = null;
   /* @type {string} */
   export let date;
 </script>
+
 <div class="hero text-width">
   <h1 class="hero--page-headline">{headline}</h1>
-  {#if subhead}
-    <p class="hero--subhead">{subhead}</p>
-  {/if}
   <p class="hero--date">{@html date}</p>
 </div>
 <SocialButtons />
@@ -31,10 +28,6 @@
   .hero p {
     font-style: italic;
   }
-  .hero--subhead {
-    margin-bottom: var(--spacing-12);
-    color: var(--color-gray-shade-darkest);
-  }
   .hero--date {
     color: var(--color-gray-shade-darker);
   }
@@ -42,5 +35,4 @@
     font-style: normal;
     font-weight: var(--font-weight-bold);
   }
-    
 </style>

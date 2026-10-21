@@ -1,68 +1,53 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
-  import { slide } from "svelte/transition";
   import Search from "$lib/components/Search.svelte";
-  import AdvancedSearch from "$lib/components/AdvancedSearch.svelte";
-  import icon_open from "$assets/icon_open.svg";
-  import icon_close from "$assets/icon_close.svg";
-  import { logClickToGA } from "$lib/analytics";
+  import IconSearch from "$components/IconSearch.svelte";
+  import { urbanColors } from "@urbaninstitute/dataviz-components/utils";
   export let label;
-  let show_advanced_search = false;
 </script>
 
 <div class="search-nav-bar">
   <div class="search-nav-bar--inner layout-container--article-width">
-    <p class="search-nav-bar--label">{label}</p>
+    <div class="search-nav-bar--label">
+      <div class="search-nav-bar--label-icon">
+        <IconSearch fill={urbanColors.white} size={21} />
+      </div>
+      <div>
+        <span class="search-nav-bar--label-highlight">Search</span>
+        {label}
+      </div>
+    </div>
     <div class="search-nav-bar--search-wrap">
       <div class="search-nav-bar--search">
         <Search placeholder="Search" />
       </div>
-      {#if !show_advanced_search}
-        <button
-          class="advanced--search-button"
-          on:click={(e) => {
-            show_advanced_search = !show_advanced_search;
-            logClickToGA(e.target, "search-nav-advanced--open");
-          }}><img src={icon_open} alt="open advanced search" /></button
-        >
-      {:else}
-        <button
-          class="advanced--search-button"
-          on:click={(e) => {
-            show_advanced_search = !show_advanced_search;
-            logClickToGA(e.target, "search-nav-advanced--close");
-          }}><img src={icon_close} alt="close advanced search" /></button
-        >
-      {/if}
     </div>
   </div>
-  {#if show_advanced_search}
-    <div
-      class="main-search--advanced-search"
-      transition:slide={{ duration: 250 }}
-    >
-      <AdvancedSearch />
-    </div>
-  {/if}
 </div>
 
 <style>
   .search-nav-bar {
-    background-color: var(--color-gray-shade-lighter);
-    position: relative;
+    background-color: var(--color-blue-shade-darkest);
+    color: var(--color-white);
+    position: sticky;
+    /* Directly beneath the sticky nav; see `+layout.svelte`. */
+    top: var(--nav-height, 0px);
     z-index: 21;
   }
   .search-nav-bar--inner {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding-top: var(--spacing-4);
-    padding-bottom: var(--spacing-4);
+    padding-top: var(--spacing-3);
+    padding-bottom: var(--spacing-3);
   }
 
   .search-nav-bar--label {
-    font-size: var(--font-size-small);
+    color: var(--color-white);
+    font-size: 20px;
     font-weight: var(--font-weight-bold);
-    line-height: 1;
+    font-family: var(--font-family-sans-alt);
+    line-height: 24px;
     margin: 0;
     display: none;
   }
@@ -74,25 +59,23 @@
     display: flex;
     align-items: center;
   }
-  .advanced--search-button {
-    width: 37px;
-    height: 37px;
-    margin-left: var(--spacing-4);
-    border-radius: 50%;
-    appearance: none;
-    border: solid 1px var(--color-blue);
-    background: var(--color-blue);
-    cursor: pointer;
+  .search-nav-bar--label-icon {
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+    flex-grow: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
-    right: var(--spacing-12);
-    /* position: absolute; */
-    bottom: calc(-27px - var(--spacing-12) - var(--spacing-4));
+  }
+
+  .search-nav-bar--label-highlight {
+    color: var(--color-white);
+    gap: 4px;
   }
   @media (min-width: 768px) {
     .search-nav-bar--label {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 </style>

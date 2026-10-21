@@ -1,3 +1,4 @@
+// A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review.
 export const urbanColors = {
   black: "#000000",
   white: "#FFFFFF",
@@ -27,7 +28,7 @@ export const urbanColors = {
   yellow_shade_lightest: "#FFF2CF",
   magenta_shade_darkest: "#351123",
   magenta_shade_darker: "#761548",
-  magenta_shade_dark: "#12719E",
+  magenta_shade_dark: "#AF1F6B",
   magenta: "#EC00BB",
   magenta_shade_medium: "#E54096",
   magenta_shade_light: "#E46AA7",
@@ -41,7 +42,7 @@ export const urbanColors = {
   green_shade_light: "#98CF90",
   green_shade_lighter: "#BCDEB4",
   green_shade_lightest: "#DCEDD9",
-  red_shade_darkest: "#1A2E19",
+  red_shade_darkest: "#370B0A",
   red_shade_darker: "#6E1614",
   red_shade_dark: "#A4201D",
   red: "#DB2B27",
@@ -76,13 +77,8 @@ export function blues(numColors = 8, reverse = false) {
     urbanColors.blue_shade_lighter,
     urbanColors.blue_shade_lightest,
   ];
-  if (numColors > colors.length) {
-    numColors = colors.length;
-  }
-  if (reverse) {
-    return colors.reverse();
-  }
-  return colors.slice(0, numColors);
+  const selected = colors.slice(0, Math.min(numColors, colors.length));
+  return reverse ? selected.reverse() : selected;
 }
 
 /**

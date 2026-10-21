@@ -1,3 +1,4 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import { fade } from "svelte/transition";
   import info_icon from "$assets/information_icon.svg";
@@ -6,16 +7,16 @@
   export let button_size = 31;
   export let align = "left";
 
+  /** @type {HTMLButtonElement} */
   let buttonEl;
 
   let show_text = false;
-  let text_y_pos = 0;
-  let text_x_pos = 0;
 </script>
 
 <svelte:window
   on:click={(e) => {
-    if (e.target == buttonEl || e.target.parentNode == buttonEl) {
+    const target = /** @type {any} */ (e.target);
+    if (target == buttonEl || target.parentNode == buttonEl) {
       return;
     }
     show_text = false;
@@ -26,11 +27,8 @@
     bind:this={buttonEl}
     on:click={(e) => {
       show_text = !show_text;
-      const rect = e.target.getBoundingClientRect();
-      text_y_pos = rect.top + window.scrollY;
-      text_x_pos = rect.left;
       logClickToGA(
-        e.detail.target,
+        e.currentTarget,
         "helptip--" + (show_text ? "open" : "close")
       );
     }}
@@ -45,8 +43,6 @@
     <div
       class="helptip--text-wrapper {align}-align"
       transition:fade={{ duration: 100 }}
-      style:top="{text_y_pos}px"
-      style:left="{text_x_pos}px"
     >
       <p>{@html text}</p>
     </div>
@@ -54,37 +50,49 @@
 </div>
 
 <style>
+  /* The tip is positioned against this wrapper, which shrinks to the button
+     (an inline block, or a flex item where the parent is a flex row), so no
+     measuring is needed: it sits above the button whatever the page around
+     it does (review #5). */
+  .helptip--wrapper {
+    position: relative;
+    display: inline-block;
+  }
   button {
     appearance: none;
     background: none;
     border: none;
     cursor: pointer;
   }
-  .helptip--wrapper {
-    /* position: relative; */
-  }
+  /* Above the button. The default opens to its upper-left, right edges
+     aligned; `right-align` opens to its upper-right, left edges aligned. */
   .helptip--text-wrapper {
     background: var(--color-white);
     position: absolute;
+    bottom: 100%;
     right: 0;
-    top: 0;
     width: 350px;
     padding: var(--spacing-4);
-    transform: translate(-100%, -100%);
     border: solid 1px var(--color-gray-shade-light);
     box-shadow: 0px 4px 4px 1px rgba(0, 0, 0, 0.25);
   }
   .helptip--text-wrapper.right-align {
-    transform: translate(0, -100%);
+    right: auto;
+    left: 0;
   }
   .helptip--text-wrapper p {
     font-size: var(--font-size-small);
   }
   @media (max-width: 768px) {
-    .helptip--text-wrapper {
-      left: var(--spacing-6) !important;
-      width: calc(100% - var(--spacing-12));
-      transform: translate(0, -100%);
+    /* The content column starts one gutter in from the viewport edge and the
+       button sits at its start, so a tip of the viewport width less both
+       gutters spans the column, as it did when it was placed against the
+       hero surface. */
+    .helptip--text-wrapper,
+    .helptip--text-wrapper.right-align {
+      right: auto;
+      left: 0;
+      width: calc(100vw - var(--spacing-12));
     }
   }
 </style>

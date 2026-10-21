@@ -1,273 +1,352 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <!--
   @component
-  Generates an SVG Barbell chart.
+  The comparison table for the geography pages' "How Do Similar Areas Compare?"
+  module. One row per funded category: a label, an inline barbell track holding
+  the comparison median and this place's value, and the place's funding.
+
+  Built as a table rather than a single SVG (per `design/geography.png`) so the
+  row labels, the axis end-labels and the dollar values are laid out by the
+  table itself instead of being positioned by hand. Every row shares one x
+  scale, computed here from `x_max`, so the rows stay comparable — and the
+  parent computes `x_max` across all rows, not just the filtered ones, so
+  filtering does not move the dots.
+
+  Dot positions are `calc()` percentages of the track cell, inset by the dot
+  radius at each end, which keeps the table responsive without measuring
+  anything.
  -->
 <script>
-  import { browser } from "$app/environment";
-  import { scalePoint, scaleLinear } from "d3-scale";
+  import { scaleLinear } from "d3-scale";
   import { max } from "d3-array";
   import { format } from "d3-format";
-  import { dollarsToString, get_program_name } from "$lib/utils";
-  import { program_map } from "$stores/programs.js";
+  import { dollarsToString } from "$lib/utils";
+  import { category_display_name } from "$stores/categories.js";
   import { current_tooltip } from "$stores/tooltip";
-  import Loading from "$components/Loading.svelte";
 
-  /** @type {Array<Record<string, any>>} data=[] - Data points to plot */
+  /** @typedef {{category: string, funding: number, median: number | null, median_funded: number | null}} CategoryRow */
+
+  /**
+   * One entry per category the place received funding for.
+   * @type {CategoryRow[]}
+   **/
   export let data = [];
 
+  /** @type {"median" | "median_funded"} */
   export let compare_key = "median";
 
+  /** @type {string} */
   export let current_location = "";
 
+  /** @type {string} */
   export let key_compare_label = "";
 
-  const margin = {
-    top: 25,
-    right: 80,
-    bottom: 50,
-    left: 60,
-  };
+  /**
+   * Upper bound of the shared x scale.
+   * @type {number}
+   **/
+  export let x_max = /** @type {number} */ (
+    max(data, (d) => Math.max(d.funding, Number(d[compare_key]) || 0)) ?? 0
+  );
 
-  const tickFormat = format("$~s");
+  // Radius of the value dots, in px. The scale is inset by one radius at each
+  // end so a dot at $0 or at the maximum still sits inside the track.
+  const DOT_RADIUS = 8;
 
-  const barbell_height = 40;
-  let width = 600;
-  export let x_max = max(data, (d) => Math.max(d.funding, d[compare_key]));
-  $: num_ticks = width < 500 ? 3 : 8;
-  $: chartData = data.sort((a, b) => b.funding - a.funding);
-  $: height =
-    barbell_height * chartData.length * 1.25 + margin.top + margin.bottom;
-  $: yScale = scalePoint()
-    .domain(chartData.map((d) => d.program))
-    .range([margin.top, height - margin.bottom - margin.top]);
-  $: xScale = scaleLinear()
-    .domain([0, x_max])
-    .range([0, width - margin.right - margin.left])
+  const axis_format = format("$~s");
+
+  $: x_scale = scaleLinear()
+    .domain([0, x_max > 0 ? x_max : 1])
+    .range([0, 1])
     .nice();
-  $: xTicks = xScale.ticks(num_ticks);
-  $: circle_radius = 6;
 
-  function on_mouseover(event, data) {
-    const program_info = $program_map.get(data.program.replace("_per_1k", ""));
-    let tooltip_content = [
-      {
-        label: "",
-        text: `<strong>${get_program_name(program_info.short_name)}</strong>`,
-      },
-      {
-        label: "Funding per 1,000 residents:",
-        text: dollarsToString(data.funding),
-      },
-      {
-        label: `Median among ${key_compare_label}:`,
-        text: dollarsToString(data[compare_key]),
-      },
-    ];
+  // `nice()` rounds the domain out; the rounded value is what the right-hand
+  // axis header reads.
+  $: axis_max = x_scale.domain()[1];
 
+  $: rows = build_rows(data, compare_key, x_scale);
+
+  /**
+   * Position along the track as a CSS length. Percentages keep the table
+   * responsive; the px terms inset both ends by the dot radius.
+   * @param {number} t - Scaled position, 0–1
+   * @returns {string}
+   */
+  function track_offset(t) {
+    return `calc(${DOT_RADIUS}px + ${t} * (100% - ${DOT_RADIUS * 2}px))`;
+  }
+
+  /**
+   * Precompute each row's label and track geometry. The scale is taken as an
+   * argument rather than read from the outer scope so that the reactive
+   * statement above re-runs when the scale changes.
+   * @param {CategoryRow[]} category_rows
+   * @param {"median" | "median_funded"} key
+   * @param {import("d3-scale").ScaleLinear<number, number>} scale
+   */
+  function build_rows(category_rows, key, scale) {
+    return [...category_rows]
+      .sort((a, b) => b.funding - a.funding)
+      .map((row) => {
+        const median = typeof row[key] === "number" ? Number(row[key]) : null;
+        const value_t = scale(row.funding);
+        const median_t = median === null ? null : scale(median);
+        return {
+          ...row,
+          label: category_display_name(row.category),
+          median_value: median,
+          value_offset: track_offset(value_t),
+          median_offset: median_t === null ? null : track_offset(median_t),
+          bar_offset:
+            median_t === null
+              ? null
+              : track_offset(Math.min(value_t, median_t)),
+          bar_width:
+            median_t === null
+              ? null
+              : `calc(${Math.abs(value_t - median_t)} * (100% - ${
+                  DOT_RADIUS * 2
+                }px))`,
+        };
+      });
+  }
+
+  /**
+   * @param {MouseEvent} event
+   * @param {{label: string, funding: number, median_value: number | null}} row
+   */
+  function on_mousemove(event, row) {
     $current_tooltip = {
       xPosition: event.pageX,
       yPosition: event.pageY,
-      content: tooltip_content,
+      content: [
+        { label: "", text: `<strong>${row.label}</strong>` },
+        {
+          label: `${current_location}, per 1,000 residents:`,
+          text: dollarsToString(row.funding),
+        },
+        {
+          label: `Median among ${key_compare_label}:`,
+          text:
+            row.median_value === null
+              ? "Not available"
+              : dollarsToString(row.median_value),
+        },
+      ],
     };
   }
 </script>
 
-<div class="barbell-wrap" bind:clientWidth={width}>
-  <div class="key-wrapper">
-    <div class="key-item">
-      <div class="key-swatch median" />
-      <p class="key-label">
-        Median among {key_compare_label}
-      </p>
-    </div>
-    <div class="key-item">
-      <div class="key-swatch value" />
-      <p class="key-label">{current_location}</p>
-    </div>
-  </div>
-  <p class="axis-label left">Funding per 1,000 residents</p>
-  <div class="barbell--chart">
-    {#if browser}
-      <svg
-        {width}
-        {height}
-        aria-label="A chart comparing funding per 1,000 residents for each program compared with the median in similar {key_compare_label}"
-        role="img"
-      >
-        <g class="axes" transform="translate({margin.left}, 0)">
-          <line
-            x1={-margin.left}
-            x2={width - margin.right}
-            y1={margin.top}
-            y2={margin.top}
-            stroke="#000000"
-          />
-          {#each xTicks as tick}
-            <line
-              x1={xScale(tick)}
-              x2={xScale(tick)}
-              y1={margin.top}
-              y2={height}
-              stroke="#d2d2d2"
-            />
-            <text
-              x={xScale(tick)}
-              y={margin.top}
-              dy="-1em"
-              text-anchor="middle"
-              class="chart--tick-label">{tickFormat(tick)}</text
+<div class="barbell-table--wrap">
+  <table
+    class="barbell-table"
+    aria-label="Funding per 1,000 residents for each category, compared with the median among {key_compare_label}"
+  >
+    <colgroup>
+      <col class="col-label" />
+      <col class="col-axis" />
+      <col class="col-axis" />
+      <col class="col-value" />
+    </colgroup>
+    <thead>
+      <tr>
+        <th scope="col" class="cell-label">Category</th>
+        <th scope="col" class="cell-axis cell-axis--start">{axis_format(0)}</th>
+        <th scope="col" class="cell-axis cell-axis--end"
+          >{axis_format(axis_max)}</th
+        >
+        <th scope="col" class="cell-value">Funding per 1,000 residents</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each rows as row (row.category)}
+        <tr
+          on:mousemove={(e) => on_mousemove(e, row)}
+          on:mouseleave={() => ($current_tooltip = null)}
+        >
+          <th scope="row" class="cell-label">{row.label}</th>
+          <td class="cell-track" colspan="2">
+            <div class="track">
+              {#if row.bar_offset !== null}
+                <div
+                  class="track--bar"
+                  style:left={row.bar_offset}
+                  style:width={row.bar_width}
+                />
+              {/if}
+              {#if row.median_offset !== null}
+                <div class="track--dot median" style:left={row.median_offset} />
+              {/if}
+              <div class="track--dot value" style:left={row.value_offset} />
+            </div>
+            <span class="track--description"
+              >Median among {key_compare_label}: {row.median_value === null
+                ? "not available"
+                : dollarsToString(row.median_value)}</span
             >
-          {/each}
-        </g>
-        <g transform="translate(0, {barbell_height / 2})">
-          {#each chartData as item}
-            {@const yPos = yScale(item.program)}
-            {@const xValuePos = xScale(item.funding)}
-            {@const xMedianPos = xScale(item[compare_key])}
-            <g
-              transform="translate({margin.left}, 0)"
-              on:mousemove={(e) => on_mouseover(e, item)}
-              on:mouseleave={(e) => ($current_tooltip = null)}
-            >
-              <g transform="translate(0, {barbell_height / 2})">
-                <rect
-                  x={Math.min(xMedianPos, xValuePos)}
-                  y={yScale(item.program) - barbell_height / 8}
-                  width={Math.abs(xValuePos - xMedianPos)}
-                  height={barbell_height / 4}
-                  fill="#dcdbdb"
-                />
-                <circle
-                  cx={xMedianPos}
-                  cy={yPos}
-                  r={circle_radius}
-                  fill="#a2d4ec"
-                  stroke-width="2px"
-                  stroke="#000000"
-                />
-                <circle
-                  cx={xValuePos}
-                  cy={yPos}
-                  stroke="#000000"
-                  stroke-width="2px"
-                  r={circle_radius}
-                  fill="#fdbf11"
-                />
-                <text
-                  y={yPos}
-                  dy="0.5em"
-                  dx={item.funding >= item[compare_key] ? "1em" : "-1em"}
-                  x={xValuePos}
-                  class="chart-annotation-stroke"
-                  text-anchor={item.funding >= item[compare_key]
-                    ? "start"
-                    : "end"}>{dollarsToString(item.funding)}</text
-                >
-              </g>
-            </g>
-          {/each}
-        </g>
-      </svg>
-      <div class="barbell--annotation-layer">
-        {#each chartData as item}
-          {@const yPos = yScale(item.program) + barbell_height / 2}
-          {@const xPos = Math.min(
-            xScale(item.funding),
-            xScale(item[compare_key])
-          )}
-          <p
-            style:transform="translate({xPos}px, {yPos - 10}px)"
-            class="barbell-chart--program-label"
-            on:mousemove={(e) => on_mouseover(e, item)}
-            on:mouseleave={(e) => ($current_tooltip = null)}
+          </td>
+          <td class="cell-value">{dollarsToString(row.funding)}</td>
+        </tr>
+      {:else}
+        <tr>
+          <td class="cell-empty" colspan="4"
+            >No funded categories to compare.</td
           >
-            {get_program_name($program_map.get(item.program.replace("_per_1k", ""))?.short_name)}
-          </p>
-        {/each}
-      </div>
-    {:else}
-      <Loading {height} />
-    {/if}
-  </div>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
 </div>
 
 <style>
-  .barbell-wrap {
+  .barbell-table--wrap {
     width: 100%;
+    overflow-x: auto;
   }
-  .key-wrapper {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 1rem;
+  table.barbell-table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 600px;
   }
-  .key-item {
-    display: flex;
-    justify-content: center;
-    align-items: middle;
-    text-align: center;
-    margin-right: 2rem;
+  col.col-label {
+    width: 45%;
   }
-  .key-swatch {
-    width: 14px;
-    height: 14px;
-    border-radius: 7px;
-    border: solid 2px var(--color-black);
-    flex-shrink: 0;
+  col.col-axis {
+    width: 15%;
   }
-  .key-swatch.median {
-    background: var(--color-blue-shade-light);
+  col.col-value {
+    width: 25%;
   }
-  .key-swatch.value {
-    background: var(--color-yellow);
+  table.barbell-table thead tr {
+    background: var(--color-gray-shade-lighter);
   }
-  .key-label {
+  table.barbell-table th {
+    font-family: var(--font-family-sans-alt);
     font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+  }
+  table.barbell-table thead th {
+    padding-block: var(--spacing-3);
+  }
+  table.barbell-table .cell-label {
+    text-align: left;
+    padding-inline: var(--spacing-4);
+  }
+  table.barbell-table .cell-axis {
+    padding: 0;
+    text-align: left;
+  }
+  table.barbell-table .cell-axis--end {
+    text-align: right;
+  }
+  table.barbell-table .cell-value {
+    text-align: right;
+    padding-inline-end: var(--spacing-4);
+    font-size: var(--font-size-small);
+    white-space: nowrap;
+  }
+  /* The header carries the units ("Funding per 1,000 residents"), so it wraps
+     within the column; the dollar values below it stay on one line. */
+  table.barbell-table thead .cell-value {
+    white-space: normal;
+  }
+  table.barbell-table tbody th,
+  table.barbell-table tbody td {
+    border-bottom: solid 1px var(--color-gray-shade-lighter);
+    padding-block: var(--spacing-3);
     vertical-align: middle;
-    line-height: 1em;
-    margin-left: 0.5em;
   }
-  .barbell--chart {
-    position: relative;
-  }
-  .barbell--annotation-layer {
-    position: absolute;
-    top: 0;
-    left: 20px;
-    right: 0;
-    bottom: 0;
-  }
-  .barbell-chart--program-label {
-    font-size: var(--font-size-xsmall);
-    /* font-weight: var(--font-weight-bold); */
-  }
-  p.barbell-chart--program-label {
-    position: absolute;
-    height: 3rem;
-    cursor: pointer;
-    transform: translateY(-0.5em);
-  }
-  text.chart-annotation-stroke {
+  table.barbell-table tbody th.cell-label {
+    font-family: var(--font-family-sans);
     font-size: var(--font-size-small);
+    font-weight: var(--font-weight-normal);
   }
-
+  table.barbell-table tbody tr:hover {
+    background: var(--color-gray-shade-lightest);
+  }
+  table.barbell-table .cell-track {
+    padding-inline: 0;
+  }
+  /* The visible track spans the two axis columns; the dots are positioned as a
+     share of its width, so a single scale serves every row. */
+  .track {
+    position: relative;
+    height: 16px;
+  }
+  .track--bar {
+    position: absolute;
+    top: 50%;
+    height: 12px;
+    transform: translateY(-50%);
+    background: var(--color-gray-shade-lighter);
+    border-radius: 6px;
+  }
+  .track--dot {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    margin-left: -8px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  .track--dot.median {
+    background: var(--color-black);
+  }
+  .track--dot.value {
+    background: var(--color-blue);
+  }
+  /* The median only has a readable value in the tooltip, which is mouse-only. */
+  .track--description {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  /* Narrow screens: let the table fit rather than scroll. Scrolling here would
+     leave the label column visible and push the tracks and dollar values, i.e.
+     the whole point of the module, off screen. */
   @media (max-width: 768px) {
-    .key-item {
-      display: block;
-      text-align: center;
+    table.barbell-table {
+      min-width: 0;
     }
-    .key-swatch {
-      margin: 0 auto var(--spacing-2);
+    col.col-label {
+      width: 40%;
     }
-    .barbell-chart--program-label {
-      left: 0px !important;
+    col.col-value {
+      width: 30%;
     }
-    .barbell--annotation-layer {
-      display: none;
-    }
-  }
-  @media (max-width: 540px) {
-    text.chart-annotation-stroke {
+    table.barbell-table thead th,
+    table.barbell-table tbody th.cell-label,
+    table.barbell-table .cell-value {
       font-size: var(--font-size-xsmall);
     }
+    table.barbell-table .cell-label {
+      padding-inline: var(--spacing-2);
+    }
+    table.barbell-table .cell-value {
+      padding-inline-end: var(--spacing-2);
+    }
+    .track--dot {
+      width: 12px;
+      height: 12px;
+      margin-left: -6px;
+    }
+    .track--bar {
+      height: 8px;
+    }
+  }
+  table.barbell-table .cell-empty {
+    padding: var(--spacing-6);
+    text-align: center;
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-gray-shade-dark);
   }
 </style>

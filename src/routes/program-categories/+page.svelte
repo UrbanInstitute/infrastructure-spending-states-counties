@@ -1,22 +1,22 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import { base } from "$app/paths";
-  import {
-    slugify_program,
-    format_category_name,
-    get_site_url,
-  } from "$lib/utils";
+  import { get_site_url } from "$lib/utils";
 
-  // Furniture components
+  // layout helpers
+  import LayoutSection from "$components/LayoutSection.svelte";
+  import LayoutBlock from "$components/LayoutBlock.svelte";
+
+  // furniture components
   import Meta from "$components/Meta.svelte";
   import About from "$components/About.svelte";
   import Credits from "$components/Credits.svelte";
   import SearchNavBar from "$components/SearchNavBar.svelte";
-  import LayoutSection from "$components/LayoutSection.svelte";
-  import LayoutBlock from "$components/LayoutBlock.svelte";
+  import HeroArt from "$components/HeroArt.svelte";
+  import CategoryGrid from "$components/CategoryGrid.svelte";
 
   // data and content
   import site_content from "$data/site_content.aml";
-  import program_language from "$data/program_language.json";
 
   /** @type {import('./$types').PageData} */
   export let data;
@@ -28,63 +28,46 @@
   url={get_site_url("program-categories")}
 />
 <SearchNavBar
-  label="Search for a type of infrastructure, a federal program, or a geography."
+  label="for a type of infrastructure, a federal program, or a geography."
 />
-<div class="layout-container--article-width page--content">
-  <LayoutSection layout="col-1">
+<article>
+  <!--
+    Per design/categories-landing-page.png this page follows the homepage
+    arrangement rather than the LayoutHero one the category, program and
+    geography pages use: a full-bleed hero band with the headline sitting
+    below it rather than on a white surface over it.
+  -->
+  <HeroArt image="{base}/hero-icons.svg" />
+  <LayoutSection padding={false}>
     <LayoutBlock>
-      <h1 class="overview-page--page-title">
+      <h1 class="overview-page--page-title categories--title">
         {site_content.category_page.header}
       </h1>
-      <p>{@html site_content.category_page.about_text}</p>
+      <p class="categories--intro">
+        {@html site_content.category_page.about_text}
+      </p>
+    </LayoutBlock>
+    <LayoutBlock size="large">
+      <div class="categories--grid">
+        <CategoryGrid categories={data.categories_simple} />
+      </div>
     </LayoutBlock>
   </LayoutSection>
-  <LayoutSection layout="col-1">
-    {#each data.categories as category}
-      <div id={slugify_program(category)} class="category--section">
-        <LayoutBlock>
-          <h2 class="category--subhead">{format_category_name(category)}</h2>
-          <p>{@html site_content.category_page.descriptions[category]}</p>
-          <ul class="category--program-list">
-            {#each data.programs.filter( (program) => program.categories.includes(category) ) as program}
-              {@const program_language_vars = program_language.find(
-                ({ program_short_name }) =>
-                  program_short_name === program.short_name
-              )}
-              <li>
-                <p>
-                  <a href="{base}/program/{slugify_program(program.short_name)}"
-                    >{program_language_vars.program_name}</a
-                  >
-                </p>
-              </li>
-            {/each}
-          </ul>
-        </LayoutBlock>
-      </div>
-    {/each}
-  </LayoutSection>
-  <section class="section--page-footer">
+  <LayoutSection theme="white" hairline>
     <About content={site_content.about} />
-  </section>
-  <section>
     <Credits content={site_content.credits} />
-  </section>
-</div>
+  </LayoutSection>
+</article>
 
 <style>
-  .page--content {
-    margin-top: var(--spacing-12);
+  .categories--title {
+    text-align: center;
   }
-  .category--program-list {
-    padding-left: 3em;
-    margin-bottom: var(--spacing-6);
+  .categories--intro {
+    text-align: center;
+    margin-block-end: var(--spacing-16);
   }
-  .category--subhead {
-    font-size: var(--font-size-3xl);
-    margin-bottom: var(--spacing-6);
-  }
-  .category--subhead {
-    font-size: var(--font-size-2xl);
+  .categories--grid {
+    padding-block-end: var(--spacing-20);
   }
 </style>

@@ -1,12 +1,22 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
+  // layout helpers
+  import LayoutHero from "$components/LayoutHero.svelte";
   import LayoutSection from "$components/LayoutSection.svelte";
   import LayoutBlock from "$components/LayoutBlock.svelte";
+
+  // furniture components
   import SearchNavBar from "$components/SearchNavBar.svelte";
+  import Card from "$components/Card.svelte";
+  import SourcesTable from "$components/SourcesTable.svelte";
   import About from "$components/About.svelte";
   import Credits from "$components/Credits.svelte";
   import Meta from "$components/Meta.svelte";
+
+  // data and content
   import site_content from "$data/site_content.aml";
-  import { get_site_url } from "$lib/utils.js";
+  import { base } from "$app/paths";
+  import { get_site_url, format_text_template } from "$lib/utils.js";
 </script>
 
 <Meta
@@ -15,75 +25,75 @@
   url={get_site_url("user-guide")}
 />
 <SearchNavBar
-  label="Search for a type of infrastructure, a federal program, or a geography."
+  label="for a type of infrastructure, a federal program, or a geography."
 />
-<div class="layout-container--article-width page--content">
-  <LayoutSection layout="col-1">
+<article>
+  <LayoutHero>
     <LayoutBlock>
       <h1 class="overview-page--page-title">
         {site_content.user_guide.header}
       </h1>
     </LayoutBlock>
-    {#each site_content.user_guide.text as item, i (i)}
-      {#if item.type === "text"}
-        <div class="user-guide--text">{@html item.value}</div>
-      {:else if item.type === "table"}
-        <iframe
-          title="Indicators and Data Sources"
-          aria-label="Table"
-          id="datawrapper-chart-CkbAx"
-          src="https://datawrapper.dwcdn.net/CkbAx/1/"
-          scrolling="no"
-          frameborder="0"
-          style="width: 0; min-width: 100% !important; border: none;"
-          height="5100"
-          data-external="1"
-        /><script type="text/javascript">
-          !(function () {
-            "use strict";
-            window.addEventListener("message", function (a) {
-              if (void 0 !== a.data["datawrapper-height"]) {
-                var e = document.querySelectorAll("iframe");
-                for (var t in a.data["datawrapper-height"])
-                  for (var r = 0; r < e.length; r++)
-                    if (e[r].contentWindow === a.source) {
-                      var i = a.data["datawrapper-height"][t] + "px";
-                      e[r].style.height = i;
-                    }
-              }
-            });
-          })();
-        </script>
-      {/if}
-    {/each}
+  </LayoutHero>
+  <!--
+    Per design/user-guide.png the body runs straight on from the hero on the
+    same white surface, so this section supplies no padding of its own — the
+    hero's own bottom padding is the whole gap. Same arrangement the categories
+    overview uses under its hero.
+  -->
+  <LayoutSection padding={false}>
+    <div class="user-guide--body">
+      {#each site_content.user_guide.text as item, i (i)}
+        {#if item.type === "text"}
+          <LayoutBlock>
+            <div
+              class="user-guide--text"
+              class:user-guide--text-after-table={site_content.user_guide.text[
+                i - 1
+              ]?.type === "table"}
+            >
+              {@html format_text_template(item.value, { base })}
+            </div>
+          </LayoutBlock>
+        {:else if item.type === "table"}
+          <!-- The comp breaks the table out of the 760px reading column; `xl`
+               is the design system's nearest width to the 1058px it draws. The
+               box it draws around the table is a Card — its 1px #ececec border
+               is `--color-gray-shade-lighter` exactly.
+
+               `item.value` is the AML's position marker, not data: the table
+               reads `src/data/sources.csv` directly. -->
+          <LayoutBlock size="xl">
+            <Card>
+              <SourcesTable title={site_content.user_guide.table_title} />
+            </Card>
+          </LayoutBlock>
+        {/if}
+      {/each}
+    </div>
   </LayoutSection>
-  <section>
-    <div class="section-divide-rule" />
+  <LayoutSection theme="white" hairline>
     <About content={site_content.about} />
-  </section>
-  <section>
     <Credits content={site_content.credits} />
-  </section>
-</div>
+  </LayoutSection>
+</article>
 
 <style>
-  .page--content {
-    margin-top: var(--spacing-12);
+  .user-guide--body {
+    padding-block-end: var(--spacing-20);
   }
   .user-guide--text {
     margin-bottom: var(--spacing-8);
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-xl);
     line-height: var(--line-height-normal);
   }
-  :global(.user-guide--text h2) {
-    font-size: var(--font-size-2xl);
-  }
-  h1 {
-    font-size: var(--font-size-5xl);
+  /* The table's Card has no bottom margin, so the heading after it would
+     otherwise sit flush against it. Match the gap above other section h2s. */
+  .user-guide--text-after-table {
+    margin-top: var(--spacing-8);
   }
   @media (min-width: 769px) {
     .user-guide--text {
-      margin-bottom: var(--spacing-8);
       line-height: var(--line-height-relaxed);
     }
   }

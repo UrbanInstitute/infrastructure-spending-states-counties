@@ -1,13 +1,4 @@
-/* Font loading borrowed from: https://github.com/UI-Research/lyndon/blob/dev/src/global/global.css */
-
-/* Import Lato font from Google fonts */
-@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap");
-/* Import Futura PT font from typekit */
-@import url("//use.typekit.net/lqo0ftp.css");
-
-/*
- * Font family defaults taken from : https://github.com/UI-Research/lyndon/blob/97dab753e4a0adebe000d5dfb409b776333d07d2/src/tailwind/tokens/font-family.json
-*/
+/* A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. */
 :root {
   --font-family-sans: Lato, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
@@ -20,8 +11,7 @@
   --font-family-mono: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
     monospace;
   --font-size-normal: 1rem;
-  --font-size-xsmall: 0.750rem;
-  --font-size-small: 0.875rem;
+  --font-size-xsmall: 0.75rem;
   --font-size-small: 0.875rem;
   --font-size-large: 1.125rem;
   --font-size-xl: 1.25rem;
@@ -111,11 +101,13 @@
   --spacing-16: 4rem;
   --spacing-20: 5rem;
   --body-width: 760px;
+  --card-box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.1);
+  --section-top-box-shadow: 0px -6px 20px 0 rgba(0, 0, 0, 0.05);
   font-family: var(--font-family-sans);
   line-height: 1.5;
   font-weight: 400;
   font-size: 16px;
-  color-scheme: light dark;
+  color-scheme: light;
   color: #000000;
   background-color: #ffffff;
   font-synthesis: none;
@@ -152,6 +144,13 @@ body,
   box-sizing: border-box;
 }
 
+/* Anchor and `scrollIntoView` targets land below the sticky nav (its height is
+   set by `+layout.svelte`). The search bar beneath it is cleared by the target
+   sections' own top padding. */
+html {
+  scroll-padding-top: var(--nav-height, 0px);
+}
+
 /*
  * Typography
  * Classes are based on Figma: https://www.figma.com/file/Tnl8cmQL64BXvjykHDm4lR/Urban-Styles-%26-Components?node-id=8%3A21&t=tj4wqp9e6su2pu69-1
@@ -159,6 +158,15 @@ body,
 
 /*
  * Font sizes
+ *
+ * This block and the font-weight / font-family / line-height / text-transform /
+ * text-decoration utilities below it are a deliberate vocabulary, not live code:
+ * nothing in `src/` uses them today. They are kept because content HTML can use
+ * them without any reference appearing in `src/` — `.text-highlight` is exactly
+ * that case, applied in `site_content.aml` and reaching the page through
+ * `MainSearch`'s `{@html}`. svelte-check cannot see a class used that way, and
+ * neither can a grep of the components. Everything else unused was removed in
+ * the step 7 cleanup; this layer was kept by decision. See `redesign-plan.md`.
  */
 
 .text-base {
@@ -188,7 +196,6 @@ body,
 .text-4xl {
   font-size: var(--font-size-4xl);
 }
-
 .text-5xl {
   font-size: var(--font-size-5xl);
 }
@@ -303,73 +310,63 @@ body,
 
 h1 {
   color: var(--color-black);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-4xl);
+  font-family: var(--font-family-sans-alt);
+  font-size: 36px;
+  line-height: 44px;
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
   text-transform: none;
 }
 
 h2 {
   color: var(--color-black);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-3xl);
+  font-size: 32px;
+  line-height: 40px;
+  font-family: var(--font-family-sans-alt);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-snug);
   text-transform: none;
 }
 
 h3 {
   color: var(--color-black);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-2xl);
+  font-family: var(--font-family-sans-alt);
   font-weight: var(--font-weight-light);
-  line-height: var(--line-height-normal);
   text-transform: uppercase;
+  font-size: 28px;
+  line-height: 36px;
 }
 
 h4 {
   color: var(--color-black);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-xl);
+  font-family: var(--font-family-sans-alt);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-normal);
   text-transform: none;
+  font-size: 24px;
+  line-height: 32px;
 }
 
 h5 {
   color: var(--color-black);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-large);
+  font-family: var(--font-family-sans-alt);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-normal);
   text-transform: none;
+  font-size: 20px;
+  line-height: 28px;
 }
 
 h6 {
   color: var(--color-black);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-normal);
-  text-transform: none;
-}
-
-.sub-head {
-  color: var(--color-black);
   font-family: var(--font-family-sans-alt);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-medium);
-  line-height: auto;
-  text-transform: uppercase;
+  font-weight: var(--font-weight-bold);
+  text-transform: none;
+  font-size: 18px;
+  line-height: 24px;
 }
 
 /*
  * Paragraphs
  */
 
-p,
-.text-paragraph {
+p {
   font-family: var(--font-family-sans);
   font-size: var(--font-size-large);
   font-weight: var(--font-weight-normal);
@@ -377,151 +374,33 @@ p,
   color: var(--color-gray-shade-darkest);
 }
 
-strong,
-.text-paragraph--bold {
+strong {
   font-weight: var(--font-weight-bold);
 }
 
-em,
-.text-paragraph--italic {
+em {
   font-style: italic;
 }
 
-/*
- * Misc.
- */
-
-.text-date {
-  color: var(--color-gray-shade-darker);
-  font-size: var(--font-size-small);
-  font-family: var(--font-family-sans);
-  font-weight: var(--font-weight-normal);
-  line-height: var(--line-height-normal);
-}
-
-.text-caption {
-  color: var(--color-gray-shade-darkest);
-  font-size: var(--font-size-small);
-  font-family: var(--font-family-sans);
-  font-weight: var(--font-weight-normal);
-  line-height: var(--line-height-normal);
-  font-style: italic;
-}
-
-.text-eyebrow {
-  color: var(--color-gray-shade-darker);
-  font-size: var(--font-size-small);
-  font-family: var(--font-family-sans);
-  font-weight: var(--font-weight-normal);
-  font-style: italic;
-  line-height: var(--line-height-normal);
-  text-transform: none;
-}
-
-/*
- * Display
- */
-
-.text-display {
-  font-size: var(--font-size-5xl);
+.text-highlight {
+  color: var(--color-blue);
 }
 
 /*
  * Links
  */
 
-.text-link {
-  color: var(--color-blue);
-  font-weight: var(--font-weight-bold);
-  text-decoration: none;
-}
-
-.text-link:hover {
-  color: var(--color-blue-shade-dark);
-}
-
-.text-link--state-disabled {
-  opacity: 0.5;
-}
-
-/*
- * Main Navigation
- */
-
-.text-nav-main {
-  color: var(--color-black);
-  font-family: var(--font-family-sans-alt);
-  font-size: var(--font-size-xl);
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-.text-nav-main--state-active,
-.text-nav-main:hover {
-  color: var(--color-blue);
-  border-bottom: solid 2px var(--color-blue);
-}
-
-.text-nav-main--state-disabled {
-  color: var(--color-black);
-  opacity: 0.5;
-  text-decoration: none;
-}
-
-.text-footer-nav {
+/* `a, a:visited` below matches this rule's specificity and comes later, so the
+   visited state repainted the label blue on the blue fill. Naming `:visited`
+   here outranks it. */
+a.button-link,
+a.button-link:visited {
+  display: inline-block;
+  background-color: var(--color-blue);
+  padding: var(--spacing-3) var(--spacing-4);
   color: var(--color-white);
-  font-size: var(--font-size-small);
-  font-family: var(--font-family-sans);
-  font-weight: var(--font-weight-normal);
-  line-height: var(--line-height-normal);
-  text-decoration: none;
-}
-
-.text-footer-nav--state-disabled {
-  opacity: 0.5;
-}
-
-/*
- * Sub Navigation
- */
-
-.text-sub-nav {
-  font-size: var(--font-size-large);
-  font-family: var(--font-family-sans);
+  font-size: 20px;
   font-weight: var(--font-weight-bold);
-  line-height: auto;
-}
-
-.text-sub-nav--dark {
-  color: var(--color-black);
-}
-
-.text-sub-nav--dark:hover,
-.text-sub-nav--dark--state-active {
-  color: var(--color-blue);
-  border-bottom: solid 4px var(--color-blue);
-}
-
-.text-sub-nav--bumblebee {
-  color: var(--color-black);
-}
-
-.text-sub-nav--bumblebee:hover,
-.text-sub-nav--bumblebee--state-active {
-  border-bottom: solid 4px var(--color-yellow);
-}
-
-.text-sub-nav--state-disabled {
-  opacity: 0.5;
-}
-
-.text-button {
-  color: var(--color-white);
-  font-size: var(--font-size-large);
-  font-family: var(--font-family-sans);
-  font-weight: var(--font-weight-bold);
-  line-height: auto;
-  text-transform: uppercase;
 }
 
 /*
@@ -537,8 +416,10 @@ p {
   margin-bottom: var(--spacing-2);
 }
 
+/* Same side gutter as LayoutBlock, so headings, lists and buttons line up with
+   the body text beside them instead of running to the viewport edge on mobile. */
 .text-width {
-  max-width: var(--body-width, 760px);
+  max-width: min(var(--body-width, 760px), calc(100% - var(--spacing-12)));
   margin: 0 auto;
 }
 
@@ -552,84 +433,40 @@ p {
    */
 
   h1 {
-    font-size: var(--font-size-5xl);
+    font-size: 60px;
+    line-height: 68px;
   }
 
   h2 {
-    font-size: var(--font-size-4xl);
+    font-size: 44px;
+    line-height: 56px;
   }
 
   h3 {
-    font-size: var(--font-size-3xl);
+    font-size: 36px;
+    line-height: 44px;
   }
 
   h4 {
     margin-bottom: 1em;
-    /* font-size: var(--font-size-2xl); */
+    font-size: 28px;
+    line-height: 36px;
   }
 
   h5 {
-    font-size: var(--font-size-xl);
+    font-size: 24px;
+    line-height: 32px;
   }
 
   h6 {
-    font-size: var(--font-size-large);
-  }
-
-  .shead {
-    font-size: var(--font-size-3xl);
+    font-size: 20px;
+    line-height: 24px;
   }
 
   p {
     /* font-size: var(--font-size-xl); */
     line-height: var(--line-height-relaxed);
   }
-
-  .text-display {
-    font-size: var(--font-size-6xl);
-  }
-}
-
-.section-label {
-  background-color: var(--color-gray-shade-lighter);
-  color: var(--color-black);
-  padding: 10px;
-  text-transform: uppercase;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-.section-label p {
-  margin: 0;
-  padding: 0;
-  color: var(--color-black);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-small);
-}
-
-.section-break {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin: var(--spacing-6) 0;
-}
-
-.section-break .section-line {
-  flex-grow: 1;
-  flex-shrink: 1;
-  width: 100%;
-  border-bottom: 1px solid var(--color-gray-shade-medium);
-}
-
-.module-subhead {
-  font-size: var(--font-size-2xl);
-  line-height: var(--line-height-normal);
-  margin-bottom: 1rem;
-}
-
-.module-small-title {
-  font-size: var(--font-size-large);
-  margin-bottom: 0;
 }
 
 text.chart-annotation-stroke,
@@ -641,23 +478,8 @@ text.chart-annotation-stroke,
     -1px -1px 0px rgba(255, 255, 255, 0.8);
 }
 
-text.chart-annotation-minor {
-  font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-small);
-  fill: var(--color-gray-shade-dark);
-}
-
-text.chart-axis-tick-text {
-  font-size: var(--font-size-small);
-}
-
 .layout-container--article-width {
   padding: 0 var(--spacing-6);
-}
-
-.layout-container--full-width {
-  padding: 0 var(--spacing-12);
-  margin: 0 auto;
 }
 
 section {
@@ -666,19 +488,6 @@ section {
 
 .spacing {
   margin-bottom: var(--spacing-4);
-}
-
-.placeholder-box {
-  margin: var(--spacing-4) auto;
-  border-radius: 5px;
-  text-align: center;
-  font-weight: var(--font-weight-bold);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  background-color: var(--color-gray-shade-lightest);
-  height: 300px;
 }
 
 a,
@@ -698,73 +507,42 @@ a:visited {
 
 /* a couple of global type styles until i have a better place to put them */
 h1.overview-page--page-title {
-  font-size: var(--font-size-4xl);
+  color: var(--color-gray-shade-darkest);
+  /* Follows the base `h1` scale rather than pinning 60px at every width: the
+     longest of these titles ("The Federal Infrastructure Funding Tracker: User
+     Guide") ran eight lines deep on a 342px column. */
+  font-size: 36px;
+  line-height: 44px;
+  /* at 390px a single long word ("Non-Metropolitan", "Weatherization") is wider
+     than the content box and pushes the page sideways */
+  overflow-wrap: break-word;
   margin-bottom: var(--spacing-4);
+}
+
+@media (min-width: 769px) {
+  h1.overview-page--page-title {
+    font-size: 60px;
+    line-height: 68px;
+  }
 }
 
 p.page-description {
   font-size: var(--font-size-xl);
 }
 
-.detail-page--text p,
-.detail-page--text {
-  font-size: 18px;
-  line-height: 27px;
-  margin-bottom: var(--spacing-4) !important;
-}
-
-.detail-page--text li {
-  margin-bottom: var(--spacing-2);
-}
-
-.help-text {
-  background-color: var(--color-gray-shade-lightest);
-  color: var(--color-gray-shade-darkest);
-  font-size: var(--font-size-small);
-  padding: 1em;
-  border-radius: 5px;
-  margin-top: var(--spacing-6);
-}
-
 section {
   margin-bottom: var(--spacing-12);
 }
 
-.section--page-footer {
-  padding-bottom: var(--spacing-12);
-  /* border-bottom: solid 1px var(--color-gray-shade-light); */
-  border-top: solid 1px var(--color-gray-shade-light);
-}
-
-[data-svelte-typeahead] input {
-  color: var(--color-black, black);
-  font-style: italic;
-  font-family: var(--font-family-sans);
-}
-
-.chart--tick-label {
-  font-size: var(--font-size-xsmall);
-}
-
-.section-divide-rule {
-  border-bottom: solid 1px var(--color-gray-shade-light);
-  margin: var(--spacing-12) 0;
-}
-
-.multi-column-1-2>*:first-child {
-  margin-bottom: var(--spacing-8);
-}
-
-
 .geo-toggle-button {
   appearance: none;
   border: none;
-  text-transform: uppercase;
   font-weight: var(--font-weight-bold);
   font-family: var(--font-family-sans);
-  color: var(--color-black);
+  font-size: 20px;
+  color: var(--color-white);
   padding: var(--spacing-4);
-  background: var(--color-gray-shade-lightest);
+  background: var(--color-blue);
   cursor: pointer;
 }
 
@@ -773,35 +551,46 @@ section {
   color: var(--color-white);
 }
 
-.geo-toggle-button:nth-child(2) {
-  margin-left: var(--spacing-2);
+.geo-toggle {
+  display: flex;
+  /* Three levels, not two, since the home and category maps gained County.
+     "State CBSA County" comes to ~327px at 20px bold with 16px of padding a
+     side, against ~342px of room inside the home page's card at 390px — it
+     fits, but only just, and font metrics decide it. Wrapping is the honest
+     answer. */
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  align-items: center;
+  justify-content: center;
 }
 
-@media (min-width: 1024px) {
-  .multi-column-1-2 {
-    display: flex;
-  }
-
-  .multi-column-1-2>*:first-child {
-    width: 33.33%;
-    margin-bottom: 0;
-  }
-
-  .multi-column-1-2>*:nth-child(2) {
-    padding-left: var(--spacing-8);
-    width: 66.66%;
-  }
+.description-tag {
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-shade-darker);
+  font-family: var(--font-family-sans-alt);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .chart-note {
   font-size: var(--font-size-xsmall);
 }
 
+/* A funding map's geography-level caveat, set under the map inside its card.
+   It is a supporting label, not descriptive copy, so it takes `.chart-note`'s
+   size and keeps the map section's centred alignment; the body-width cap stops
+   a two-line note from running the full width of a large map card. */
+.map-note {
+  font-size: var(--font-size-xsmall);
+  text-align: center;
+  max-width: var(--body-width);
+  margin-block: var(--spacing-4) 0;
+  margin-inline: auto;
+}
+
 p.axis-label {
   text-align: center;
   font-size: var(--font-size-xsmall);
-}
-
-p.axis-label.left {
-  text-align: left;
 }

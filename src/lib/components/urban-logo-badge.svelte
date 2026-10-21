@@ -1,3 +1,4 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   export let width = 80;
   $: height = width * (90 / 80);

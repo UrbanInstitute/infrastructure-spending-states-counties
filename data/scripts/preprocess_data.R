@@ -1,20 +1,19 @@
 ################################################################################
-# This script converts the 2024 source data for the PERC data tool
-# It reads source files in the format that have been provided by the
-# Urban Institute research team and optimizes the data for the front-end application.
-
-# Dependencies
-# Necessary packages for this script can be installed with:
-
+# This script converts the 2026 source data for the PERC data tool
+# It reads source files in the format provided by the Urban Institute research
+# team and reshapes them into intermediate JSON files for the Node postprocessor.
+#
+# 2026 update: Data is now primarily category-level (pre-aggregated by the research team).
+# Geography pages show category funding; program pages are simplified.
+#
+# Note: A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review.
+#
+# Dependencies:
 # install.packages("tidyverse")
 # install.packages("readxl")
 # install.packages("here")
 # install.packages("jsonlite")
 # install.packages("janitor")
-################################################################################
-
-################################################################################
-# Load libraries used
 ################################################################################
 
 library(tidyverse)
@@ -23,507 +22,539 @@ library(here)
 library(jsonlite)
 library(janitor)
 
-input_folder <- here("data", "source", "tables")
+input_folder <- here("data", "source-2026")
 output_folder <- here("data", "output", "preprocessed")
 
+# Category columns present in funding files
+category_cols <- c(
+  "broadband", "energy_and_power", "environmental_resilience",
+  "housing_and_community_development", "passenger_and_freight_rail",
+  "ports", "public_transportation", "roads_and_bridges", "water_conservation"
+)
+
 ################################################################################
-# Load in table 1: county program table
-# Make FIPS column a character column and ensure leading zeros for applicable states
-# Drop geo columns that are unused
-# Clean all columns names with janitor::clean_names()
+# Helpers
 ################################################################################
 
-pr_dc_lookup <- setNames(c("Puerto Rico", "District of Columbia"), c("PR", "DC"))
-state_name_lookup <- append(setNames(state.name, state.abb), pr_dc_lookup)
-county_program_table <-
-  read_csv(here(input_folder, "table1_countyprogram.csv"), show_col_types = F) %>%
+# 2026 source files provide full state names in the `state` column (e.g. "Alabama").
+# Derive the abbreviation from the full name; the full name passes through unchanged.
+state_abb_lookup <- append(
+  setNames(state.abb, state.name),
+  setNames(c("PR", "DC"), c("Puerto Rico", "District of Columbia"))
+)
+
+################################################################################
+# 1.1 — Load table 1: County category funding (raw)
+################################################################################
+
+county_category_table <-
+  read_csv(here(input_folder, "table1_countycategory.csv"), show_col_types = FALSE) %>%
   mutate(
     fips = str_pad(GEOID, 5, "left", "0"),
-    state_abb = state,
-    state = state_name_lookup[state]
-  )  %>%
-  select(-1, -GEOID) %>%
-  clean_names()
-
-## Load county and state per 1k funding and join as new columns
-county_program_funding_per_1k <-
-  read_csv(here(input_folder, "county_program_list_per_1000_ppl.csv")) %>%
-  mutate(
-    fips = str_pad(GEOID, 5, "left", "0"),
-  ) %>%
-  select(
-    -1,
-    -state,
-    -county,
-    -year,
-    -total_county_pop
-    ) %>%
-  rename_with(
-    ~ str_c(., "_per_1k"),
-    .cols = 2:82
-  )
-
-county_with_funding_per_cap <- county_program_table %>%
-  left_join(county_program_funding_per_1k)
-
-################################################################################
-# Load in table 2: state program table
-# Make FIPS column a character column and ensure leading zeros for applicable states
-# Clean all columns names with janitor::clean_names()
-################################################################################
-
-state_program_table <-
-  read_csv(here(input_folder, "table2_stateprogram.csv"), show_col_types = F) %>%
-  mutate(
-    fips = str_pad(GEOID, 2, "left", "0"),
-    state_abb = state,
-    state = state_name_lookup[state]
+    state_abb = unname(state_abb_lookup[state])
   ) %>%
   select(-1, -GEOID) %>%
   clean_names()
 
-state_program_funding_per_1k <-
-  read_csv(here(input_folder, "state_program_list_per_1000_ppl.csv")) %>%
+################################################################################
+# County per-capita category funding
+################################################################################
+
+county_category_per_1k <-
+  read_csv(here(input_folder, "county_category_list_per_1000_ppl.csv"), show_col_types = FALSE) %>%
+  mutate(fips = str_pad(GEOID, 5, "left", "0")) %>%
+  select(-1, -state, -county, -year, -total_county_pop, -GEOID) %>%
+  rename_with(~ str_c(., "_per_1k"), .cols = !fips)
+
+county_with_funding <- county_category_table %>%
+  left_join(county_category_per_1k, by = "fips")
+
+################################################################################
+# 1.1 — Load table 2: State category funding (raw)
+################################################################################
+
+state_category_table <-
+  read_csv(here(input_folder, "table2_statecategory.csv"), show_col_types = FALSE) %>%
   mutate(
     fips = str_pad(GEOID, 2, "left", "0"),
+    state_abb = unname(state_abb_lookup[state])
   ) %>%
-  select(
-    -1,
-    -state,
-    -year,
-    -total_state_pop,
-    -GEOID
-  ) %>%
-  rename_with(
-    ~ str_c(., "_per_1k"),
-    .cols = 1:110
-  )
-
-state_with_funding_per_cap <- state_program_table %>%
-  left_join(state_program_funding_per_1k, by="fips")
-
-################################################################################
-# Load in: CBSA program table
-# Make FIPS column a character column and ensure leading zeros for applicable states
-# Clean all columns names with janitor::clean_names()
-################################################################################
-cbsa_program_table <-
-  read_csv(here(input_folder, "cbsa_program_list.csv"), show_col_types = F) %>%
-  rename(
-    fips = GEOID,
-  ) %>%
-  mutate(
-    fips = as.character(fips)
-  ) %>%
-  select(-1, -total_cbsa_pop) %>%
+  select(-1, -GEOID) %>%
   clean_names()
 
-# Load in CBSA funding per capita and join to other CBSA table
-cbsa_program_funding_per_1k <-
-  read_csv(here(input_folder, "cbsa_program_list_per_1000_ppl.csv")) %>%
-  mutate(
-    fips = as.character(GEOID),
-  ) %>%
-  select(
-    -1,
-    -cbsa,
-    -GEOID
-  ) %>%
-  rename_with(
-    ~ str_c(., "_per_1k"),
-    .cols = 2:82
-  )
+################################################################################
+# State per-capita category funding
+################################################################################
 
-cbsa_with_funding_per_cap <- cbsa_program_table %>%
-  left_join(cbsa_program_funding_per_1k, by="fips")
+state_category_per_1k <-
+  read_csv(here(input_folder, "state_category_list_per_1000_ppl.csv"), show_col_types = FALSE) %>%
+  mutate(fips = str_pad(GEOID, 2, "left", "0")) %>%
+  select(-1, -state, -year, -total_state_pop, -GEOID) %>%
+  rename_with(~ str_c(., "_per_1k"), .cols = !fips)
+
+state_with_funding <- state_category_table %>%
+  left_join(state_category_per_1k, by = "fips")
 
 ################################################################################
-# Load in table 3: county indicator table
-# Make FIPS column a character column and ensure leading zeros for applicable states
-# Drop GEOID and NAME columns, as well as county and state which will come from
-# join with county_program_table later
-# Convert some columns to logical
-# Clean all columns names with janitor::clean_names()
+# 1.1 — Load CBSA category funding (raw)
+################################################################################
+
+cbsa_category_table <-
+  read_csv(here(input_folder, "cbsa_category_list.csv"), show_col_types = FALSE) %>%
+  mutate(fips = as.character(GEOID)) %>%
+  select(-1, -GEOID) %>%
+  clean_names()
+
+################################################################################
+# CBSA per-capita category funding
+################################################################################
+
+cbsa_category_per_1k <-
+  read_csv(here(input_folder, "cbsa_category_list_per_1000_ppl.csv"), show_col_types = FALSE) %>%
+  mutate(fips = as.character(GEOID)) %>%
+  select(-1, -cbsa, -year, -total_cbsa_pop, -GEOID) %>%
+  rename_with(~ str_c(., "_per_1k"), .cols = !fips)
+
+cbsa_with_funding <- cbsa_category_table %>%
+
+  left_join(cbsa_category_per_1k, by = "fips")
+
+################################################################################
+# 1.4 — Load indicator tables
 ################################################################################
 
 county_indicator_table <-
-  read_csv(here(input_folder, "table3_county-indicator.csv"), show_col_types = F) %>%
+  read_csv(here(input_folder, "table3_county-indicator.csv"), show_col_types = FALSE) %>%
   mutate(fips = str_pad(GEOID, 5, "left", "0")) %>%
   rename(id = 1) %>%
-  select(
-    -GEOID,
-    -county,
-    -ALAND,
-    -AWATER,
-    -state
-  ) %>%
-  mutate(across(c(
-    metro, nonmetro, persistent_poverty_county, disadvantaged_county, urban, rural
-  ), as.logical)) %>%
+  select(-GEOID, -county, -ALAND, -AWATER, -state) %>%
+  mutate(across(any_of(c(
+    "metro", "nonmetro", "persistent_poverty_county", "disadvantaged_county", "urban", "rural"
+  )), as.logical)) %>%
   clean_names()
 
-################################################################################
-# Load in table 4: state indicator table
-# Make FIPS column a character column and ensure leading zeros for applicable states
-# Clean all columns names with janitor::clean_names()
-################################################################################
-
 state_indicator_table <-
-  read_csv(here(input_folder, "table4_state-indicator.csv"), show_col_types = F) %>%
+  read_csv(here(input_folder, "table4_state-indicator.csv"), show_col_types = FALSE) %>%
   mutate(fips = str_pad(GEOID, 2, "left", "0")) %>%
   rename(id = 1) %>%
   select(-GEOID, -ALAND, -AWATER) %>%
   clean_names()
 
-################################################################################
-# Load in: CBSA indicator table
-# Make FIPS column a character column
-# Drop id, ALAND and AWATER columns
-# Clean all columns names with janitor::clean_names()
-################################################################################
-
 cbsa_indicator_table <-
-  read_csv(here(input_folder, "cbsa-indicator.csv"), show_col_types = F) %>%
+  read_csv(here(input_folder, "cbsa-indicator.csv"), show_col_types = FALSE) %>%
   rename(id = 1, fips = GEOID) %>%
   mutate(fips = as.character(fips)) %>%
   select(-ALAND, -AWATER, -id) %>%
   clean_names()
 
-
 ################################################################################
-# Load in table 5: Program indicators
-# rename columns for easier access
-# convert integers to logical where appropriate
-# Clean all columns names with janitor::clean_names()
+# Join funding + indicators into combined geography tables
 ################################################################################
 
-program_indicator_table <-
-  read_excel(here(input_folder, "table5_programindicator.xlsx")) %>%
-  rename(
-    name = "Program Name",
-    short_name = "Program Short Name",
-    description = "Program Description",
-  ) %>%
-  arrange(name) %>%
-  clean_names() %>%
+county_data_joined <- county_with_funding %>%
+  left_join(county_indicator_table, by = "fips") %>%
+  mutate(state_fips = str_sub(fips, 1, 2))
+
+state_data_joined <- state_with_funding %>%
+  left_join(state_indicator_table, by = "fips")
+
+cbsa_data_joined <- cbsa_with_funding %>%
+  left_join(cbsa_indicator_table, by = "fips")
+
+################################################################################
+# 1.4 — Funding percentile ranks (NEW)
+################################################################################
+
+county_funding_percentile_ranks <-
+  read_csv(here(input_folder, "county_category_list_percentile_rank.csv"), show_col_types = FALSE) %>%
+  mutate(fips = str_pad(GEOID, 5, "left", "0")) %>%
+  select(-1, -state, -county, -year, -total_county_pop, -GEOID)
+
+state_funding_percentile_ranks <-
+  read_csv(here(input_folder, "state_category_list_percentile_rank.csv"), show_col_types = FALSE) %>%
+  mutate(fips = str_pad(GEOID, 2, "left", "0")) %>%
+  select(-1, -state, -year, -total_state_pop, -GEOID)
+
+cbsa_funding_percentile_ranks <-
+  read_csv(here(input_folder, "cbsa_category_list_percentile_rank.csv"), show_col_types = FALSE) %>%
+  mutate(fips = as.character(GEOID)) %>%
+  select(-1, -cbsa, -year, -total_cbsa_pop, -GEOID)
+
+################################################################################
+# 1.4 — Indicator percentile ranks (NEW)
+################################################################################
+
+county_indicator_percentile_ranks <-
+  read_csv(here(input_folder, "county_indicator_percentile_rank.csv"), show_col_types = FALSE) %>%
+  mutate(fips = str_pad(GEOID, 5, "left", "0")) %>%
+  select(-1, -NAME, -county, -state, -GEOID) %>%
+  rename_with(~ str_remove(., "percent_rank_"), .cols = starts_with("percent_rank_"))
+
+state_indicator_percentile_ranks <-
+  read_csv(here(input_folder, "state_indicator_percentile_rank.csv"), show_col_types = FALSE) %>%
+  mutate(fips = str_pad(GEOID, 2, "left", "0")) %>%
+  select(-1, -NAME, -GEOID) %>%
+  rename_with(~ str_remove(., "percent_rank_"), .cols = starts_with("percent_rank_"))
+
+cbsa_indicator_percentile_ranks <-
+  read_csv(here(input_folder, "cbsa_indicator_percentile_rank.csv"), show_col_types = FALSE) %>%
+  mutate(fips = as.character(GEOID)) %>%
+  select(-1, -NAME, -GEOID) %>%
+  rename_with(~ str_remove(., "percent_rank_"), .cols = starts_with("percent_rank_"))
+
+################################################################################
+# 1.5 — Equity directions (sign of equity metric per category×indicator×location)
+################################################################################
+
+derive_equity_directions <- function(df, fips_width = NULL) {
+  # Equity metric columns are named: category_{cat}-percent_rank_{indicator}
+  # We extract the sign: positive → "higher", negative → "lower", zero → "neutral"
+  df <- df %>% select(-1, -NAME, -any_of(c("county", "state")))
+
+  if (!is.null(fips_width)) {
+    df <- df %>% mutate(fips = str_pad(GEOID, fips_width, "left", "0")) %>% select(-GEOID)
+  } else {
+    df <- df %>% mutate(fips = as.character(GEOID)) %>% select(-GEOID)
+  }
+
+  metric_cols <- names(df)[names(df) != "fips"]
+
+  df %>%
+    mutate(across(all_of(metric_cols), ~ case_when(
+      . > 0 ~ "higher",
+      . < 0 ~ "lower",
+      TRUE ~ "neutral"
+    ))) %>%
+    # Simplify column names: category_{cat}-percent_rank_{indicator} → {cat}-{indicator}
+    # (remove only "percent_rank_" so the "-" separating category from indicator is kept)
+    rename_with(
+      ~ str_remove(., "category_") %>% str_remove("percent_rank_"),
+      .cols = all_of(metric_cols)
+    )
+}
+
+county_equity_directions <-
+  read_csv(here(input_folder, "county_equity_metrics.csv"), show_col_types = FALSE) %>%
+  derive_equity_directions(fips_width = 5)
+
+state_equity_directions <-
+  read_csv(here(input_folder, "state_equity_metrics.csv"), show_col_types = FALSE) %>%
+  derive_equity_directions(fips_width = 2)
+
+cbsa_equity_directions <-
+  read_csv(here(input_folder, "cbsa_equity_metrics.csv"), show_col_types = FALSE) %>%
+  derive_equity_directions()
+
+################################################################################
+# 1.6 — Concentration scores (category-level, ratio-based)
+################################################################################
+
+county_concentration_scores <-
+  read_csv(here(input_folder, "county_concentration_score_all.csv"), show_col_types = FALSE) %>%
+  select(-1)
+
+state_concentration_scores <-
+  read_csv(here(input_folder, "state_concentration_score_all.csv"), show_col_types = FALSE) %>%
+  select(-1)
+
+cbsa_concentration_scores <-
+  read_csv(here(input_folder, "cbsa_concentration_score_all.csv"), show_col_types = FALSE) %>%
+  select(-1)
+
+################################################################################
+# 1.6 — Disadvantaged / persistent poverty scores (category-level)
+################################################################################
+
+disadvantaged_poverty_scores <-
+  read_csv(here(input_folder, "disadvantaged_persistent_poverty_scores.csv"), show_col_types = FALSE) %>%
+  select(-1)
+
+################################################################################
+# 1.2 — Mapping tables (table5a, 5b, 5c)
+################################################################################
+
+# Table 5a: old → new program name mapping (for redirects)
+table5a <- read_excel(here(input_folder, "table5a_old_to_new_program.xlsx")) %>%
+  clean_names()
+
+old_to_new_program_map <- table5a %>%
   select(
-    -iija_flag,
-    -ira_flag
+    old_program_short_name,
+    new_program_short_name = program_short_name
   )
 
+# Table 5b: program → category binary matrix (71 active programs)
+table5b <- read_excel(here(input_folder, "table5b_program_to_category.xlsx")) %>%
+  clean_names()
 
+# Table 5c: category → indicator binary matrix (9 categories)
+table5c <- read_excel(here(input_folder, "table5c_category_to_indicator.xlsx")) %>%
+  clean_names()
 
 ################################################################################
-# Load in table 6: Program information
-# Clean all columns names with janitor::clean_names()
-# Select relevant columns
-# Create wider version of table with 1 row per program
+# 1.7 — Program information (table6a)
 ################################################################################
 
 program_information_table <-
-  read_csv(here(input_folder, "table6_programinformation.csv")) %>%
-  rename(
-    short_name = "program_short_name",
-  ) %>%
-  clean_names() %>%
-  select(
-    -1,
-  )
+  read_csv(here(input_folder, "table6a_programinformation.csv"), show_col_types = FALSE) %>%
+  select(-1) %>%
+  clean_names()
 
-# reformat this table so there is 1 row per program, like the rest of the data
-# keep the annual funding amounts as new columns
-program_information_table_wide <- program_information_table %>%
+# Create wide version: 1 row per program with per-year funding columns
+program_information_wide <- program_information_table %>%
   arrange(program_name) %>%
-  pivot_wider(values_from = total_award_amount,
-              names_from = year,
-              names_glue = "fy_{year}_funding") %>%
-  select(
-    short_name,
-    agency_name,
-    bureau_name,
-    formula,
-    competitive,
-    iija_flag,
-    ira_flag,
-    county_level,
-    fy_2023_funding,
-    fy_2022_funding
+  pivot_wider(
+    values_from = total_award_amount,
+    names_from = year,
+    names_glue = "fy_{year}_funding"
   )
 
-# create table of programs with list of categories
-programs_with_categories <- program_indicator_table %>%
-  select(
-    short_name,
-    name,
-    ends_with("_category")
-  ) %>%
+# Total funding per program (sum across years)
+program_total_funding <- program_information_table %>%
+  group_by(program_short_name) %>%
+  summarise(total_funding = sum(total_award_amount), .groups = "drop")
+
+# Build programs.json: full program metadata
+program_data <- program_information_wide %>%
+  left_join(program_total_funding, by = "program_short_name") %>%
+  left_join(
+    table5b %>% select(program_short_name, iija_flag, ira_flag),
+    by = "program_short_name"
+  )
+
+################################################################################
+# Build programs_simple.json: 71 active programs with category associations
+################################################################################
+
+programs_with_categories <- table5b %>%
+  select(program_short_name, program_name, all_of(category_cols)) %>%
   pivot_longer(
-    ends_with("category"),
-    values_to = "include",
+    cols = all_of(category_cols),
     names_to = "category",
+    values_to = "include"
   ) %>%
-  filter(
-    include == 1
+  filter(include == 1) %>%
+  group_by(program_short_name, program_name) %>%
+  summarise(categories = list(category), .groups = "drop") %>%
+  left_join(
+    program_information_wide %>% select(program_short_name, agency_name, formula, competitive),
+    by = "program_short_name"
   ) %>%
-  group_by(
-    short_name,
-  ) %>%
-  summarize(
-    categories = list(category)
-  ) %>%
-  mutate(
-    categories = map(categories, ~ str_replace(.x, "_category", ""))
-  ) %>%
-  ungroup() %>% left_join(program_information_table_wide, by = "short_name") %>%
-  select(
-    short_name,
-    categories,
-    county_level,
-    agency_name
+  rename(short_name = program_short_name, name = program_name)
+
+################################################################################
+# 1.3 — Category metadata (table6b) → categories.json
+################################################################################
+
+table6b <- read_csv(here(input_folder, "table6b_categoryinformation.csv"), show_col_types = FALSE) %>%
+  select(-1) %>%
+  clean_names()
+
+# Canonical category dictionary: the snake_case slug is the unique identifier (primary key)
+# for every category across the pipeline. table6b is the single source of truth — the only
+# file declaring both slug (`category_short_name`) and display name (`category_name`) for all
+# 9 categories. Assert its slug set matches the expected list so a source rename fails loudly.
+stopifnot(setequal(unique(table6b$category_short_name), category_cols))
+
+# Display-name override hook: keyed by slug. Empty = pass through table6b's category_name
+# unchanged. The data team must confirm the canonical label for `ports` (table6b currently
+# says "Airports and Docks" — see UPDATE_PLAN Open Item #5); when decided, add it here.
+category_display_overrides <- c()
+
+# Build per-year funding as a nested list, then join with totals
+category_yearly <- table6b %>%
+  group_by(category_name, category_short_name) %>%
+  summarise(
+    per_year_funding = list(setNames(as.list(total_award_amount), year)),
+    .groups = "drop"
   )
 
-################################################################################
-# Calculate total funding for each program from state table
-################################################################################
-
-program_total_funding <- state_program_table %>%
-  select(-year, -total_state_pop, -fips, -state_abb) %>%
-  pivot_longer(cols = !state, names_to="short_name", values_to = "total_funding") %>%
-  group_by(short_name) %>%
-  summarise(total_funding = sum(total_funding))
-
-
-################################################################################
-# Join state, county, and cbsa program and indicator tables
-################################################################################
-
-county_data_joined <- county_with_funding_per_cap %>%
-  left_join(
-    county_indicator_table,
-    by="fips"
-  ) %>%
-  mutate(
-    state_fips = str_sub(fips, 1, 2)
-  )
-
-state_data_joined <- state_with_funding_per_cap %>%
-  left_join(
-    state_indicator_table,
-    by="fips"
-  )
-
-cbsa_data_joined <- cbsa_with_funding_per_cap %>%
-  left_join(
-    cbsa_indicator_table,
-    by="fips"
-  )
+categories_data <- table6b %>%
+  group_by(category_name, category_short_name) %>%
+  summarise(total_award_amount = sum(total_award_amount), .groups = "drop") %>%
+  left_join(category_yearly, by = c("category_name", "category_short_name")) %>%
+  rename(category = category_short_name) %>%
+  mutate(category_name = ifelse(
+    category %in% names(category_display_overrides),
+    unname(category_display_overrides[category]),
+    category_name
+  )) %>%
+  relocate(category)
 
 ################################################################################
-# Join program information and indicator tables
+# 1.3 — categories_simple.json: category list with programs and indicators
 ################################################################################
 
-output_program_columns <-
-  c(
-    "short_name",
-    "iija_flag",
-    "ira_flag",
-    "county_level",
-    "formula",
-    "competitive",
-    "agency_name",
-    "bureau_name",
-    "total_funding",
-    "fy_2022_funding",
-    "fy_2023_funding"
-  )
+# Programs per category (from table5b)
+category_programs <- table5b %>%
+  select(program_short_name, all_of(category_cols)) %>%
+  pivot_longer(cols = all_of(category_cols), names_to = "category", values_to = "include") %>%
+  filter(include == 1) %>%
+  group_by(category) %>%
+  summarise(programs = list(program_short_name), .groups = "drop")
 
-program_data <- program_information_table_wide %>%
-  left_join(
-    program_indicator_table,
-    by="short_name"
-  ) %>%
-  left_join(
-    program_total_funding,
-    by="short_name"
-  ) %>%
-  select(all_of(output_program_columns))
-
-
-################################################################################
-# Load funding medians by bucket
-################################################################################
-
-cbsa_funding_medians_by_buckets <- read_csv(here(input_folder, "cbsa_funding_medians_by_buckets.csv")) %>%
-  mutate(level = as.character(level)) %>%
-  select(-1)
-
-county_funding_medians_by_buckets <- read_csv(here(input_folder, "county_funding_medians_by_buckets.csv")) %>%
-  mutate(level = as.character(level)) %>%
-  select(-1)
-
-# Compute county medians for "across the state" comparisons
-county_funding_medians_by_buckets <- bind_rows(
-  county_data_joined %>% group_by(state_fips) %>%
-    summarise(
-      across(ends_with("_per_1k"), ~ median(.x), .names = "{.col}_median"),
-      across(ends_with("_per_1k"), ~ median(.x[.x > 0]), .names = "{.col}_funded_median")
-    ) %>%
-    rename(level = state_fips) %>%
-    mutate(bucket = "state_bucket") %>%
-    relocate(bucket, .before = level),
-    county_funding_medians_by_buckets
+# Indicators per category (from table5c).
+# table5c declares categories by display name only, so map each label to the canonical slug
+# EXPLICITLY (not by string-munging) — a future label change then fails the stopifnot below
+# instead of silently dropping indicators. Note "Ports" here is the slug `ports`, i.e. the
+# same category table6b labels "Airports and Docks".
+table5c_to_slug <- c(
+  "Housing and Community Development" = "housing_and_community_development",
+  "Roads and Bridges"                 = "roads_and_bridges",
+  "Public Transportation"             = "public_transportation",
+  "Passenger and Freight Rail"        = "passenger_and_freight_rail",
+  "Broadband"                         = "broadband",
+  "Environmental Resilience"          = "environmental_resilience",
+  "Ports"                             = "ports",
+  "Water Conservation"                = "water_conservation",
+  "Energy and Power"                  = "energy_and_power"
 )
 
+indicator_cols_5c <- names(table5c)[names(table5c) != "category"]
+table5c_mapped <- table5c %>%
+  mutate(category = unname(table5c_to_slug[category]))
+# Every table5c label must resolve to a known slug.
+stopifnot(!anyNA(table5c_mapped$category))
+
+category_indicators <- table5c_mapped %>%
+  pivot_longer(cols = all_of(indicator_cols_5c), names_to = "indicator", values_to = "include") %>%
+  filter(include == 1) %>%
+  group_by(category) %>%
+  summarise(indicators = list(indicator), .groups = "drop")
+# Every canonical category must end up with indicators.
+stopifnot(setequal(category_indicators$category, category_cols))
+
+categories_simple <- categories_data %>%
+  select(category, category_name) %>%
+  left_join(category_programs, by = "category") %>%
+  left_join(category_indicators, by = "category")
+
 ################################################################################
-# Compute state funding medians
+# 1.4 — Per-program per-capita funding (state + CBSA) for program page maps
 ################################################################################
 
-funding_keys <- names(state_data_joined[str_detect(names(state_data_joined), "per_1k")])
+state_program_funding_per_1k <-
+  read_csv(here(input_folder, "state_program_list_per_1000_ppl.csv"), show_col_types = FALSE) %>%
+  mutate(fips = str_pad(GEOID, 2, "left", "0")) %>%
+  select(-1, -state, -year, -total_state_pop, -GEOID)
+
+cbsa_program_funding_per_1k <-
+  read_csv(here(input_folder, "cbsa_program_list_per_1000_ppl.csv"), show_col_types = FALSE) %>%
+  mutate(fips = as.character(GEOID)) %>%
+  select(-1, -cbsa, -year, -total_cbsa_pop, -GEOID)
+
+################################################################################
+# 1.4 — Funding medians by bucket (county + CBSA)
+################################################################################
+
+county_funding_medians <-
+  read_csv(here(input_folder, "county_funding_medians_by_buckets.csv"), show_col_types = FALSE) %>%
+  mutate(level = as.character(level)) %>%
+  select(-1)
+
+cbsa_funding_medians <-
+  read_csv(here(input_folder, "cbsa_funding_medians_by_buckets.csv"), show_col_types = FALSE) %>%
+  mutate(level = as.character(level)) %>%
+  select(-1)
+
+# Compute county medians for "across the state" comparisons (state_bucket rows)
+county_state_medians <- county_data_joined %>%
+  group_by(state_fips) %>%
+  summarise(
+    across(ends_with("_per_1k"), ~ median(.x, na.rm = TRUE), .names = "{.col}_median"),
+    across(ends_with("_per_1k"), ~ median(.x[.x > 0], na.rm = TRUE), .names = "{.col}_funded_median"),
+    .groups = "drop"
+  ) %>%
+  rename(level = state_fips) %>%
+  mutate(bucket = "state_bucket") %>%
+  relocate(bucket, .before = level)
+
+county_funding_medians <- bind_rows(county_state_medians, county_funding_medians)
+
+################################################################################
+# Compute state funding medians (no source file provided — derive from data)
+################################################################################
+
+state_per_1k_cols <- names(state_with_funding)[str_detect(names(state_with_funding), "_per_1k$")]
 state_funding_medians <- list()
-for (k in funding_keys) {
-  program_funding <- state_data_joined %>% pull(k)
-  program_funding_funded <- program_funding[program_funding > 0]
-  state_funding_medians[[k]] = median(program_funding)
-  state_funding_medians[[paste0(k, "_funded")]] = median(program_funding_funded)
+for (k in state_per_1k_cols) {
+  vals <- state_with_funding %>% pull(!!sym(k))
+  state_funding_medians[[paste0(k, "_median")]] <- median(vals, na.rm = TRUE)
+  state_funding_medians[[paste0(k, "_funded_median")]] <- median(vals[vals > 0], na.rm = TRUE)
 }
 
-
 ################################################################################
-# Load equity metrics
-# 1 equity metric for each program x indicator x location (county or state)
-# equity metric is the difference between the program funding percentile
-# and the indicator percentile
+# 1.8 — Quantile and t-test data (category-level)
 ################################################################################
 
-county_equity_scores <- read_csv(here(input_folder, "county_equity_metrics.csv")) %>%
-  select(-1, -NAME, -county, -state) %>%
-  rename(fips = GEOID) %>%
-  rename_with( ~ str_remove(., "program_") %>% str_remove("percent_rank_"),
-               .cols = starts_with("program_"))
-
-state_equity_scores <- read_csv(
-  here(input_folder, "state_equity_metrics.csv")
-) %>%
-  select(-1, -NAME) %>%
-  rename(fips = GEOID) %>%
-  rename_with( ~ str_remove(., "program_") %>% str_remove("percent_rank_"),
-               .cols = starts_with("program_"))
-
-cbsa_equity_scores <- read_csv(here(input_folder, "cbsa_equity_metrics.csv")) %>%
-  select(-1, -NAME) %>%
-  rename(fips = GEOID) %>%
-  mutate(fips = as.character(fips)) %>%
-  rename_with( ~ str_remove(., "program_") %>% str_remove("percent_rank_"),
-               .cols = starts_with("program_"))
-
-################################################################################
-# Import data outputs for program equity metrics
-################################################################################
-
-equity_scores_county <- read_csv(here(input_folder, "county_concentration_score_all.csv")) %>%
+category_quantile_funding <-
+  read_csv(here(input_folder, "category_quantile_funding.csv"), show_col_types = FALSE) %>%
   select(-1)
 
-equity_scores_state_concentration <- read_csv(here(input_folder, "state_concentration_score_all.csv")) %>%
-  select(-1)
-
-equity_scores_program_variability <- read_csv(here(input_folder, "state_formula_program_variability_scores_div_by_national_funding.csv")) %>%
-  select(-1) %>%
-  select(program = state_formula_program, variability_score = variability_score_div_national_funding)
-
-# new disadvantaged county scores
-equity_scores_program_disadadvantaged <- read_csv(here(input_folder, "disadvantaged_persistent_poverty_scores.csv")) %>%
-  select(-1)
-
-equity_scores_state <- equity_scores_state_concentration %>%
-  left_join(equity_scores_program_variability, by = "program") %>%
-  left_join(equity_scores_program_disadadvantaged, by = "program")
-
-equity_scores_cbsa <- read_csv(here(input_folder, "cbsa_concentration_score_all.csv")) %>%
+category_t_test <-
+  read_csv(here(input_folder, "category_t_test_data.csv"), show_col_types = FALSE) %>%
   select(-1)
 
 ################################################################################
-# Create small table for search that includes programs, states and counties
+# 1.9 — Search index
 ################################################################################
 
 states_for_search <- state_data_joined %>%
-  select(name, fips) %>%
+  select(name = state, fips) %>%
   mutate(category = "state") %>%
-  select(
-    name,
-    route_param = fips,
-    category
-  )
+  select(name, route_param = fips, category)
 
 counties_for_search <- county_data_joined %>%
   select(county, fips, state_fips) %>%
   left_join(states_for_search, by = c("state_fips" = "route_param")) %>%
   mutate(
     state = name,
-    name = paste(county, name, sep = ", "),
+    name = paste(county, state, sep = ", "),
     category = "county"
   ) %>%
-  select(
-    name,
-    state,
-    category,
-    route_param = fips
-  )
+  select(name, state, category, route_param = fips)
 
 cbsas_for_search <- cbsa_data_joined %>%
   select(cbsa, fips) %>%
-  mutate(
-    state = NA,
-    name = cbsa,
-    category = "cbsa"
-  ) %>%
-  select(
-    name,
-    state,
-    category,
-    route_param = fips
-  )
+  mutate(state = NA, name = cbsa, category = "cbsa") %>%
+  select(name, state, category, route_param = fips)
 
-programs_for_search <- program_information_table_wide %>%
-  select(
-    short_name
-  ) %>%
+programs_for_search <- programs_with_categories %>%
+  select(short_name) %>%
   mutate(
+    name = short_name,
     category = "program",
     route_param = str_replace_all(short_name, "_", "-")
   ) %>%
-  select(-short_name) 
+  select(name, category, route_param)
 
-categories_for_search <- programs_with_categories %>%
-  select(categories) %>%
-  unnest(cols=c(categories)) %>%
-  distinct() %>%
-  arrange(categories) %>%
-  rename(name = categories) %>%
+categories_for_search <- categories_simple %>%
+  select(category_name, category) %>%
   mutate(
-    category = "program-categories",
-    route_param = NA,
-    page_id = str_replace_all(name, "_", "-")
-  )
+    name = category_name,
+    # Compute route_param from the slug BEFORE overwriting `category` with the record type.
+    route_param = str_replace_all(category, "_", "-"),
+    category = "category"
+  ) %>%
+  select(name, category, route_param)
 
-search_data <- bind_rows(categories_for_search, programs_for_search, states_for_search, counties_for_search, cbsas_for_search)
+search_data <- bind_rows(
+  categories_for_search,
+  programs_for_search,
+  states_for_search,
+  counties_for_search,
+  cbsas_for_search
+)
 
 ################################################################################
-# Program quantiles
-################################################################################
-
-program_quantile_funding_data <- read_csv(here(input_folder, "program_quantile_funding.csv"))
-
-all_t_test_data <- read_csv(here(input_folder, "program_t_test_data.csv")) %>%
-  select(-1)
-
-################################################################################
-# Output tables to JSON or CSV format
+# Output to JSON
 ################################################################################
 
 if (!dir.exists(output_folder)) {
   dir.create(output_folder, recursive = TRUE)
 }
 
+# Geography combined tables (funding + indicators)
 county_data_joined %>%
   toJSON(na = "null") %>%
   write_lines(here(output_folder, "counties.json"))
@@ -536,59 +567,120 @@ cbsa_data_joined %>%
   toJSON(na = "null") %>%
   write_lines(here(output_folder, "cbsas.json"))
 
+# Funding percentile ranks (NEW)
+county_funding_percentile_ranks %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "county_funding_percentile_ranks.json"))
+
+state_funding_percentile_ranks %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "state_funding_percentile_ranks.json"))
+
+cbsa_funding_percentile_ranks %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "cbsa_funding_percentile_ranks.json"))
+
+# Indicator percentile ranks (NEW)
+county_indicator_percentile_ranks %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "county_indicator_percentile_ranks.json"))
+
+state_indicator_percentile_ranks %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "state_indicator_percentile_ranks.json"))
+
+cbsa_indicator_percentile_ranks %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "cbsa_indicator_percentile_ranks.json"))
+
+# Equity directions (NEW)
+county_equity_directions %>%
+  toJSON(dataframe = "columns", na = "null") %>%
+  write_lines(here(output_folder, "county_equity_directions.json"))
+
+state_equity_directions %>%
+  toJSON(dataframe = "columns", na = "null") %>%
+  write_lines(here(output_folder, "state_equity_directions.json"))
+
+cbsa_equity_directions %>%
+  toJSON(dataframe = "columns", na = "null") %>%
+  write_lines(here(output_folder, "cbsa_equity_directions.json"))
+
+# Program data
 program_data %>%
   toJSON(na = "null") %>%
   write_lines(here(output_folder, "programs.json"))
 
-# simple list of programs
 programs_with_categories %>%
   toJSON(na = "null") %>%
   write_lines(here(output_folder, "programs_simple.json"))
 
-county_funding_medians_by_buckets %>%
+# Per-program per-capita funding by geography (for program-page maps)
+state_program_funding_per_1k %>%
   toJSON(na = "null") %>%
-  write_lines(here(output_folder, "county_bucket_funding_medians.json"))
+  write_lines(here(output_folder, "state_program_funding_per_1k.json"))
 
-cbsa_funding_medians_by_buckets %>%
+cbsa_program_funding_per_1k %>%
   toJSON(na = "null") %>%
-  write_lines(here(output_folder, "cbsa_bucket_funding_medians.json"))
+  write_lines(here(output_folder, "cbsa_program_funding_per_1k.json"))
+
+# Category metadata
+categories_data %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "categories.json"))
+
+categories_simple %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "categories_simple.json"))
+
+# Concentration scores
+county_concentration_scores %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "county_concentration_scores.json"))
+
+state_concentration_scores %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "state_concentration_scores.json"))
+
+cbsa_concentration_scores %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "cbsa_concentration_scores.json"))
+
+# Funding medians
+county_funding_medians %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "county_funding_medians.json"))
+
+cbsa_funding_medians %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "cbsa_funding_medians.json"))
 
 state_funding_medians %>%
   toJSON(na = "null", auto_unbox = TRUE) %>%
   write_lines(here(output_folder, "state_funding_medians.json"))
 
-county_equity_scores %>%
-  toJSON(dataframe = "columns", na = "null") %>%
-  write_lines(here(output_folder, "county_equity_scores.json"))
+# Disadvantaged / poverty scores
+disadvantaged_poverty_scores %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "disadvantaged_poverty_scores.json"))
 
-state_equity_scores %>%
-  toJSON(dataframe = "columns", na = "null") %>%
-  write_lines(here(output_folder, "state_equity_scores.json"))
+# Quantile and t-test
+category_quantile_funding %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "category_quantile_funding.json"))
 
-cbsa_equity_scores %>%
-  toJSON(dataframe = "columns", na = "null") %>%
-  write_lines(here(output_folder, "cbsa_equity_scores.json"))
+category_t_test %>%
+  toJSON(na = "null") %>%
+  write_lines(here(output_folder, "category_t_test.json"))
 
+# Search index
 search_data %>%
   toJSON(na = "null") %>%
   write_lines(here(output_folder, "search.json"))
 
-equity_scores_county %>%
+# Old-to-new program redirect map
+old_to_new_program_map %>%
   toJSON(na = "null") %>%
-  write_lines(here(output_folder, "program_equity_scores_county.json"))
+  write_lines(here(output_folder, "old_to_new_program_map.json"))
 
-equity_scores_state %>%
-  toJSON(na = "null") %>%
-  write_lines(here(output_folder, "program_equity_scores_state.json"))
-
-equity_scores_cbsa %>%
-  toJSON(na = "null") %>%
-  write_lines(here(output_folder, "program_equity_scores_cbsa.json"))
-
-program_quantile_funding_data %>%
-  toJSON(na = "null") %>%
-  write_lines(here(output_folder, "program_quantile_funding.json"))
-
-all_t_test_data %>%
-  toJSON(na = "null") %>%
-  write_lines(here(output_folder, "program_t_test.json"))
+cat("✓ Preprocessing complete. Output written to:", output_folder, "\n")

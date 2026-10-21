@@ -1,3 +1,4 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   /** @type {string | null} */
   export let image = null;
@@ -43,14 +44,13 @@
   }
   .hero-image-wrap {
     width: 100%;
-    height: 387px;
-    min-height: 15vw;
-    max-height: 25vw;
+    aspect-ratio: 144/50;
+    max-height: 500px;
   }
   .hero-image-wrap img {
     display: block;
     object-fit: cover;
-    object-position: center center;
+    object-position: center bottom;
     width: 100%;
     height: 100%;
   }

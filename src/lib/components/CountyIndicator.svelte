@@ -1,3 +1,4 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import HelpTip from "$components/HelpTip.svelte";
 
@@ -6,7 +7,7 @@
 </script>
 
 <div class="indicator-wrapper">
-  <HelpTip text={tip_text} align="right" button_size={20}/>
+  <HelpTip text={tip_text} align="right" button_size={20} />
   <slot />
 </div>
 

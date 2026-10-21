@@ -2,6 +2,9 @@
   "name": "perc-data-tool",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "data:geo": "make all",
     "data:preprocess": "Rscript data/scripts/preprocess_data.R",
@@ -12,15 +15,12 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
-    "test": "npm run test:unit",
-    "test:unit": "vitest run",
-    "test:watch": "vitest",
+    "test": "npm run data:postprocess && node data/scripts/verify_data.js",
     "lint": "prettier --plugin-search-dir . --check .",
     "format": "prettier --plugin-search-dir . --write .",
     "content": "node data/scripts/format_program_text.js"
   },
   "devDependencies": {
-    "@playwright/test": "^1.28.1",
     "@sveltejs/adapter-static": "^3.0.0",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
@@ -40,7 +40,7 @@
     "typescript": "^5.0.0",
     "typescript-svelte-plugin": "^0.3.25",
     "vite": "^5.0.0",
-    "vitest": "^1.0.0"
+    "xlsx": "^0.18.5"
   },
   "type": "module",
   "dependencies": {
@@ -49,7 +49,6 @@
     "archieml": "^0.5.0",
     "d3-array": "^3.2.4",
     "d3-dsv": "^3.0.1",
-    "d3-force": "^3.0.0",
     "d3-format": "^3.1.0",
     "d3-geo": "^3.1.0",
     "d3-scale": "^4.0.2",
@@ -57,7 +56,6 @@
     "rollup-plugin-archieml": "^1.2.1",
     "strip-bom": "^5.0.0",
     "svelte-select": "^5.6.1",
-    "svelte-typeahead": "^4.4.1",
     "topojson-client": "^3.1.0",
     "topojson-server": "^3.0.1"
   }

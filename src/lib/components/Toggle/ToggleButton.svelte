@@ -1,3 +1,4 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   /**
    * Whether the toggle is active or not
@@ -9,11 +10,6 @@
    * @type {string}
    **/
   export let label = "Toggle";
-  /**
-   * Value for the toggle
-   * @type {string}
-   **/
-  export let value = "toggle";
 
   export let disabled = false;
 </script>
@@ -45,10 +41,6 @@
     margin-bottom: 0;
     margin-left: 5px;
     font-size: var(--font-size-small);
-  }
-
-  button[aria-pressed="true"] {
-    /* color: red; */
   }
 
   .toggle-wrapper {
