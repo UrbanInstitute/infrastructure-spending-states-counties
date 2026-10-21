@@ -1,3 +1,4 @@
+// A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review.
 import site_content from "$data/site_content.aml";
 import program_language from "$data/program_language.json";
 import { format } from "d3-format";
@@ -46,7 +47,7 @@ export function deslugify_program(program_slug) {
  * @param {Element} el The element to raise.
  */
 export function raise(el) {
-  if (el.nextSibling) el.parentNode.appendChild(el);
+  if (el.nextSibling) el.parentNode?.appendChild(el);
 }
 
 /**
@@ -73,10 +74,38 @@ export function get_equity_scores_by_program(
 }
 
 /**
+ * Generates an array of equity direction entries for a given category
+ * @param {string} category_slug - The category slug (e.g. "broadband")
+ * @param {Record<string, string>} equity_directions - The map of equity directions keyed as "category-indicator"
+ * @returns {{key: string, category: string, indicator: string, direction: string}[]} The filtered equity direction data
+ */
+export function get_equity_directions_by_category(
+  category_slug,
+  equity_directions
+) {
+  if (!equity_directions) return [];
+  const category_keys = Object.keys(equity_directions).filter((key) => {
+    const [category, _] = key.split("-");
+    return category === category_slug;
+  });
+  return category_keys.map((key) => ({
+    key,
+    category: key.split("-")[0],
+    indicator: key.split("-")[1],
+    direction: equity_directions[key],
+  }));
+}
+
+/**
  * Generates an array of equity scores for the table
  * @param {string} text_template - The template with one or more dynamic variables to swap in
  * @param {Record<string, string | null>} vars - Key-value pairs of variables to swap into the template
  * @returns {string} The formatted text string
+ */
+/**
+ * @param {string} text_template
+ * @param {Record<string, string | null>} vars
+ * @returns {string}
  */
 export function format_text_template(text_template, vars) {
   let result = text_template;
@@ -114,22 +143,57 @@ export function get_indicator_label(indicator) {
 }
 
 /**
+ * An indicator label in lowercase, for use mid-sentence
+ * @param {string} indicator - The indicator string
+ * @returns {string} The lowercased indicator label
+ */
+export function get_indicator_label_lower(indicator) {
+  return get_indicator_label(indicator).toLowerCase();
+}
+
+/**
  * Formats a bucket name to be displayed as a human friendly label
  * @param {string} bucket_name - The bucket name
  * @param {"state" | "county" | "cbsa"} geo_type - The type of geography
  * @returns {string} The formatted bucket label
  */
 export function get_bucket_label(bucket_name, geo_type) {
+  if (bucket_name === "all_states") {
+    return "All States";
+  }
   let place_label = geo_type === "county" ? "Counties" : "CBSAs";
   if (bucket_name == "state_bucket") {
     return `Other ${place_label} in the state`;
   }
-  let label = get_indicator_label(bucket_name.replace("_bucket", ""));
-  return `${place_label} with a similar ${label.toLowerCase()}`;
+  let label = get_indicator_label_lower(bucket_name.replace("_bucket", ""));
+  return `${place_label} with a similar ${label}`;
 }
+
+/**
+ * The noun for a geography level, singular and plural, as it reads
+ * mid-sentence ("this county", "other CBSAs"). Anything other than "county"
+ * or "cbsa" is a state, which is what every ternary this replaced did.
+ * @param {string} geo_type
+ * @returns {{singular: string, plural: string}}
+ */
+export function geo_labels(geo_type) {
+  if (geo_type === "county") {
+    return { singular: "county", plural: "counties" };
+  }
+  if (geo_type === "cbsa") {
+    return { singular: "CBSA", plural: "CBSAs" };
+  }
+  return { singular: "state", plural: "states" };
+}
+
+/** Header for every total-obligated-funding column */
+export const TOTAL_FUNDING_HEADER = "Total obligated funding (FY 2022–25)";
 
 export const number_fmts = {
   pct: ".1%",
+  // For shares whose quantile breaks sit under 1%, where `pct` rounds
+  // neighbouring breaks to the same label ("0.0%-0.0%").
+  pct_fine: ".2%",
   pct_small: ".4%",
   decimal: ",.2f",
   decimal_small: ",.4f",
@@ -173,7 +237,6 @@ const per_sq_mile_indicators = ["highway_miles"];
 const quantile_indicator_formats = {
   percent_poc: number_fmts.pct,
   poverty_rate: number_fmts.pct,
-  pop_density: number_fmts.integer,
   med_hh_income: number_fmts.dollar,
   broadband_speed: number_fmts.decimal,
   hh_int_access: number_fmts.pct,
@@ -192,9 +255,9 @@ const quantile_indicator_formats = {
   housing_cost_burden: number_fmts.pct,
   housing_units: number_fmts.decimal,
   capacity_housing: number_fmts.decimal,
-  overcrowded_housing: number_fmts.pct,
+  overcrowded_housing: number_fmts.pct_fine,
   vacancy_rate: number_fmts.pct,
-  homelessness: number_fmts.pct,
+  homelessness: number_fmts.pct_fine,
   incomplete_plumbing: number_fmts.pct,
   incomplete_kitchen: number_fmts.pct,
   permits: number_fmts.decimal,
@@ -212,7 +275,7 @@ const quantile_indicator_formats = {
   transport_costs: number_fmts.pct,
   commute_time: number_fmts.pct,
   pub_transit_commute: number_fmts.pct,
-  green_commute: number_fmts.pct,
+  green_commute: number_fmts.pct_fine,
   pub_transit_stops: number_fmts.decimal,
   employment_access_index: number_fmts.decimal,
   bridges: number_fmts.decimal,
@@ -232,20 +295,67 @@ const quantile_indicator_formats = {
   age_under_18: number_fmts.pct,
 };
 
+/** @param {string} indicator */
 export function is_indicator_per_capita(indicator) {
   return per_cap_indicators.includes(indicator);
 }
 
+/** @param {string} indicator */
 export function is_indicator_per_sq_mile(indicator) {
   return per_sq_mile_indicators.includes(indicator);
 }
 
-export function format_indicator_value(raw_value, indicator) {
+/**
+ * A short form of one of the `quantile_indicator_formats` specs, for places
+ * where the full label does not fit — the quantile chart's x-axis on narrow
+ * screens, where a band is roughly 50px wide and "12,125.15-17,841.23" is not.
+ *
+ * Percentages and dollars have significant-digit forms that hold up across
+ * magnitudes. Bare numbers switch to SI notation above 1,000 ("27k") and to
+ * significant digits below it, so indicators scaled into the thousandths
+ * (airports per 10,000 residents) keep their digits instead of rounding to 0.
+ *
+ * @param {number} value - already scaled for per-capita/per-square-mile
+ * @param {string} spec - the indicator's full d3-format spec
+ * @returns {string}
+ */
+function format_compact_number(value, spec) {
+  if (spec.endsWith("%")) {
+    return format(".2~p")(value);
+  }
+  if (spec.startsWith("$")) {
+    return format("$,.2~s")(value);
+  }
+  const magnitude = Math.abs(value);
+  if (magnitude >= 1000) {
+    return format(".2~s")(value);
+  }
+  if (magnitude >= 1) {
+    return format(".3~r")(value);
+  }
+  return format(".2~r")(value);
+}
+
+/**
+ * @param {number} raw_value
+ * @param {string} indicator
+ * @param {boolean} [compact] - abbreviate the number (see
+ *   `format_compact_number`). Shorter than the full form for every indicator
+ *   here except percentages below 1%, where it trades one character for real
+ *   digits: "0.0%" becomes "0.032%".
+ */
+export function format_indicator_value(raw_value, indicator, compact = false) {
   if (!Object.keys(quantile_indicator_formats).includes(indicator)) {
     console.log("Warning: no format found for indicator: " + indicator);
     return raw_value;
   }
-  const f = format(quantile_indicator_formats[indicator]);
+  const spec =
+    quantile_indicator_formats[
+      /** @type {keyof typeof quantile_indicator_formats} */ (indicator)
+    ];
+  const f = compact
+    ? (/** @type {number} */ v) => format_compact_number(v, spec)
+    : format(spec);
   if (
     is_indicator_per_capita(indicator) &&
     is_indicator_per_sq_mile(indicator)
@@ -258,9 +368,10 @@ export function format_indicator_value(raw_value, indicator) {
   if (pct_int_indicators.includes(indicator)) {
     return f(raw_value / 100);
   }
-  return f(raw_value, quantile_indicator_formats[indicator]);
+  return f(raw_value);
 }
 
+/** @param {string} [path] */
 export function get_site_url(path) {
   const staging = import.meta.env.MODE == "staging";
   const base_url = staging
@@ -272,6 +383,7 @@ export function get_site_url(path) {
   return `${base_url}/`;
 }
 
+/** @param {string} input_program_short_name */
 export function get_program_language_vars(input_program_short_name) {
   return (
     program_language.find(
@@ -281,6 +393,7 @@ export function get_program_language_vars(input_program_short_name) {
   );
 }
 
+/** @param {string} program_short_name */
 export function get_program_name(program_short_name) {
   const { program_name } = get_program_language_vars(program_short_name);
   return program_name;

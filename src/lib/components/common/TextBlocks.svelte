@@ -1,8 +1,11 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
+  import LayoutBlock from "$components/LayoutBlock.svelte";
+  /** @type {Array<{ type: string; value: string }>} */
   export let blocks = [];
 </script>
 
-<div class="text-blocks text-width">
+<LayoutBlock>
   {#each blocks as textBlock}
     {#if textBlock.type === "text"}
       <p>{@html textBlock.value}</p>
@@ -10,13 +13,13 @@
       <h4 class="block-header">{@html textBlock.value}</h4>
     {/if}
   {/each}
-</div>
+</LayoutBlock>
 
 <style>
-  .text-blocks p {
+  p {
     margin-bottom: var(--spacing-8);
   }
-  .text-blocks h4.block-header {
+  h4.block-header {
     font-size: var(--font-size-small);
     text-transform: uppercase;
     font-weight: var(--font-weight-bold);

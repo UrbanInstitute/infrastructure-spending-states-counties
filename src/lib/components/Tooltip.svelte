@@ -1,3 +1,4 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script context="module">
   /**
    * @typedef {Object} TooltipContent
@@ -43,6 +44,7 @@
   };
 
   // bind to wrapper element
+  /** @type {HTMLElement} */
   let tooltipEl;
 
   // store width and height of the tooltip
@@ -79,7 +81,7 @@
       return "right";
     }
     // next check if tooltip is too far to the right
-    if (x > (windowWidth - tooltipWidth / 2)) {
+    if (x > windowWidth - tooltipWidth / 2) {
       return "left";
     }
     // next check if tooltip is too far up
@@ -92,7 +94,12 @@
 
   // the direction of the tooltip in relation to the mouse
   // defaults to "top", but will move if the tooltip reaches any edge
-  $: tooltipDirection = getTooltipDirection(xPosition, yPosition, windowWidth, windowHeight);
+  $: tooltipDirection = getTooltipDirection(
+    xPosition,
+    yPosition,
+    windowWidth,
+    windowHeight
+  );
 
   /**
    * Calculate the SVG shape of the tooltip based on size and direction
@@ -103,18 +110,29 @@
   */
   function getTooltipShape(width, height, direction) {
     if (direction === "bottom") {
-      return `M0,${triangleHeight}H${width / 2 - triangleWidth / 2}L${width / 2},0L${width / 2 + triangleWidth / 2},${triangleHeight}H${width}V${height + triangleHeight}H0Z`
+      return `M0,${triangleHeight}H${width / 2 - triangleWidth / 2}L${
+        width / 2
+      },0L${width / 2 + triangleWidth / 2},${triangleHeight}H${width}V${
+        height + triangleHeight
+      }H0Z`;
     }
     if (direction === "right") {
-      return `M${triangleHeight},0H${width}V${height}H${triangleHeight}V${height / 2 + triangleWidth / 2}L0,${height / 2}L${triangleHeight},${height / 2 - triangleWidth / 2}Z`
+      return `M${triangleHeight},0H${width}V${height}H${triangleHeight}V${
+        height / 2 + triangleWidth / 2
+      }L0,${height / 2}L${triangleHeight},${height / 2 - triangleWidth / 2}Z`;
     }
     if (direction === "left") {
-      return `M0,0H${width - triangleHeight}V${height / 2 - triangleWidth / 2}L${width},${height / 2}L${width - triangleHeight},${height / 2 + triangleWidth / 2}V${height}H0Z`
+      return `M0,0H${width - triangleHeight}V${
+        height / 2 - triangleWidth / 2
+      }L${width},${height / 2}L${width - triangleHeight},${
+        height / 2 + triangleWidth / 2
+      }V${height}H0Z`;
     }
     // default to top
-    return `M0,0H${width}V${height}H${width / 2 + triangleWidth / 2}L${width / 2},${height + triangleHeight}L${width / 2 - triangleWidth / 2},${height}H0Z`
+    return `M0,0H${width}V${height}H${width / 2 + triangleWidth / 2}L${
+      width / 2
+    },${height + triangleHeight}L${width / 2 - triangleWidth / 2},${height}H0Z`;
   }
-
 </script>
 
 <svelte:window bind:innerWidth={windowWidth} bind:innerHeight={windowHeight} />
@@ -129,7 +147,7 @@
   <!--   height={tooltipHeight + triangleHeight} -->
   <!--   viewBox="0 0 {tooltipWidth + triangleHeight} {tooltipHeight + triangleHeight}" -->
   <!-- > -->
-    <!-- tooltip background path calculated based on size and height of content and direction of tooltip-->
+  <!-- tooltip background path calculated based on size and height of content and direction of tooltip-->
   <!--   <path -->
   <!--     d={getTooltipShape(tooltipWidth, tooltipHeight, tooltipDirection)} -->
   <!--   /> -->
@@ -190,12 +208,5 @@
     top: 0;
     left: 0;
     z-index: 500;
-  }
-  .tooltip.tooltip-dark .tooltip-shape path {
-    fill: var(--color-black, "#000000");
-  }
-  .tooltip.tooltip-light .tooltip-shape path {
-    fill: var(--color-gray-shade-lighter, "#FFFFFF");
-    stroke: var(--color-gray);
   }
 </style>

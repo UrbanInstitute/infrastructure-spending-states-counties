@@ -1,10 +1,10 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   export let height = 500;
-  export let label = "Loading...";
 </script>
 
 <div class="loading--wrapper" style:height={`${height}px`}>
-    <div class="skeleton skeleton-content"/>
+  <div class="skeleton skeleton-content" />
 </div>
 
 <style>
@@ -15,16 +15,6 @@
     100% {
       background-color: var(--color-gray-shade-lightest);
     }
-  }
-  .skeleton-text {
-    width: 100%;
-    height: 0.7rem;
-    margin-bottom: 0.5rem;
-    border-radius: 0.25rem;
-  }
-
-  .skeleton-text__body {
-    width: 75%;
   }
   .skeleton {
     animation: skeleton-loading 1s linear infinite alternate;

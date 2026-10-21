@@ -1,3 +1,4 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   export let style = "default"; // or 'blue'
   export let disabled = false;
@@ -25,7 +26,6 @@
     font-size: var(--font-size-large);
     font-weight: var(--font-weight-bold);
     line-height: var(--leading-none);
-    text-transform: uppercase;
     text-decoration: none;
     display: flex;
     justify-content: center;
@@ -38,6 +38,11 @@
     background: var(--color-white);
     border: solid 2px var(--color-black);
   }
+  .button-content-container.black {
+    color: var(--color-white);
+    background: var(--color-black);
+    border: none;
+  }
 
   .button-content-container.blue {
     color: var(--color-white);
@@ -45,7 +50,7 @@
     border: none;
   }
 
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     .button-content-container {
       font-size: var(--font-size-medium);
     }

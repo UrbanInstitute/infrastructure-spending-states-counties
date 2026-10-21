@@ -1,5 +1,8 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import { page } from "$app/stores";
+  import { base, resolveRoute } from "$app/paths";
+  import { get_site_url } from "$lib/utils";
   import twitterIcon from "$assets/icon_twitter.svg";
   import facebookIcon from "$assets/icon_facebook.svg";
   import linkedinIcon from "$assets/icon_linkedin.svg";
@@ -7,7 +10,17 @@
   import { logClickToGA } from "$lib/analytics";
 
   const base_share_url = "https://www.addtoany.com/add_to";
-  $: encoded_url_to_share = encodeURIComponent($page.url.href);
+  // $page.url.href is http://sveltekit-prerender/... at build time, and while
+  // prerendering `base` is a relative path ("." or "../.."), so neither can simply
+  // be sliced off the pathname. resolveRoute() prefixes that same `base`, so slicing
+  // it off the resolved route gives the app-relative path both at build time and in
+  // the browser; get_site_url() then adds the host for the build mode and the
+  // trailing slash.
+  $: app_path = $page.route.id
+    ? resolveRoute($page.route.id, $page.params).slice(base.length)
+    : "";
+  $: url_to_share = get_site_url(app_path.replace(/^\/|\/$/g, ""));
+  $: encoded_url_to_share = encodeURIComponent(url_to_share);
 
   $: socials = [
     {

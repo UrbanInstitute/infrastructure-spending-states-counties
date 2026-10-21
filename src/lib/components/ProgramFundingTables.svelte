@@ -1,71 +1,64 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import { base } from "$app/paths";
-  import LayoutBlock from "$components/LayoutBlock.svelte";
   import Table from "$components/LinkTable.svelte";
-  import { program_list } from "$stores/programs.js";
-  import { slugify_program, get_program_name } from "$lib/utils.js";
+  import { category_list, category_display_name } from "$stores/categories.js";
+  import { slugify_program, TOTAL_FUNDING_HEADER } from "$lib/utils.js";
 
-  export let data = [];
+  /** @type {Record<string, number>} */
+  export let data = {};
+
   /**
-   * Generates an array of program funding amounts for the table
-   * @param {{name: string, short_name: string, type: string}[]} program_data - The program data to format
-   * @returns {{program: string, funding_per_1k: number}[]} The formatted program data
+   * Generates an array of category funding amounts for the table
+   * @param {Record<string, number>} category_funding - The category_funding object
+   * @returns {{category: string, url: string, total_funding: number}[]} The formatted category data
    */
-  function formatProgramDataForTable(program_data, funding_data) {
-    const county_programs = Object.keys(funding_data).map((program) =>
-      program.replace("_per_1k", "")
-    );
-    return program_data
+  function formatCategoryDataForTable(category_funding) {
+    return $category_list
       .filter(
-        (program) =>
-          county_programs.includes(program.short_name) &&
-          funding_data[`${program.short_name}_per_1k`] > 0
+        (cat) =>
+          category_funding[cat.category] != null &&
+          category_funding[cat.category] > 0
       )
-      .map((program) => {
+      .map((cat) => {
         return {
-          program: get_program_name(program.short_name),
-          url: `${base}/program/${slugify_program(program.short_name)}`,
-          total_funding: funding_data[program.short_name],
+          category: category_display_name(cat.category),
+          url: `${base}/program-categories/${slugify_program(cat.category)}/`,
+          total_funding: category_funding[cat.category],
         };
       });
   }
 
   const format_funs = {
-    funding_per_1k: (val) => `$${Math.round(val).toLocaleString()}`,
-    total_funding: (val) => `$${Math.round(val).toLocaleString()}`,
+    total_funding: (/** @type {number} */ val) =>
+      `$${Math.round(val).toLocaleString("en-US")}`,
   };
 
-  $: iija_program_funding = formatProgramDataForTable($program_list, data);
-  // $: hud_program_funding = formatProgramDataForTable(
-  //   $program_list.filter((program) => program.type == "HUD"),
-  //   data
-  // );
+  const column_headers = {
+    category: "Infrastructure category",
+    total_funding: TOTAL_FUNDING_HEADER,
+  };
+
+  $: category_funding_rows = formatCategoryDataForTable(data);
 </script>
 
-<div class="section-label"><p>Program funding</p></div>
-<div class="spacing" />
-<LayoutBlock>
-  <!-- <h2 class="module-subhead">IIJA Program funding</h2> -->
-  {#if iija_program_funding.length > 0}
+<div class="funding-table--wrapper">
+  {#if category_funding_rows.length > 0}
     <Table
       sort_column="total_funding"
-      data={iija_program_funding}
+      link_column="category"
+      data={category_funding_rows}
       limit_height
+      fit_last_column
       {format_funs}
+      {column_headers}
     />
   {:else}
     <div class="funding-table--no-programs">
-      <p>No IIJA program funding data available for this county.</p>
+      <p>No category funding data available for this location.</p>
     </div>
   {/if}
-</LayoutBlock>
-
-<!-- <div class="section-label"><p>HUD funding</p></div> -->
-<!-- <div class="spacing" /> -->
-<!-- <LayoutBlock> -->
-<!-- <h2 class="module-subhead">HUD Program funding</h2> -->
-<!-- <Table data={hud_program_funding} limit_height {format_funs} sort_column="total_funding" /> -->
-<!-- </LayoutBlock> -->
+</div>
 
 <style>
   .funding-table--no-programs {

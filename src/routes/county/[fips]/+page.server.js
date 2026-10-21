@@ -1,6 +1,6 @@
-import { error } from "@sveltejs/kit";
+// A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review.
 import fips_list from "$data/server/county_fips_list.json";
-import PlaceData from "$lib/server/place_data";
+import { load_place } from "$lib/server/place_data";
 
 // tell sveltekit what pages to prerender
 /** @type {import('./$types').EntryGenerator} */
@@ -10,20 +10,7 @@ export function entries() {
   }));
 }
 
-
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params, fetch }) {
-
-  const place_data = new PlaceData("county", params.fips, fetch);
-  const place = await place_data.get_data();
-
-  if (!place) {
-    error(404, `Place not found`);
-  }
-  const comparison_buckets = await place_data.get_comparison_buckets();
-
-  return {
-    place,
-    comparison_buckets,
-  };
+export function load({ params, fetch }) {
+  return load_place("county", params.fips, fetch);
 }

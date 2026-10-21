@@ -1,3 +1,4 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import { base } from "$app/paths";
   import { get_site_url } from "$lib/utils";
@@ -54,21 +55,6 @@
 
   <link rel="canonical" href={url} />
 
-  <!-- Google Tag Manager -->
-  <!-- Google Tag Manager -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-N0EZ8ZMM8T"
-  ></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag({}) {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-    gtag("config", "G-N0EZ8ZMM8T");
-  </script>
-  <!-- End Google Tag Manager -->
   <!-- schema.org metadata -->
   {@html schema_meta_markup}
   <!-- End shema.org metadata -->

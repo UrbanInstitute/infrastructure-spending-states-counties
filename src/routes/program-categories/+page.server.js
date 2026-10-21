@@ -1,12 +1,8 @@
-import programs from "$data/server/programs_simple.json";
+// A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review.
+import categories_simple from "$data/server/categories_simple.json";
 
-const categories = Array.from(
-  new Set(programs.flatMap(({ categories }) => categories))
-).sort();
+// this function loads data for the page
 /** @type {import('./$types').PageServerLoad} */
-export function load({ params }) {
-  return {
-    categories,
-    programs,
-  };
+export function load() {
+  return { categories_simple };
 }

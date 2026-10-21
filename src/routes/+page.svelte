@@ -1,42 +1,54 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
-  import { LoadingWrapper } from "@urbaninstitute/dataviz-components";
   import Meta from "$components/Meta.svelte";
   import Hero from "$components/common/Hero.svelte";
   import HeroArt from "$components/HeroArt.svelte";
+  import LayoutSection from "$components/LayoutSection.svelte";
+  import LayoutBlock from "$components/LayoutBlock.svelte";
+  import Card from "$components/Card.svelte";
+  import MapSectionInfo from "$components/MapSectionInfo.svelte";
   import About from "$components/About.svelte";
   import MainSearch from "$components/MainSearch.svelte";
   import TextBlocks from "$components/common/TextBlocks.svelte";
   import Credits from "$components/Credits.svelte";
   import FundingMap from "$components/FundingMap.svelte";
-  import Vignettes from "$components/Vignettes.svelte";
+  import CategoryHighlights from "$components/CategoryHighlights.svelte";
   import site_content from "$data/site_content.aml";
-  import { get_funding_data } from "$stores/funding_data";
-  import { program_list } from "$stores/programs.js";
+  import { category_list } from "$stores/categories.js";
   import { get_site_url } from "$lib/utils";
-  import { browser } from "$app/environment";
   import { base } from "$app/paths";
 
-  /** @type {import('./$types').PageData} */
-  export let data;
+  let map_category = "roads_and_bridges";
+  /** @type {"state" | "county" | "cbsa"} */
+  let map_level = "state";
 
-  let map_program = "cdbg_entitlement";
-  let map_level = "cbsa";
-  $: map_program_data =
-    browser && map_program
-      ? get_funding_data(map_program, map_level)
-      : new Promise(() => {});
+  // All three geographies. Passed explicitly because `MapSectionInfo`'s default
+  // is the two-level pair the program page uses; the opening level is State.
+  /** @type {{value: "state" | "county" | "cbsa", label: string}[]} */
+  const map_levels = [
+    { value: "state", label: "State" },
+    { value: "cbsa", label: "CBSA" },
+    { value: "county", label: "County" },
+  ];
 
-  $: current_map_program_info = $program_list.find(
-    (d) => d.short_name === map_program
-  );
-  $: show_map_geo_toggle = current_map_program_info?.county_level === 1;
+  // Each level's caveat, shown only while that level is selected — the same
+  // rule the program and category maps apply to theirs. State is the one level
+  // with nothing to caveat: the state-capital problem is about funding landing
+  // in the wrong sub-state geography, which a state-level map cannot show.
+  $: map_note =
+    map_level === "county"
+      ? site_content.intro_map.county_note
+      : map_level === "cbsa"
+      ? site_content.intro_map.cbsa_note
+      : null;
 
-  // if use is viewing CBSA map, and selects a program without CBSA data, reset map level to state
-  $: if (!show_map_geo_toggle && map_level === "cbsa") {
-    map_level = "state";
-  }
+  // Categories reshaped into the option shape the map selector expects.
+  $: map_categories = $category_list.map((c) => ({
+    short_name: c.category,
+    name: c.category_name,
+  }));
 
-  const vignettes = site_content.data_highlights;
+  const category_highlights = site_content.category_highlights;
 </script>
 
 <Meta
@@ -45,41 +57,56 @@
   url={get_site_url("")}
 />
 <article>
-  <HeroArt image="{base}/perc-header-image.svg" />
-  <div class="layout-container--article-width">
+  <HeroArt image="{base}/hero_illustration_home.svg" />
+  <LayoutSection padding={false}>
     <Hero headline={site_content.hero.headline} date={site_content.hero.date} />
-    <section class="body">
-      <TextBlocks blocks={site_content.intro_before_map} />
-      <div class="vignettes--container">
-        <Vignettes items={vignettes} />
-      </div>
-      <div class="funding-map--container">
-        <h4>{site_content.intro_map.subhead}</h4>
-        {#if site_content.intro_map.description}
-          <p>{site_content.intro_map.description}</p>
-        {/if}
-        <div class="map-spacing" />
-        {#await map_program_data}
-          <LoadingWrapper>
-            <div class="loading-block" style="height: 500px;" />
-          </LoadingWrapper>
-        {:then map_data}
-          <FundingMap
-            bind:selected_program={map_program}
-            show_geo_toggle={show_map_geo_toggle}
-            show_select_label={true}
-            bind:map_level
-            data_layer={Array.from(map_data.values())}
-            programs={$program_list}
-          />
-        {/await}
-      </div>
-      <TextBlocks blocks={site_content.intro_after_map} />
-    </section>
-  </div>
-  <section class="home-search">
+    <TextBlocks blocks={site_content.intro_before_map} />
+  </LayoutSection>
+  <LayoutSection theme="gradient">
+    <CategoryHighlights
+      header={category_highlights.header}
+      button_text={category_highlights.button_text}
+      items={category_highlights.items}
+    />
+  </LayoutSection>
+  <LayoutSection topShadow>
+    <TextBlocks blocks={site_content.intro_after_map} />
+  </LayoutSection>
+  <LayoutSection padding={false}>
     <MainSearch content={site_content.search} />
-  </section>
+  </LayoutSection>
+  <!--
+    Per design/homepage.png the heading sits above the card and the subhead,
+    units label and geography toggle sit inside it, unlike the program,
+    category and geography pages — hence MapSectionInfo directly rather than
+    the stacked MapSection.
+  -->
+  <LayoutSection theme="gradient">
+    <LayoutBlock>
+      <h2 class="map-section-title">{site_content.intro_map.header}</h2>
+    </LayoutBlock>
+    <LayoutBlock size="large">
+      <Card>
+        <div class="funding-map--container">
+          <div class="funding-map--info">
+            <MapSectionInfo
+              levels={map_levels}
+              bind:map_level
+              ga_control="home-map-geo-toggle"
+            />
+          </div>
+          <FundingMap
+            bind:selected_program={map_category}
+            bind:map_level
+            programs={map_categories}
+            option_type="category"
+            legend_title={site_content.intro_map.Description}
+            note={map_note}
+          />
+        </div>
+      </Card>
+    </LayoutBlock>
+  </LayoutSection>
   <div class="layout-container--article-width">
     <section>
       <About content={site_content.about} />
@@ -91,25 +118,16 @@
 </article>
 
 <style>
+  .map-section-title {
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+  }
   .funding-map--container {
-    margin: 0 auto;
+    padding: var(--spacing-6);
+  }
+  .funding-map--info {
     max-width: var(--body-width);
-    /* border-top: solid 1px var(--color-gray-shade-light); */
-    border-bottom: solid 1px var(--color-gray-shade-light);
-    padding: var(--spacing-8) 0;
-    margin-bottom: var(--spacing-8);
-  }
-  .funding-map--container h2 {
-    margin-bottom: 1rem;
-    font-size: var(--font-size-large);
-  }
-  .map-spacing {
-    height: var(--spacing-4);
-  }
-  .vignettes--container {
-    margin: 0 auto;
-    max-width: var(--body-width);
-    margin-bottom: var(--spacing-8);
-    border-top: solid 1px var(--color-gray-shade-light);
+    margin-inline: auto;
+    margin-block-end: var(--spacing-3);
   }
 </style>

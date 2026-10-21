@@ -1,17 +1,19 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <!--
   @component
-  Generates an SVG Choropleth map as well as layer toggles and controls.
+  Generates an SVG Choropleth map with program selection and data fetching.
+  Fetches its own funding data based on `selected_program` and `map_level` props.
  -->
 <script>
   import { base } from "$app/paths";
-  import { slugify_program } from "$lib/utils";
+  import { browser } from "$app/environment";
+  import { get_program_name, slugify_program } from "$lib/utils";
+  import { category_display_name } from "$stores/categories";
   import { logClickToGA } from "$lib/analytics";
+  import { get_funding_data } from "$stores/funding_data";
+  import { LoadingWrapper } from "@urbaninstitute/dataviz-components";
   import Map from "$components/Map";
   import ProgramSelect from "$components/ProgramSelect.svelte";
-
-  /**
-   * @typedef {import("geojson").FeatureCollection} FeatureCollection
-   */
 
   /**
    * FIPS code of feature to highlight
@@ -21,13 +23,6 @@
   export let highlight_fips = null;
 
   /**
-   * Geojson feature to fit the projection to
-   * @type {FeatureCollection | null}
-   * @optional
-   **/
-  export let bound_feature = null;
-
-  /**
    * What level of the map to show
    * @type {"state" | "county" | "cbsa"}
    * @default "state"
@@ -35,60 +30,88 @@
   export let map_level = "state";
 
   /**
-   * Data for choropleth map layer
-   * @type {Array<Record<string, any>>}
-   * @required
+   * Currently selected program (or category) identifier
+   * @type {string}
    **/
-  export let data_layer;
+  export let selected_program = "cdbg_entitlement";
 
   /**
-   * @type {{"name": string, "short_name": string, "type": string}[] | null}
+   * Options for the selector dropdown. If null, no selector is shown.
+   * @type {{"name": string, "short_name": string, "type"?: string}[] | null}
    */
   export let programs = null;
 
   /**
-   * @type {string | null}
-   */
-  export let show_counties = null;
-
-  export let color_key = "funding_per_1k";
-
-  export let link_program = null;
-
-  export let show_program_link = true;
-
-  export let program_select = true;
+   * Whether `selected_program` and `programs` identify federal programs or
+   * infrastructure categories. Drives the selector's labels and placeholder,
+   * the analytics control name, and where the link below the map points.
+   * @type {"program" | "category"}
+   **/
+  export let option_type = "program";
 
   /**
+   * Scopes a county-level map to one state, by that state's 2-digit FIPS code.
+   * Leave it `null` for the national county map. Forwarded to `Map`, which
+   * documents the distinction.
    * @type {string | null}
    */
-  export let program_state = null;
+  export let county_state_fips = null;
 
-  export let selected_program =
-    map_level == "state" ? "fhwa_nhpp" : "cdbg_entitlement";
-
-  export let show_geo_toggle = false;
+  export let show_program_link = true;
 
   export let show_select_label = false;
 
   /**
-   * List of programs that require NYC special note
-   */
-  const nyc_programs = [
-    "cdbg_entitlement",
-    "coc",
-    "home",
-    "public_hsg",
-    "public_hsg_cap",
-    "hcv",
-  ];
+   * Optional caveat for the level on show, e.g. what a CBSA-level total counts.
+   * Rendered as a small note under the map, inside whatever card holds it —
+   * pages swap it as `map_level` changes.
+   * @type {string | null}
+   * @optional
+   **/
+  export let note = null;
 
-  $: map_color_key = color_key;
-  let has_data = true;
-  // $: has_data = Object.keys(data_layer[0]).includes(map_color_key);
+  /**
+   * Units line shown above the map's color legend.
+   * @type {string | null}
+   * @optional
+   **/
+  export let legend_title = null;
 
-  function update_geo_level(new_level) {
-    map_level = new_level;
+  $: is_category = option_type === "category";
+  $: get_option_label = is_category ? category_display_name : get_program_name;
+  $: select_placeholder = is_category
+    ? "Search for an infrastructure category"
+    : "Search for a specific program";
+  $: select_ga_control = is_category
+    ? "category-select-map"
+    : "program-select-map";
+  $: detail_url = `${base}/${
+    is_category ? "program-categories" : "program"
+  }/${slugify_program(selected_program)}/`;
+
+  // Internal data state
+  /** @type {Array<Record<string, any>>} */
+  let data_layer = [];
+  let has_loaded = false;
+
+  // Tracks which fetch is the current one. Responses arrive out of order —
+  // a 404 comes back faster than a 200 — and without this the *last to resolve*
+  // won rather than the last to be issued, so the map could settle on data the
+  // selector was no longer labelling. A geography page reliably hit this: it
+  // requests the default category at init and the deep link's category after
+  // mount, and the slower of the two overwrote the other.
+  let request_id = 0;
+
+  // Fetch funding data reactively when program or level changes.
+  // `option_type` also picks the data directory — see `get_funding_data`.
+  $: if (browser && selected_program) {
+    const this_request = ++request_id;
+    get_funding_data(selected_program, map_level, option_type).then((data) => {
+      // A newer selection has been made since this fetch started; drop it.
+      if (this_request !== request_id) return;
+      data_layer = Array.from(data.values());
+      has_loaded = true;
+    });
   }
 </script>
 
@@ -98,67 +121,43 @@
       <ProgramSelect
         {programs}
         show_label={show_select_label}
+        get_label={get_option_label}
+        placeholder={select_placeholder}
         on:change={(e) => {
-          // explicitly clear program state when user selects a new program
-          program_state = null;
-          logClickToGA(e.target, "program-select-map--" + selected_program);
+          logClickToGA(e.target, `${select_ga_control}--${selected_program}`);
         }}
         bind:value={selected_program}
       />
     {/if}
-    {#if show_geo_toggle}
-      <div class="geo-controls">
-        <div class="geo-toggle">
-          <button
-            class="geo-toggle-button"
-            class:active={map_level == "state"}
-            on:click={() => update_geo_level("state")}
-          >
-            States
-          </button>
-          <button
-            class="geo-toggle-button"
-            class:active={map_level == "cbsa"}
-            on:click={() => update_geo_level("cbsa")}
-          >
-            CBSAs
-          </button>
-        </div>
-      </div>
-    {/if}
-    {#if map_level == "county" && !has_data}
-      <p class="help-text">
-        <strong>Note:</strong> county-level data not available for selected program.
-      </p>
-    {/if}
   </div>
-  <Map
-    {highlight_fips}
-    {bound_feature}
-    {data_layer}
-    no_data={!has_data}
-    link_program={selected_program}
-    color_key={map_color_key}
-    {map_level}
-    {show_counties}
-  >
-    {#if show_program_link}
-      <p class="learn-more-link">
+  {#if !has_loaded}
+    <LoadingWrapper>
+      <div class="loading-block" style="height: 500px;" />
+    </LoadingWrapper>
+  {:else}
+    <Map
+      {highlight_fips}
+      {data_layer}
+      link_program={selected_program}
+      color_key="funding_per_1k"
+      {map_level}
+      {county_state_fips}
+      {option_type}
+      {legend_title}
+    >
+      {#if show_program_link}
         <a
-          href="{base}/program/{slugify_program(selected_program)}"
+          class="button-link program-link"
+          href={detail_url}
           on:click={(event) =>
             logClickToGA(event.target, "map-link-click--full-program-analysis")}
-          >View full program analysis</a
+          >View category</a
         >
-      </p>
-    {/if}
-  </Map>
-  {#if map_level == "county" && show_counties == "36" && nyc_programs.includes(selected_program)}
-    <p class="chart-note">
-      <strong>Notes:</strong> For this program, funding for New York City’s five
-      counties was estimated by dividing the city’s total funding by county population
-      share.
-    </p>
+      {/if}
+    </Map>
+  {/if}
+  {#if note}
+    <p class="map-note">{note}</p>
   {/if}
 </div>
 
@@ -167,30 +166,19 @@
     margin: var(--spacing-4) auto 0;
     max-width: var(--body-width);
   }
-  .learn-more-link {
-    font-size: var(--font-size-small);
-    margin-top: 0.5em;
-    text-align: center;
-    text-transform: uppercase;
-  }
-  .learn-more-link a,
-  .learn-more-link a:visited {
-    color: var(--color-black);
-  }
-  .learn-more-link a:hover {
-    color: var(--color-blue);
-  }
-  .geo-controls {
-    margin-top: var(--spacing-4);
+  /* Centred under the map, per design/homepage.png. `a.button-link` is
+     inline-block, so it needs an explicit box to centre. */
+  .program-link {
+    display: block;
+    width: fit-content;
+    margin-block-start: var(--spacing-6);
+    margin-inline: auto;
   }
   @media (min-width: 768px) {
     .map-controls {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
-    }
-    .geo-controls {
-      margin-top: 2.25em;
+      justify-content: center;
     }
   }
 </style>

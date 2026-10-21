@@ -1,3 +1,4 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script>
   import ToggleButton from "./ToggleButton.svelte";
   import { createEventDispatcher } from "svelte";
@@ -22,11 +23,10 @@
   {#each options as option}
     <ToggleButton
       label={option.label}
-      value={option.value}
       {disabled}
       on:click={(e) => {
         value = option.value;
-        dispatch("change", {target: e.target});
+        dispatch("change", { target: e.target });
       }}
       is_active={value === option.value}
     />

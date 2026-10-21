@@ -1,101 +1,126 @@
+<!-- A generative AI model wrote or edited portions of this file with the supervision of a human developer and careful human review. -->
 <script context="module">
   /**
    * Data for search
    * @typedef {Object} SearchData
    * @property {string} name - The name to search for
-   * @property {"state" | "county" | "program" | "program-categories" } category - The type of item to display in search results
-   * @property {"string"} route_param - What to put at the end of the route when item is selected
+   * @property {string} category - The type of item to display in search results
+   * @property {string} route_param - What to put at the end of the route when item is selected
    */
 </script>
 
 <script>
   import { goto } from "$app/navigation";
   import { base } from "$app/paths";
-  import { format_category_name, get_program_name } from "$lib/utils";
+  import { get_program_name } from "$lib/utils";
+  import { category_display_name } from "$stores/categories.js";
   import search_data from "$data/server/search.json";
   import Select from "svelte-select";
-
-  const states_to_include = ["24", "36", "48"];
-  const filter_counties = false;
+  import IconSearch from "$components/IconSearch.svelte";
 
   /**
    * @type {SearchData[]}
    */
-  export let data = search_data.map((item) => {
-    if (item.category === "program-categories") {
-      item.name = format_category_name(item.name);
-      return item;
-    } else if (item.category !== "program") {
-      return item;
-    }
-    return Object.assign({}, item, {
-      name: get_program_name(item.route_param?.replaceAll("-", "_")),
-    });
-  });
-  $: if (filter_counties) {
-    data = data.filter(
-      ({ category, route_param }) =>
-        category !== "county" ||
-        states_to_include.includes(route_param.substring(0, 2))
-    );
-  }
+  export let data = /** @type {SearchData[]} */ (
+    search_data.map((item) => {
+      if (item.category === "category") {
+        item.name = category_display_name(
+          /** @type {string} */ (item.route_param?.replaceAll("-", "_"))
+        );
+        return item;
+      } else if (item.category !== "program") {
+        return item;
+      }
+      return Object.assign({}, item, {
+        name: get_program_name(
+          /** @type {string} */ (item.route_param?.replaceAll("-", "_"))
+        ),
+      });
+    })
+  );
 
-  let value = "";
-
-  export let limit = 10;
-  /**
-   * @type {(data: SearchData) => string}
-   */
-  const extract = ({ name, category }) =>
-    category === "program-categories" ? format_category_name(name) : name;
-
-  export let label = "Search";
   export let placeholder = "Search";
 
   /**
-   * Listener for on:select for the Typeahead component. Navigates to the selected item's page.
+   * How many items the list shows while nothing has been typed. svelte-select 5
+   * has no virtual list and opens with an empty filter, so without a cap every
+   * click on the box built all 4,000-plus items before the user typed (review #8).
+   */
+  const EMPTY_FILTER_LIMIT = 50;
+
+  /**
+   * Replaces svelte-select's default `filter`: the first few items while the
+   * box is empty, otherwise the same case-insensitive "label contains text"
+   * match the default applies (`itemFilter` is that default match).
+   * @param {Parameters<typeof import("svelte-select/filter").default>[0]} options
+   * @returns {Record<string, any>[]}
+   */
+  function search_filter({ items, filterText, itemFilter, label }) {
+    /** @type {Record<string, any>[]} */
+    const list = items || [];
+    if (!filterText) return list.slice(0, EMPTY_FILTER_LIMIT);
+    return list.filter((item) => itemFilter(item[label], filterText, item));
+  }
+
+  // The select's state, bound so it can be emptied after each pick. Pages that
+  // reuse their component across navigations (state to state, category to
+  // category) keep this instance alive, and a retained selection blocked the
+  // next search.
+  /** @type {SearchData | null} */
+  let value = null;
+  let filter_text = "";
+  /** @type {HTMLInputElement | undefined} */
+  let input;
+
+  /**
+   * Listener for on:select for the Typeahead component. Navigates to the
+   * selected item's page, then clears the box for the next search.
    * @type {(e: CustomEvent) => void}
    */
   function handleSelect(e) {
-    const { category, route_param, page_id } = e.detail;
-    let url = `${base}/${category}`;
-    if (route_param) {
-      url += `/${route_param}`;
+    const { category, route_param } = e.detail;
+    let url;
+    if (category === "category") {
+      url = `${base}/program-categories/${route_param}`;
+    } else {
+      url = `${base}/${category}`;
+      if (route_param) {
+        url += `/${route_param}`;
+      }
     }
-    if (page_id) {
-      url += `#${page_id}`;
-    }
-    goto(url);
+    // trailingSlash is "always"; link straight to the canonical form
+    goto(`${url}/`);
+
+    value = null;
+    filter_text = "";
+    input?.blur();
   }
 </script>
 
 <div class="search">
-  <Select items={data} searchable on:select={handleSelect} {placeholder} label="name">
+  <Select
+    items={data}
+    filter={search_filter}
+    searchable
+    bind:value
+    bind:filterText={filter_text}
+    bind:input
+    on:select={handleSelect}
+    {placeholder}
+    label="name"
+    showChevron
+  >
     <div slot="item" let:item class="search--result-item">
       <p class="search--result-item-text">{item.name}</p>
       <p class="search--result-item-subtext">
-        {item.category === "program-categories" ? "Category" : item.category}
+        {item.category === "category" ? "Category" : item.category}
       </p>
     </div>
+    <div slot="chevron-icon" class="icon-wrapper"><IconSearch /></div>
   </Select>
 </div>
 
 <style>
-  :global([data-svelte-typeahead] input) {
-    color: var(--color-black, black);
-    font-style: italic;
-    font-family: var(--font-family-sans);
-    min-height: 52px;
-    border: 1px solid var(--color-gray-shade-medium) !important;
-  }
-  :global([data-svelte-typeahead] mark) {
-    background-color: var(--color-gray-shade-lightest) !important;
-    color: var(--color-gray-shade-darker);
-  }
-  :global([data-svelte-typeahead] li.selected:hover),
-  :global([data-svelte-typeahead] li.selected) {
-    background-color: var(--color-gray-shade-lightest) !important;
-  }
   .search--result-item-text {
     margin: 0;
     font-size: var(--font-size-large);
@@ -117,8 +142,9 @@
     height: auto !important;
   }
   .search :global(input) {
-    font-family: inherit;
-    font-style: italic;
+    font-family: var(--font-family-sans-alt);
+    font-weight: var(--font-weight-bold);
+    --font-size: 24px;
   }
   .search {
     width: 100%;
@@ -127,7 +153,7 @@
     --border-focused: solid 1px var(--color-blue, #1696d2);
     --chevron-color: var(--color-blue, #1696d2);
     --placeholder-color: var(--color-gray-shade-darker, #696969);
-    --list-item-overflows:
+    --list-item-overflows: ;
     --input-color: var(--color-black, #000000);
 
     /* list */
@@ -149,7 +175,12 @@
     --height: 52px;
   }
   :global(.select .svelte-select input) {
-    font-family: var(--font-family-sans);
+    font-family: var(--font-family-sans-alt);
     color: var(--color-black, #000000);
+  }
+  .icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
